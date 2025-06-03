@@ -3,9 +3,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <meta name="author" content="<?php echo e(!empty($settings['app_name']) ? $settings['app_name'] : env('APP_NAME')); ?>">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
@@ -37,13 +34,23 @@
     <!-- Fonts css-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+        rel="stylesheet">
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 
     <!-- Font awesome -->
     <link href="<?php echo e(asset('assets/css/vendor/font-awesome.css')); ?>" rel="stylesheet">
     <!-- themify icon-->
     <link href="<?php echo e(asset('assets/css/vendor/themify-icons.css')); ?>" rel="stylesheet">
 
-    
 
     <!-- Slick slider-->
     <link href="<?php echo e(asset('assets/css/vendor/slider/slick-slider/slick.css')); ?>" rel="stylesheet">
@@ -51,17 +58,12 @@
     <link href="<?php echo e(asset('assets/css/vendor/select2/select2.css')); ?>" rel="stylesheet">
 
     <!-- Scrollbar-->
+
     <link href="<?php echo e(asset('assets/css/vendor/simplebar.css')); ?>" rel="stylesheet">
     <!-- Bootstrap css-->
     <link href="<?php echo e(asset('assets/css/vendor/bootstrap.css')); ?>" rel="stylesheet">
 
     <link href="<?php echo e(asset('assets/css/vendor/sweetalert/sweetalert2.css')); ?>" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
 
     <?php echo $__env->yieldPushContent('css-page'); ?>
     <!-- Custom css-->
@@ -71,9 +73,14 @@
             $style = 'style.css';
         }
     ?>
-    <link href="<?php echo e(asset(path: 'assets/css/' . $style)); ?>" id="customstyle" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/css/' . $style)); ?>" id="customstyle" rel="stylesheet">
 
+    <link href="<?php echo e(asset('css/custom.css')); ?>" rel="stylesheet">
     
+
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
 
 
 </head>

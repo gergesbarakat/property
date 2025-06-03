@@ -20,64 +20,39 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
                 <div class="card-body">
-                    <div class="d-flex">
-                        <button id="generate-pdf" class="btn btn-outline-primary">
-                            PDF
-                        </button>
-
-                        <!-- Export to Excel Button -->
-                        <button onclick="exportToExcel()" class="btn btn-outline-success">
-                            Export to Excel
-                        </button>
-                    </div>
-                    <table class="bg-white p-3 w-full position-relative" id="invoice-table">
+                    <table class="display dataTable cell-border datatbl-advance" id="invoice-table">
                         <thead>
                             <tr>
-                                <td><span><?php echo e(__('Property')); ?> </span></td>
+                                <th><?php echo e(__('Property')); ?></th>
 
-                                <td><span><?php echo e(__('Unit')); ?> </span></td>
+                                <th><?php echo e(__('Name')); ?></th>
+                                <th><?php echo e(__('Bedroom')); ?></th>
+                                <th><?php echo e(__('Kitchen')); ?></th>
+                                <th><?php echo e(__('Bath')); ?></th>
+                                
+                                
+                                <th><?php echo e(__('Created ')); ?></th>
+                                <th><?php echo e(__('Updated')); ?></th>
 
-                                <td><span><?php echo e(__('Bedroom')); ?> </span></td>
-                                <td><span><?php echo e(__('Kitchen')); ?> </span></td>
-                                <td><span><?php echo e(__('Bath')); ?> </span></td>
-                                <td><span><?php echo e(__('Unit Price')); ?> </span></td>
-                                <td><span><?php echo e(__('Status')); ?> </span></td>
-                                <td>
-                                    <span><?php echo e(__('Date Created')); ?> </span>
-                                </td>
-                                <td>
-                                    <span><?php echo e(__('Date Updated')); ?> </span>
-                                </td>
-                                <td> <span><?php echo e(__('Actions')); ?>
-
-                                    </span></td>
-
+                                <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
+                                    <th class="text-center"><?php echo e(__('Actions')); ?></th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php $__currentLoopData = $units; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                    <td><?php echo e($unit->property->name); ?></td>
+                                    <td><?php echo e($unit->properties->name); ?></td>
 
                                     <td><?php echo e($unit->name); ?></td>
-
-
-                                    <td><?php echo e($unit->bedroom); ?> </td>
+                                    <td><?php echo e($unit->bedroom); ?></td>
                                     <td><?php echo e($unit->kitchen); ?></td>
                                     <td><?php echo e($unit->baths); ?></td>
-                                    <td><?php echo e(priceFormat($unit->rent)); ?></td>
+                                    
+                                    <td><?php echo e($unit->created_at); ?></td>
+                                    <td><?php echo e($unit->updated_at); ?></td>
 
-                                    <td><?php echo e($unit->status); ?></td>
-                                    <td>
-                                        <?php echo e(dateFormat($unit->created_at)); ?>
-
-                                    </td>
-                                    <td>
-                                        <?php echo e(dateFormat($unit->updated_at)); ?>
-
-                                    </td>
                                     <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
                                         <td class="text-right">
                                             <div class="cart-action">
@@ -103,7 +78,10 @@
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+
                         </tbody>
+
                     </table>
                 </div>
             </div>

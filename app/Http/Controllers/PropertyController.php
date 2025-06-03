@@ -14,7 +14,7 @@ class PropertyController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage property')) {
-            $properties = Property::where('parent_id',parentId())->where('is_active',1)->get();
+            $properties = Property::where('parent_id', parentId())->where('is_active', 1)->get();
             return view('property.index', compact('properties'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -37,17 +37,18 @@ class PropertyController extends Controller
     {
         if (\Auth::user()->can('create property')) {
             $validator = \Validator::make(
-                $request->all(), [
-                'name' => 'required',
-                'description' => 'required',
-                'type' => 'required',
-                'country' => 'required',
-                'state' => 'required',
-                'city' => 'required',
-                'zip_code' => 'required',
-                'address' => 'required',
-                'thumbnail' => 'required',
-            ]
+                $request->all(),
+                [
+                    'name' => 'required',
+                    'description' => 'required',
+                    'type' => 'required',
+                    'country' => 'required',
+                    'state' => 'required',
+                    'city' => 'required',
+                    'zip_code' => 'required',
+                    'address' => 'required',
+                    'thumbnail' => 'required',
+                ]
             );
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
@@ -57,7 +58,6 @@ class PropertyController extends Controller
                     'msg' => $messages->first(),
 
                 ]);
-
             }
 
             $ids = parentId();
@@ -80,10 +80,10 @@ class PropertyController extends Controller
             $property->city = $request->city;
             $property->zip_code = $request->zip_code;
             $property->address = $request->address;
-            $property->parent_id =parentId();
+            $property->parent_id = parentId();
             $property->save();
 
-            if ($request->thumbnail!='undefined') {
+            if ($request->thumbnail != 'undefined') {
                 $thumbnailFilenameWithExt = $request->file('thumbnail')->getClientOriginalName();
                 $thumbnailFilename = pathinfo($thumbnailFilenameWithExt, PATHINFO_FILENAME);
                 $thumbnailExtension = $request->file('thumbnail')->getClientOriginalExtension();
@@ -128,14 +128,13 @@ class PropertyController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
-
     }
 
 
     public function show(Property $property)
     {
         if (\Auth::user()->can('show property')) {
-            $units = PropertyUnit::where('property_id', $property->id)->orderBy('id', 'desc')->get();
+            $units = PropertyUnit::where('property_id', $property->id)->orderBy('id', 'desc')->with(['properties'])->get();
             return view('property.show', compact('property', 'units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -159,7 +158,8 @@ class PropertyController extends Controller
 
         if (\Auth::user()->can('edit property')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'name' => 'required',
                     'description' => 'required',
                     'type' => 'required',
@@ -180,7 +180,6 @@ class PropertyController extends Controller
                     'msg' => $messages->first(),
 
                 ]);
-
             }
 
             $property->name = $request->name;
@@ -194,7 +193,7 @@ class PropertyController extends Controller
             $property->save();
 
             if (!empty($request->thumbnail)) {
-                if(!empty($property->thumbnail) && isset($property->thumbnail->image)){
+                if (!empty($property->thumbnail) && isset($property->thumbnail->image)) {
                     $image_path = "storage/upload/thumbnail/" . $property->thumbnail->image;
                     if (\File::exists($image_path)) {
                         \File::delete($image_path);
@@ -210,7 +209,7 @@ class PropertyController extends Controller
                     mkdir($dir, 0777, true);
                 }
                 $request->file('thumbnail')->storeAs('upload/thumbnail/', $thumbnailFileName);
-                $thumbnail =PropertyImage::where('property_id',$property->id)->where('type','thumbnail')->first();
+                $thumbnail = PropertyImage::where('property_id', $property->id)->where('type', 'thumbnail')->first();
                 $thumbnail->image = $thumbnailFileName;
                 $thumbnail->save();
             }
@@ -254,14 +253,13 @@ class PropertyController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
-
     }
 
 
     public function units()
     {
         if (\Auth::user()->can('manage unit')) {
-            $units = PropertyUnit::where('parent_id',parentId())->get();
+            $units = PropertyUnit::where('parent_id', parentId())->with(['properties'])->get();
             return view('unit.index', compact('units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -279,18 +277,19 @@ class PropertyController extends Controller
     {
         if (\Auth::user()->can('create unit')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'name' => 'required',
                     'bedroom' => 'required',
                     'kitchen' => 'required',
                     'baths' => 'required',
-                    'rent' => 'required',
-                    'rent_type' => 'required',
-                    'deposit_type' => 'required',
-                    'deposit_amount' => 'required',
-                    'late_fee_type' => 'required',
-                    'late_fee_amount' => 'required',
-                    'incident_receipt_amount' => 'required',
+                    // 'rent' => 'required',
+                    // 'rent_type' => 'required',
+                    // 'deposit_type' => 'required',
+                    // 'deposit_amount' => 'required',
+                    // 'late_fee_type' => 'required',
+                    // 'late_fee_amount' => 'required',
+                    // 'incident_receipt_amount' => 'required',
                 ]
             );
             if ($validator->fails()) {
@@ -304,24 +303,24 @@ class PropertyController extends Controller
             $unit->bedroom = $request->bedroom;
             $unit->kitchen = $request->kitchen;
             $unit->baths = $request->baths;
-            $unit->rent = $request->rent;
-            $unit->rent_type = $request->rent_type;
-            if ($request->rent_type == 'custom') {
-                $unit->start_date = $request->start_date;
-                $unit->end_date = $request->end_date;
-                $unit->payment_due_date = $request->payment_due_date;
-            } else {
-                $unit->rent_duration = $request->rent_duration;
-            }
+            // $unit->rent = $request->rent;
+            // $unit->rent_type = $request->rent_type;
+            // if ($request->rent_type == 'custom') {
+            //     $unit->start_date = $request->start_date;
+            //     $unit->end_date = $request->end_date;
+            //     $unit->payment_due_date = $request->payment_due_date;
+            // } else {
+            //     $unit->rent_duration = $request->rent_duration;
+            // }
 
-            $unit->deposit_type = $request->deposit_type;
-            $unit->deposit_amount = $request->deposit_amount;
-            $unit->late_fee_type = $request->late_fee_type;
-            $unit->late_fee_amount = $request->late_fee_amount;
-            $unit->incident_receipt_amount = $request->incident_receipt_amount;
+            // $unit->deposit_type = $request->deposit_type;
+            // $unit->deposit_amount = $request->deposit_amount;
+            // $unit->late_fee_type = $request->late_fee_type;
+            // $unit->late_fee_amount = $request->late_fee_amount;
+            // $unit->incident_receipt_amount = $request->incident_receipt_amount;
             $unit->notes = $request->notes;
             $unit->property_id = $property_id;
-            $unit->parent_id =parentId();
+            $unit->parent_id = parentId();
             $unit->save();
             return redirect()->back()->with('success', __('Unit successfully created.'));
         } else {
@@ -341,7 +340,8 @@ class PropertyController extends Controller
     {
         if (\Auth::user()->can('edit unit')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'name' => 'required',
                     'bedroom' => 'required',
                     'kitchen' => 'required',
@@ -405,6 +405,4 @@ class PropertyController extends Controller
         $units = PropertyUnit::where('property_id', $property_id)->get()->pluck('name', 'id');
         return response()->json($units);
     }
-
-
 }

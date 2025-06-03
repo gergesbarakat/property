@@ -32,154 +32,132 @@
             </div>
         </div>
     <?php endif; ?>
-    <div class="row mt-10">
-        <div class="row">
-            <div class="col-md-5 cdx-xl-45">
-                <div class="product-card">
-                    <div class="product-for">
-                        <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php if(!empty($image) && !empty($image->image)): ?>
-                                <?php  $img= $image->image; ?>
-                            <?php else: ?>
-                                <?php  $img= 'default.jpg'; ?>
-                            <?php endif; ?>
-                            <div>
-                                <div class="product-imgwrap" style="height: 300px">
-                                    <img class="img-fluid" src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $img); ?>"
-                                        alt="">
-                                </div>
-                            </div>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </div>
-                    <div class="product-to">
-                        <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php if(!empty($image) && !empty($image->image)): ?>
-                                <?php  $img= $image->image; ?>
-                            <?php else: ?>
-                                <?php  $img= 'default.jpg'; ?>
-                            <?php endif; ?>
-                            <div>
-                                <div class="product-imgwrap">
-                                    <img style="width: 200px;height:100px" class="img-fluid"
-                                        src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $img); ?>" alt="">
-                                </div>
-                            </div>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-7 cdx-xl-55 cdxpro-detail">
-                <div class="product-card">
-                    <div class="detail-group">
-                        <div class="media">
-                            <div>
-                                <h2><?php echo e($property->name); ?></h2>
-                                <h6 class="text-light">
-                                    <div class="date-info">
-                                        <span class="badge badge-primary" data-bs-toggle="tooltip"
-                                            data-bs-original-title="<?php echo e(__('Type')); ?>"><?php echo e(\App\Models\Property::$Type[$property->type]); ?></span>
-                                    </div>
-                                </h6>
+
+    <div class="row">
+        <div class="col-md-5 cdx-xl-45">
+            <div class="product-card">
+                <div class="product-for">
+                    <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(!empty($image) && !empty($image->image)): ?>
+                            <?php  $img= $image->image; ?>
+                        <?php else: ?>
+                            <?php  $img= 'default.jpg'; ?>
+                        <?php endif; ?>
+                        <div>
+                            <div class="product-imgwrap">
+                                <img class="img-fluid" src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $img); ?>"
+                                    alt="">
                             </div>
                         </div>
-                    </div>
-                    <div class="detail-group">
-                        <h6><?php echo e(__('Property Details')); ?></h6>
-                        <p class="mb-10"><?php echo e($property->description); ?></p>
-
-                    </div>
-                    <div class="detail-group">
-                        <h6><?php echo e(__('Property Address')); ?></h6>
-                        <p class="mb-10"><?php echo e($property->address); ?></p>
-                        <p class="mb-10"><?php echo e($property->city . ', ' . $property->state . ', ' . $property->country); ?></p>
-                        <p class="mb-10"><?php echo e($property->zip_code); ?></p>
-                    </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+                <div class="product-to">
+                    <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(!empty($image) && !empty($image->image)): ?>
+                            <?php  $img= $image->image; ?>
+                        <?php else: ?>
+                            <?php  $img= 'default.jpg'; ?>
+                        <?php endif; ?>
+                        <div>
+                            <div class="product-imgwrap">
+                                <img class="img-fluid" src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $img); ?>"
+                                    alt="">
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
         </div>
+        <div class="col-md-7 cdx-xl-55 cdxpro-detail">
+            <div class="product-card">
+                <div class="detail-group">
+                    <div class="media">
+                        <div>
+                            <h2><?php echo e($property->name); ?></h2>
+                            <h6 class="text-light">
+                                <div class="date-info">
+                                    <span class="badge badge-primary" data-bs-toggle="tooltip"
+                                        data-bs-original-title="<?php echo e(__('Type')); ?>"><?php echo e(\App\Models\Property::$Type[$property->type]); ?></span>
+                                </div>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <h6><?php echo e(__('Property Details')); ?></h6>
+                    <p class="mb-10"><?php echo e($property->description); ?></p>
 
-        <div class="row bg-white mt-20 mx-15 rounded-lg py-30   w-full   max-w-full">
-            <div class="d-flex">
-                <button id="generate-pdf" class="btn btn-outline-primary">
-                    PDF
-                </button>
-
-                <!-- Export to Excel Button -->
-                <button onclick="exportToExcel()" class="btn btn-outline-success">
-                    Export to Excel
-                </button>
+                </div>
+                <div class="detail-group">
+                    <h6><?php echo e(__('Property Address')); ?></h6>
+                    <p class="mb-10"><?php echo e($property->address); ?></p>
+                    <p class="mb-10"><?php echo e($property->city . ', ' . $property->state . ', ' . $property->country); ?></p>
+                    <p class="mb-10"><?php echo e($property->zip_code); ?></p>
+                </div>
             </div>
-
-            <table class="bg-white p-3 w-full position-relative" id="invoice-table">
-                <thead>
-                    <tr>
-                        <td><span><?php echo e(__('Unit')); ?> </span></td>
-
-                        <td><span><?php echo e(__('Bedroom')); ?> </span></td>
-                        <td><span><?php echo e(__('Kitchen')); ?> </span></td>
-                        <td><span><?php echo e(__('Bath')); ?> </span></td>
-                        <td><span><?php echo e(__('Unit Price')); ?> </span></td>
-                        <td><span><?php echo e(__('Status')); ?> </span></td>
-                        <td>
-                            <span><?php echo e(__('Date Created')); ?> </span>
-                        </td>
-                        <td>
-                            <span><?php echo e(__('Date Updated')); ?> </span>
-                        </td>
-                        <td> <span><?php echo e(__('Actions')); ?>
-
-                            </span></td>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $__currentLoopData = $units; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <tr>
-                            <td><?php echo e($unit->name); ?></td>
-
-
-                            <td><?php echo e($unit->bedroom); ?> </td>
-                            <td><?php echo e($unit->kitchen); ?></td>
-                            <td><?php echo e($unit->baths); ?></td>
-                            <td><?php echo e(priceFormat($unit->rent)); ?></td>
-
-                            <td><?php echo e($unit->status); ?></td>
-                            <td>
-                                <?php echo e(dateFormat($unit->created_at)); ?>
-
-                            </td>
-                            <td>
-                                <?php echo e(dateFormat($unit->updated_at)); ?>
-
-                            </td>
-                            <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
-                                <td class="text-right">
-                                    <div class="cart-action">
-                                        <?php echo Form::open(['method' => 'DELETE', 'route' => ['unit.destroy', [$unit->property_id, $unit->id]]]); ?>
-
-
-                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit unit')): ?>
-                                            <a class="text-success customModal"
-                                                data-url="<?php echo e(route('unit.edit', [$unit->property_id, $unit->id])); ?>"
-                                                href="#" data-size="lg" data-title="<?php echo e(__('Edit Unit')); ?>"
-                                                data-bs-toggle="tooltip" data-bs-original-title="<?php echo e(__('Edit')); ?>">
-                                                <i data-feather="edit"></i></a>
-                                        <?php endif; ?>
-                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete unit')): ?>
-                                            <a class=" text-danger confirm_dialog" data-bs-toggle="tooltip"
-                                                data-bs-original-title="<?php echo e(__('Detete')); ?>" href="#"> <i
-                                                    data-feather="trash-2"></i></a>
-                                        <?php endif; ?>
-                                        <?php echo Form::close(); ?>
-
-                                    </div>
-                                </td>
-                            <?php endif; ?>
-                        </tr>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                </tbody>
-            </table>
         </div>
+    </div>
+    <div class="table-responsive mt-4 bg-white p-30 rounded">
+        <div class="p-2 h4">Property Units</div>
+        <table class="table table-bordered   align-middle" id='invoice-table'>
+            <thead class="table-light">
+                <tr>
+                    <th><?php echo e(__('Property')); ?></th>
+
+                    <th><?php echo e(__('Name')); ?></th>
+                    <th><?php echo e(__('Bedroom')); ?></th>
+                    <th><?php echo e(__('Kitchen')); ?></th>
+                    <th><?php echo e(__('Bath')); ?></th>
+                    
+                    
+                    <th><?php echo e(__('Created ')); ?></th>
+                    <th><?php echo e(__('Updated')); ?></th>
+
+                    <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
+                        <th class="text-center"><?php echo e(__('Actions')); ?></th>
+                    <?php endif; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $__currentLoopData = $units; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <tr>
+                        <td><?php echo e($unit->properties->name); ?></td>
+
+                        <td><?php echo e($unit->name); ?></td>
+                        <td><?php echo e($unit->bedroom); ?></td>
+                        <td><?php echo e($unit->kitchen); ?></td>
+                        <td><?php echo e($unit->baths); ?></td>
+                        
+                        <td><?php echo e($unit->created_at); ?></td>
+                        <td><?php echo e($unit->updated_at); ?></td>
+
+                        <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
+                            <td class="text-right">
+                                <div class="cart-action">
+                                    <?php echo Form::open(['method' => 'DELETE', 'route' => ['unit.destroy', [$unit->property_id, $unit->id]]]); ?>
+
+
+                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit unit')): ?>
+                                        <a class="text-success customModal"
+                                            data-url="<?php echo e(route('unit.edit', [$unit->property_id, $unit->id])); ?>" href="#"
+                                            data-size="lg" data-title="<?php echo e(__('Edit Unit')); ?>" data-bs-toggle="tooltip"
+                                            data-bs-original-title="<?php echo e(__('Edit')); ?>">
+                                            <i data-feather="edit"></i></a>
+                                    <?php endif; ?>
+                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete unit')): ?>
+                                        <a class=" text-danger confirm_dialog" data-bs-toggle="tooltip"
+                                            data-bs-original-title="<?php echo e(__('Detete')); ?>" href="#"> <i
+                                                data-feather="trash-2"></i></a>
+                                    <?php endif; ?>
+                                    <?php echo Form::close(); ?>
+
+                                </div>
+                            </td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </tbody>
+        </table>
     </div>
 <?php $__env->stopSection(); ?>
 
