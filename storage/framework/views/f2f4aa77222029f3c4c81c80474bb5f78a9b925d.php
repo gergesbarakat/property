@@ -1,9 +1,9 @@
-@extends('layouts.app')
-@section('page-title')
-    {{ __('Buyer Create') }}
-@endsection
-@push('script-page')
-    <script src="{{ asset('assets/js/vendors/dropzone/dropzone.js') }}"></script>
+<?php $__env->startSection('page-title'); ?>
+    <?php echo e(__('Buyer Create')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('script-page'); ?>
+    <script src="<?php echo e(asset('assets/js/vendors/dropzone/dropzone.js')); ?>"></script>
     <script>
         var dropzone = new Dropzone('#demo-upload', {
             previewTemplate: document.querySelector('.preview-dropzon').innerHTML,
@@ -46,7 +46,7 @@
                 fd.append(input.name, input.value);
             });
             $.ajax({
-                url: "{{ route('tenant.store') }}",
+                url: "<?php echo e(route('tenant.store')); ?>",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -58,7 +58,7 @@
                     if (data.status == "success") {
                         $('#tenant-submit').attr('disabled', true);
                         toastrs(data.status, data.msg, data.status);
-                        var url = '{{ route('tenant.index') }}';
+                        var url = '<?php echo e(route('tenant.index')); ?>';
                         setTimeout(() => {
                             window.location.href = url;
                         }, "1000");
@@ -82,7 +82,7 @@
         $('#property').on('change', function() {
             "use strict";
             var property_id = $(this).val();
-            var url = '{{ route('property.unit', ':id') }}';
+            var url = '<?php echo e(route('property.unit', ':id')); ?>';
             url = url.replace(':id', property_id);
             $.ajax({
                 url: url,
@@ -220,60 +220,75 @@
             calculateInstallmentAmount();
         });
     </script>
-@endpush
-@section('breadcrumb')
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('breadcrumb'); ?>
     <ul class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}">
-                <h1>{{ __('Dashboard') }}</h1>
+            <a href="<?php echo e(route('dashboard')); ?>">
+                <h1><?php echo e(__('Dashboard')); ?></h1>
             </a>
         </li>
         <li class="breadcrumb-item">
-            <a href="{{ route('tenant.index') }}">{{ __('Buyer') }}</a>
+            <a href="<?php echo e(route('tenant.index')); ?>"><?php echo e(__('Buyer')); ?></a>
         </li>
         <li class="breadcrumb-item active">
-            <a href="#">{{ __('Create') }}</a>
+            <a href="#"><?php echo e(__('Create')); ?></a>
         </li>
     </ul>
-@endsection
-@section('content')
-    {{ Form::open(['url' => 'tenant', 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'tenant_form']) }}
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <?php echo e(Form::open(['url' => 'tenant', 'method' => 'post', 'enctype' => 'multipart/form-data', 'id' => 'tenant_form'])); ?>
+
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Personal Details') }}</h5>
+                    <h5><?php echo e(__('Personal Details')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('first_name', __('First Name'), ['class' => 'form-label']) }}
-                                {{ Form::text('first_name', null, ['class' => 'form-control', 'placeholder' => __('Enter First Name')]) }}
+                                <?php echo e(Form::label('first_name', __('First Name'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('first_name', null, ['class' => 'form-control', 'placeholder' => __('Enter First Name')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('last_name', __('Last Name'), ['class' => 'form-label']) }}
-                                {{ Form::text('last_name', null, ['class' => 'form-control', 'placeholder' => __('Enter Last Name')]) }}
+                                <?php echo e(Form::label('last_name', __('Last Name'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('last_name', null, ['class' => 'form-control', 'placeholder' => __('Enter Last Name')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
-                                {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Email')]) }}
+                                <?php echo e(Form::label('email', __('Email'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Email')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('password', __('Password'), ['class' => 'form-label']) }}
-                                {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Password')]) }}
+                                <?php echo e(Form::label('password', __('Password'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Password')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('phone_number', __('Phone Number'), ['class' => 'form-label']) }}
-                                {{ Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number')]) }}
+                                <?php echo e(Form::label('phone_number', __('Phone Number'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('family_member', __('Total Family Member'), ['class' => 'form-label']) }}
-                                {{ Form::number('family_member', null, ['class' => 'form-control', 'placeholder' => __('Enter Total Family Member')]) }}
+                                <?php echo e(Form::label('family_member', __('Total Family Member'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('family_member', null, ['class' => 'form-control', 'placeholder' => __('Enter Total Family Member')])); ?>
+
                             </div>
                             <div class="form-group">
-                                {{ Form::label('profile', __('Profile'), ['class' => 'form-label']) }}
-                                {{ Form::file('profile', ['class' => 'form-control']) }}
+                                <?php echo e(Form::label('profile', __('Profile'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::file('profile', ['class' => 'form-control'])); ?>
+
                             </div>
                         </div>
                     </div>
@@ -283,30 +298,40 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Address Details') }}</h5>
+                    <h5><?php echo e(__('Address Details')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('country', __('Country'), ['class' => 'form-label']) }}
-                                {{ Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Country')]) }}
+                                <?php echo e(Form::label('country', __('Country'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Country')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('state', __('State'), ['class' => 'form-label']) }}
-                                {{ Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter State')]) }}
+                                <?php echo e(Form::label('state', __('State'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter State')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('city', __('City'), ['class' => 'form-label']) }}
-                                {{ Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter City')]) }}
+                                <?php echo e(Form::label('city', __('City'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter City')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('zip_code', __('Zip Code'), ['class' => 'form-label']) }}
-                                {{ Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Zip Code')]) }}
+                                <?php echo e(Form::label('zip_code', __('Zip Code'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Zip Code')])); ?>
+
                             </div>
                             <div class="form-group ">
-                                {{ Form::label('address', __('Address'), ['class' => 'form-label']) }}
-                                {{ Form::textarea('address', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => __('Enter Address')]) }}
+                                <?php echo e(Form::label('address', __('Address'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::textarea('address', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => __('Enter Address')])); ?>
+
                             </div>
                         </div>
                     </div>
@@ -316,73 +341,98 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Property Details') }}</h5>
+                    <h5><?php echo e(__('Property Details')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('property', __('Property'), ['class' => 'form-label']) }}
-                                {{ Form::select('property', $property, null, ['class' => 'form-control hidesearch', 'id' => 'property']) }}
+                                <?php echo e(Form::label('property', __('Property'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::select('property', $property, null, ['class' => 'form-control hidesearch', 'id' => 'property'])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('unit', __('Unit'), ['class' => 'form-label']) }}
+                                <?php echo e(Form::label('unit', __('Unit'), ['class' => 'form-label'])); ?>
+
                                 <div class="unit_div">
                                     <select class="form-control hidesearch unit" id="unit" name="unit">
-                                        <option value="">{{ __('Select Unit') }}</option>
+                                        <option value=""><?php echo e(__('Select Unit')); ?></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group col-lg-6 col-md-6    ">
-                                {{ Form::label('unit_price', __('Unit Price'), ['class' => 'form-label']) }}
-                                {{ Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01']) }}
+                                <?php echo e(Form::label('unit_price', __('Unit Price'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01'])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('purchase_type', __('Purchase Type'), ['class' => 'form-label']) }}
-                                {{ Form::select('purchase_type', ['full' => 'Full Payment', 'installment' => 'Installment'], null, ['class' => 'form-control', 'id' => 'purchase_type']) }}
+                                <?php echo e(Form::label('purchase_type', __('Purchase Type'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::select('purchase_type', ['full' => 'Full Payment', 'installment' => 'Installment'], null, ['class' => 'form-control', 'id' => 'purchase_type'])); ?>
+
                             </div>
-                            {{-- Full Payment --}}
+                            
                             <div class="form-group col-lg-6 col-md-6 purchase_full d-none">
-                                {{ Form::label('payment_date', __('Payment Date'), ['class' => 'form-label']) }}
-                                {{ Form::date('payment_date', null, ['class' => 'form-control', 'placeholder' => __('Enter payment date')]) }}
+                                <?php echo e(Form::label('payment_date', __('Payment Date'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::date('payment_date', null, ['class' => 'form-control', 'placeholder' => __('Enter payment date')])); ?>
+
                             </div>
-                            {{-- Installment Type (monthly/yearly) --}}
+                            
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_type', __('Installment Type'), ['class' => 'form-label']) }}
-                                {{ Form::select('installment_type', ['monthly' => __('Monthly'), 'yearly' => __('Yearly')], null, ['class' => 'form-control', 'id' => 'installment_type']) }}
+                                <?php echo e(Form::label('installment_type', __('Installment Type'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::select('installment_type', ['monthly' => __('Monthly'), 'yearly' => __('Yearly')], null, ['class' => 'form-control', 'id' => 'installment_type'])); ?>
+
                             </div>
 
 
-                            {{-- Installment Duration (number input) --}}
+                            
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_duration', __('Installment Duration'), ['class' => 'form-label']) }}
-                                {{ Form::number('installment_duration', null, ['class' => 'form-control', 'min' => 1]) }}
+                                <?php echo e(Form::label('installment_duration', __('Installment Duration'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('installment_duration', null, ['class' => 'form-control', 'min' => 1])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_start_date', __('Start Date'), ['class' => 'form-label']) }}
-                                {{ Form::date('installment_start_date', null, ['class' => 'form-control']) }}
+                                <?php echo e(Form::label('installment_start_date', __('Start Date'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::date('installment_start_date', null, ['class' => 'form-control'])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_end_date', __('End Date'), ['class' => 'form-label']) }}
-                                {{ Form::date('installment_end_date', null, ['class' => 'form-control', 'readonly']) }}
+                                <?php echo e(Form::label('installment_end_date', __('End Date'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::date('installment_end_date', null, ['class' => 'form-control', 'readonly'])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('deposit', __('Deposit'), ['class' => 'form-label']) }}
-                                {{ Form::number('deposit', null, ['class' => 'form-control', 'min' => 0, 'step' => '0.01']) }}
+                                <?php echo e(Form::label('deposit', __('Deposit'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('deposit', null, ['class' => 'form-control', 'min' => 0, 'step' => '0.01'])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_amount', __('Installment Amount'), ['class' => 'form-label']) }}
-                                {{ Form::number('installment_amount', null, ['class' => 'form-control', 'readonly']) }}
+                                <?php echo e(Form::label('installment_amount', __('Installment Amount'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('installment_amount', null, ['class' => 'form-control', 'readonly'])); ?>
+
                             </div>
 
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('price_after_deposit', __('Price After Deposit'), ['class' => 'form-label']) }}
-                                {{ Form::number('price_after_deposit', null, ['class' => 'form-control', 'id' => 'price_after_deposit', 'readonly']) }}
+                                <?php echo e(Form::label('price_after_deposit', __('Price After Deposit'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('price_after_deposit', null, ['class' => 'form-control', 'id' => 'price_after_deposit', 'readonly'])); ?>
+
                             </div>
 
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_fee_percent', __('Installment Fee %'), ['class' => 'form-label']) }}
-                                {{ Form::number('installment_fee_percent', null, ['class' => 'form-control', 'id' => 'installment_fee_percent', 'step' => '0.01', 'min' => 0]) }}
+                                <?php echo e(Form::label('installment_fee_percent', __('Installment Fee %'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('installment_fee_percent', null, ['class' => 'form-control', 'id' => 'installment_fee_percent', 'step' => '0.01', 'min' => 0])); ?>
+
                             </div>
 
                         </div>
@@ -393,13 +443,13 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Documents') }}</h5>
+                    <h5><?php echo e(__('Documents')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="dropzone needsclick" id='demo-upload' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                            <h3>{{ __('Drop files here or click to upload.') }}</h3>
+                            <h3><?php echo e(__('Drop files here or click to upload.')); ?></h3>
                         </div>
                     </div>
                     <div class="preview-dropzon" style="display: none;">
@@ -418,9 +468,13 @@
         </div>
         <div class="col-lg-12">
             <div class="group-button text-end">
-                {{ Form::submit(__('Create'), ['class' => 'btn btn-primary btn-rounded', 'id' => 'tenant-submit']) }}
+                <?php echo e(Form::submit(__('Create'), ['class' => 'btn btn-primary btn-rounded', 'id' => 'tenant-submit'])); ?>
+
             </div>
         </div>
     </div>
-    {{ Form::close() }}
-@endsection
+    <?php echo e(Form::close()); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH O:\JOWEB\property\resources\views/tenant/create.blade.php ENDPATH**/ ?>

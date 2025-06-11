@@ -161,11 +161,12 @@
         }
 
         // Trigger calculation on changes
-         $('#unit_price, #deposit, #installment_duration, #installment_fee_percent, #purchase_type,#installment_start_date,  #installment_type').on('change keyup',
-            function() {
-                calculateInstallmentAmount();
-                calculateEndDate();
-            });
+        $('#unit_price, #deposit, #installment_duration, #installment_fee_percent, #purchase_type,#installment_start_date,  #installment_type')
+            .on('change keyup',
+                function() {
+                    calculateInstallmentAmount();
+                    calculateEndDate();
+                });
         // Also call once on page load in case of old values
         $(document).ready(function() {
             $('#purchase_type').trigger('change');
@@ -360,6 +361,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group col-lg-6 col-md-6    ">
+                                <?php echo e(Form::label('unit_price', __('Unit Price'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01'])); ?>
+
+                            </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 <?php echo e(Form::label('purchase_type', __('Purchase Type'), ['class' => 'form-label'])); ?>
 
@@ -380,6 +387,7 @@
                                 <?php echo e(Form::select('installment_type', ['monthly' => __('Monthly'), 'yearly' => __('Yearly')], null, ['class' => 'form-control', 'id' => 'installment_type'])); ?>
 
                             </div>
+
 
                             
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
@@ -410,12 +418,6 @@
                                 <?php echo e(Form::label('installment_amount', __('Installment Amount'), ['class' => 'form-label'])); ?>
 
                                 <?php echo e(Form::number('installment_amount', null, ['class' => 'form-control', 'readonly'])); ?>
-
-                            </div>
-                            <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                <?php echo e(Form::label('unit_price', __('Unit Price'), ['class' => 'form-label'])); ?>
-
-                                <?php echo e(Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01'])); ?>
 
                             </div>
 

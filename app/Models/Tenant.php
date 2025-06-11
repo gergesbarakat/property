@@ -2,42 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Tenant extends Model
 {
-    use HasFactory;
-
-    protected $fillable=[
-        'user_id',
-        'family_member',
-        'profile',
-        'address',
-        'country',
-        'state',
-        'city',
-        'zip_code',
-        'property',
-        'unit',
-        'lease_start_date',
-        'lease_end_date',
-        'is_active',
+    protected $fillable = [
+        'name', 'national_id', 'phone', 'email', 'nationality', 'address',
+        'gender', 'purchase_type', 'payment_method', 'payment_amount',
+        'payment_currency', 'bank_name', 'iban_number', 'property_type',
+        'building_name', 'floor_number', 'unit_number', 'profile_image',
     ];
-
-    public function properties(){
-        return $this->hasOne('App\Models\Property','id','property');
-    }
-    public function units(){
-        return $this->hasOne('App\Models\PropertyUnit','id','unit');
-    }
-
-    public function user(){
-        return $this->hasOne('App\Models\User','id','user_id');
-    }
-
-    public function documents()
-    {
-        return $this->hasMany('App\Models\TenantDocument','tenant_id','id');
-    }
 }
