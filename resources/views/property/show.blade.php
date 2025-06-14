@@ -119,6 +119,8 @@
                     <th>{{ __('Late Fee Type') }}</th>
                     <th>{{ __('Late Fee Amount') }}</th>
                     <th>{{ __('Incident Receipt Amount') }}</th> --}}
+                    <th>{{ __('status ') }}</th>
+
                     <th>{{ __('Created ') }}</th>
                     <th>{{ __('Updated') }}</th>
 
@@ -130,7 +132,7 @@
             <tbody>
                 @foreach ($units as $unit)
                     <tr>
-                        <td>{{ $unit->properties->name }}</td>
+                        <td>{{ $unit->property->name }}</td>
 
                         <td>{{ $unit->name }}</td>
                         <td>{{ $unit->bedroom }}</td>
@@ -151,6 +153,15 @@
                             {{ $unit->late_fee_type == 'fixed' ? priceFormat($unit->late_fee_amount) : $unit->late_fee_amount . '%' }}
                         </td>
                         <td>{{ priceFormat($unit->incident_receipt_amount) }}</td> --}}
+                        <td>
+                            @if ($unit->status != 'Available')
+                                <span class="badge bg-danger text-white">{{ $unit->status }}</span>
+                            @else
+                                <span class="badge bg-success text-white">{{ $unit->status }}</span>
+                            @endif
+                        </td>
+
+
                         <td>{{ $unit->created_at }}</td>
                         <td>{{ $unit->updated_at }}</td>
 

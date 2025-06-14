@@ -8,14 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class InvoiceItem extends Model
 {
     use HasFactory;
-    protected $fillable=[
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'invoice_items';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
         'invoice_id',
         'invoice_type',
         'amount',
         'description',
     ];
-
-    public function types(){
-        return $this->hasOne('App\Models\Type','id','invoice_type');
-    }
 }

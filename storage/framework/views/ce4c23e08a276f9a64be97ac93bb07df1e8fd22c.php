@@ -110,6 +110,8 @@
                     <th><?php echo e(__('Bath')); ?></th>
                     
                     
+                    <th><?php echo e(__('status ')); ?></th>
+
                     <th><?php echo e(__('Created ')); ?></th>
                     <th><?php echo e(__('Updated')); ?></th>
 
@@ -121,13 +123,22 @@
             <tbody>
                 <?php $__currentLoopData = $units; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
-                        <td><?php echo e($unit->properties->name); ?></td>
+                        <td><?php echo e($unit->property->name); ?></td>
 
                         <td><?php echo e($unit->name); ?></td>
                         <td><?php echo e($unit->bedroom); ?></td>
                         <td><?php echo e($unit->kitchen); ?></td>
                         <td><?php echo e($unit->baths); ?></td>
                         
+                        <td>
+                            <?php if($unit->status != 'Available'): ?>
+                                <span class="badge bg-danger text-white"><?php echo e($unit->status); ?></span>
+                            <?php else: ?>
+                                <span class="badge bg-success text-white"><?php echo e($unit->status); ?></span>
+                            <?php endif; ?>
+                        </td>
+
+
                         <td><?php echo e($unit->created_at); ?></td>
                         <td><?php echo e($unit->updated_at); ?></td>
 

@@ -134,7 +134,7 @@ class PropertyController extends Controller
     public function show(Property $property)
     {
         if (\Auth::user()->can('show property')) {
-            $units = PropertyUnit::where('property_id', $property->id)->orderBy('id', 'desc')->with(['properties'])->get();
+            $units = PropertyUnit::where('property_id', $property->id)->orderBy('id', 'desc')->with(['property'])->get();
             return view('property.show', compact('property', 'units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -248,7 +248,22 @@ class PropertyController extends Controller
     public function destroy(Property $property)
     {
         if (\Auth::user()->can('delete property')) {
-            $property->delete();
+            try {
+                // Check if the unit is already deactivated to avoid unnecessary database writes.
+                if ($property->status === 'deactivated') {
+                    return redirect()->back()->with('warning', 'This property is already deactivated.');
+                }
+
+                // Set the status to 'deactivated' instead of deleting the record.
+                $property->status = 'deactivated';
+                $property->save();
+
+                // Redirect back with a success message.
+                return redirect()->back()->with('success', 'property successfully deactivated.');
+            } catch (\Exception $e) {
+                // In case of an unexpected error, redirect back with an error message.
+                return redirect()->back()->with('error', 'Failed to deactivate property. Please try again.');
+            }
             return redirect()->back()->with('success', 'Property successfully deleted.');
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -339,52 +354,49 @@ class PropertyController extends Controller
     public function unitUpdate(Request $request, $property_id, $unit_id)
     {
         if (\Auth::user()->can('edit unit')) {
+            // Validate the incoming request data
             $validator = \Validator::make(
                 $request->all(),
                 [
                     'name' => 'required',
-                    'bedroom' => 'required',
-                    'kitchen' => 'required',
-                    'baths' => 'required',
-                    'rent' => 'required',
-                    'rent_type' => 'required',
-                    'deposit_type' => 'required',
-                    'deposit_amount' => 'required',
-                    'late_fee_type' => 'required',
-                    'late_fee_amount' => 'required',
-                    'incident_receipt_amount' => 'required',
+                    'bedroom' => 'required|integer|min:0',
+                    'kitchen' => 'required|integer|min:0',
+                    'baths' => 'required|integer|min:0',
                 ]
             );
+
+            // If validation fails, redirect back with the first error message
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
                 return redirect()->back()->with('error', $messages->first());
             }
 
+            // Find the existing unit by its ID
             $unit = PropertyUnit::find($unit_id);
+
+            // Check if the unit was found
+            if (!$unit) {
+                return redirect()->back()->with('error', __('Unit not found.'));
+            }
+
+            // Update the unit's properties with the new data
             $unit->name = $request->name;
             $unit->bedroom = $request->bedroom;
             $unit->kitchen = $request->kitchen;
             $unit->baths = $request->baths;
-            $unit->rent = $request->rent;
-            $unit->rent_type = $request->rent_type;
-            if ($request->rent_type == 'custom') {
-                $unit->start_date = $request->start_date;
-                $unit->end_date = $request->end_date;
-                $unit->payment_due_date = $request->payment_due_date;
-            } else {
-                $unit->rent_duration = $request->rent_duration;
-            }
-
-            $unit->deposit_type = $request->deposit_type;
-            $unit->deposit_amount = $request->deposit_amount;
-            $unit->late_fee_type = $request->late_fee_type;
-            $unit->late_fee_amount = $request->late_fee_amount;
-            $unit->incident_receipt_amount = $request->incident_receipt_amount;
             $unit->notes = $request->notes;
+            $unit->status = 'Available';
+
+            // Note: The property_id does not need to be updated as the unit belongs to it.
+            // The parent_id also remains the same.
+
+            // Save the changes to the database
             $unit->save();
+
+            // Redirect back with a success message
             return redirect()->back()->with('success', __('Unit successfully updated.'));
         } else {
+            // If the user does not have permission, redirect back with an error
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
@@ -393,8 +405,23 @@ class PropertyController extends Controller
     {
         if (\Auth::user()->can('delete unit')) {
             $unit = PropertyUnit::find($unit_id);
-            $unit->delete();
-            return redirect()->back()->with('success', 'Unit successfully deleted.');
+            try {
+                // Check if the unit is already deactivated to avoid unnecessary database writes.
+                if ($unit->status === 'deactivated') {
+                    return redirect()->back()->with('warning', 'This unit is already deactivated.');
+                }
+
+                // Set the status to 'deactivated' instead of deleting the record.
+                $unit->status = 'deactivated';
+                $unit->save();
+
+                // Redirect back with a success message.
+                return redirect()->back()->with('success', 'unit successfully deactivated.');
+            } catch (\Exception $e) {
+                // In case of an unexpected error, redirect back with an error message.
+                return redirect()->back()->with('error', 'Failed to deactivate unit. Please try again.');
+            }
+            return redirect()->back()->with('success', 'unit successfully deleted.');
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
@@ -402,7 +429,7 @@ class PropertyController extends Controller
 
     public function getPropertyUnit($property_id)
     {
-        $units = PropertyUnit::where('property_id', $property_id)->get()->pluck('name', 'id');
+        $units = PropertyUnit::where('property_id', $property_id)->where('status', 'Available')->get()->pluck('name', 'id');
         return response()->json($units);
     }
 }

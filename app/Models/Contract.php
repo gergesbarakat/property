@@ -12,4 +12,10 @@ class Contract extends Model
         'tenant_id',
         'contract_file',
     ];
+
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class, 'tenant_id');
+    }
 }

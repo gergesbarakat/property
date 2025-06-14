@@ -25,12 +25,18 @@ class Installment extends Model
         'paid_date' => 'date',
     ];
 
-    // Relationships
     public function buyer()
     {
-        return $this->belongsTo(Buyer::class);
+        // ✅ THE FIX: Explicitly define the foreign key 'buyer_id'.
+        // This tells Laravel to use the 'buyer_id' column on this table
+        // to connect to the 'tenants' table.
+        return $this->belongsTo(Tenant::class, 'buyer_id');
     }
 
+    public function unit()
+    {
+        return $this->belongsTo(PropertyUnit::class, 'unit_id');
+    }
     // Scopes
     public function scopePaid($query)
     {

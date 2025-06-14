@@ -115,7 +115,7 @@ function select2() {
 }
 
 
-const table = $('#invoice-table');
+const table = $('table');
 
 if (!table.length) {
     console.warn("Table not found.");
