@@ -14,7 +14,7 @@ class PropertyController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage property')) {
-            $properties = Property::where('parent_id', parentId())->where('is_active', 1)->get();
+            $properties = Property::where('is_active', 1)->get();
             return view('property.index', compact('properties'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -274,7 +274,7 @@ class PropertyController extends Controller
     public function units()
     {
         if (\Auth::user()->can('manage unit')) {
-            $units = PropertyUnit::where('parent_id', parentId())->with(['properties'])->get();
+            $units = PropertyUnit::with(['properties'])->get();
             return view('unit.index', compact('units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));

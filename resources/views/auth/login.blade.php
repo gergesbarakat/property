@@ -83,13 +83,13 @@
             <button class="btn btn-primary" type="submit"><i class="fa fa-sign-in"></i> {{__('Login')}}</button>
         </div>
         {{Form::close()}}
-        <div class="auth-footer">
+        {{-- <div class="auth-footer">
             @if($registerPage=='on')
                 <h6 class="text-center">{{__("Don't Have An Account?")}} <a class="text-primary"
                                                         href="{{ route('register') }}">{{__('Create an account')}}</a>
                 </h6>
             @endif
-        </div>
+        </div> --}}
 
 
     </div>

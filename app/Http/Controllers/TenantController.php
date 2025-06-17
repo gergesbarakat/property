@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use ZipArchive;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 use App\Models\Property;
 use App\Models\TenantDocument;
 use App\Models\User;
@@ -9,7 +13,6 @@ use App\Models\Tenant;
 use App\Models\Installment;
 use App\Models\PropertyUnit;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -126,25 +129,24 @@ class TenantController extends Controller
                 'contracts.*' => 'file|mimes:pdf,doc,docx,jpg,png|max:5120',
             ]);
         } catch (ValidationException $e) {
-            // ✅ FIX: Return the validation error as a plain string instead of a JSON object.
-            return response()->json([
-                'status' => 'error',
-                'msg'    => $e->validator->errors()->first(), // The main error message string.
-                'errors' => $e->validator->errors()->all() // The full array of errors.
-            ], 422);
+            return response()->json(['status' => 'error', 'msg' => $e->validator->errors()->first()], 422);
         }
 
         DB::beginTransaction();
         try {
-            // ... (file upload and user creation logic is the same) ...
             $profileImagePath = null;
             if ($request->hasFile('profile')) {
-                $file = $request->file('profile');
-                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = $file->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-                $path = $file->storeAs('profiles', $fileNameToStore, 'public');
-                $profileImagePath = $path;
+
+                $tenantFilenameWithExt = $request->profile->getClientOriginalName();
+                $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
+                $tenantExtension = $request->profile->getClientOriginalExtension();
+                $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
+                $dir = storage_path('upload/profiles');
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+                $request->profile->storeAs('upload/profiles/', $tenantFileName);
+                $profileImagePath = $tenantFileName;
             }
 
             $user = User::create([
@@ -169,6 +171,10 @@ class TenantController extends Controller
                 'property' => $validatedData['property'],
                 'unit' => $validatedData['unit'],
                 'purchase_type' => $validatedData['purchase_type'],
+
+                'lease_start_date' => $validatedData['installment_start_date'],
+                'lease_end_date' =>  date('Y-m-d', strtotime("+" . $validatedData['installment_duration'] . " months", strtotime($validatedData['installment_start_date']))),
+
                 'email' => $user->email,
                 'phone' => $user->phone_number,
                 'profile_image' => $user->profile,
@@ -195,7 +201,7 @@ class TenantController extends Controller
                 $totalFee = $balance * ($feePercent / 100);
                 $totalInstallmentAmount = $balance + $totalFee;
                 $amountPerInstallment = ($duration > 0) ? $totalInstallmentAmount / $duration : 0;
-                $currentDueDate = Carbon::parse($validatedData['installment_start_date']);
+                $currentDueDate = \Carbon\Carbon::parse($validatedData['installment_start_date']);
 
                 for ($i = 0; $i < $duration; $i++) {
                     Installment::create([
@@ -216,17 +222,11 @@ class TenantController extends Controller
 
             DB::commit();
 
-            // The success response can remain a JSON object.
-            return response()->json([
-                'status' => 'success',
-                'msg' => __('Tenant successfully created.'),
-            ]);
+            return response()->json(['status' => 'success', 'msg' => __('Tenant successfully created.')]);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Tenant Creation Failed: ' . $e->getMessage());
-
-            // ✅ FIX: Return the general error as a plain string instead of a JSON object.
-            return response($e->getMessage(), 500);
+            return response()->json(['status' => 'error', 'msg' => $e->getMessage()], 500);
         }
     }
 
@@ -350,5 +350,38 @@ class TenantController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
+    }
+
+
+
+
+
+
+
+    public function downloadAllContracts($tenantId)
+    {
+        $tenant = Tenant::with('contracts')->findOrFail($tenantId);
+
+        if ($tenant->contracts->isEmpty()) {
+            return back()->with('error', 'No documents available.');
+        }
+
+        $zipFileName = 'contracts_' . $tenant->id . '.zip';
+        $zipPath = storage_path("app/public/temp/{$zipFileName}");
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($tenant->contracts as $contract) {
+                $filePath = storage_path('app/public/' . $contract->contract_file);
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                }
+            }
+            $zip->close();
+        } else {
+            return back()->with('error', 'Could not create ZIP file.');
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 }

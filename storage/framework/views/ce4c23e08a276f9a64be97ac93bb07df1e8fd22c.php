@@ -77,7 +77,7 @@
                             <h6 class="text-light">
                                 <div class="date-info">
                                     <span class="badge badge-primary" data-bs-toggle="tooltip"
-                                        data-bs-original-title="<?php echo e(__('Type')); ?>"><?php echo e(\App\Models\Property::$Type[$property->type]); ?></span>
+                                        data-bs-original-title="<?php echo e(__('Type')); ?>"><?php echo e($property->type); ?></span>
                                 </div>
                             </h6>
                         </div>
@@ -131,13 +131,12 @@
                         <td><?php echo e($unit->baths); ?></td>
                         
                         <td>
-                            <?php if($unit->status != 'Available'): ?>
+                            <?php if(ucfirst($unit->status) != 'Available'): ?>
                                 <span class="badge bg-danger text-white"><?php echo e($unit->status); ?></span>
                             <?php else: ?>
                                 <span class="badge bg-success text-white"><?php echo e($unit->status); ?></span>
                             <?php endif; ?>
                         </td>
-
 
                         <td><?php echo e($unit->created_at); ?></td>
                         <td><?php echo e($unit->updated_at); ?></td>

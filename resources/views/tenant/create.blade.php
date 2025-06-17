@@ -21,7 +21,7 @@
                         var thumbnailElement = images[i];
                         thumbnailElement.alt = file.name;
                         thumbnailElement.src = dataUrl;
-                    }
+                    }   
                     setTimeout(function() {
                         file.previewElement.classList.add("dz-image-preview");
                     }, 1);
@@ -69,11 +69,40 @@
                     }
                 },
                 error: function(data) {
+                    // Re-enable the submit button so the user can try again.
                     $('#tenant-submit').attr('disabled', false);
-                    if (data.error) {
-                        toastrs('Error', data.error, 'error');
+
+                    // 'data' here is the jqXHR object from the AJAX error.
+                    if (data.responseJSON && data.responseJSON.errors) {
+                        // This is a validation error with multiple messages.
+
+                        // 1. Create an empty array to hold the error strings.
+                        let errorList = [];
+
+                        // 2. Loop through each error and add it to the array.
+                        $.each(data.responseJSON.errors, function(key, value) {
+                            if (value.length > 0) {
+                                errorList.push(value[
+                                    0]); // Add the error message string to our list
+                            }
+                        });
+
+                        // 3. Join the array into a single string with line breaks.
+                        let errorMessage = errorList.join('<br>');
+
+                        // 4. Display the list in a single toastr notification.
+                        toastrs('Error', errorMessage, 'error');
+
+                    } else if (data.responseJSON && data.responseJSON.msg) {
+                        // This handles our custom single-message JSON errors.
+                        toastrs('Error', data.responseJSON.msg, 'error');
                     } else {
-                        toastrs('Error', data, 'error');
+                        // This is a fallback for any other type of error.
+                        let errorMessage = data.responseText || 'An unexpected error occurred.';
+                        if (errorMessage.length > 500) {
+                            errorMessage = 'An unexpected server error occurred.';
+                        }
+                        toastrs('Error', errorMessage, 'error');
                     }
                 },
             });
@@ -396,7 +425,7 @@
                     <h5>{{ __('Documents') }}</h5>
                 </div>
                 <div class="card-body">
-                    <div class="dropzone needsclick" id='demo-upload' action="#">
+                    <div class="dropzone needsclick" id='contracts' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
                             <h3>{{ __('Drop files here or click to upload.') }}</h3>

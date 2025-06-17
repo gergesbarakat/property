@@ -22,7 +22,7 @@
 @endsection
 
 
- 
+
 @section('styles')
     {{-- Custom styles for the modern table UI. --}}
     <style>
@@ -81,7 +81,7 @@
     <div class="card border-0 shadow-sm">
         <div class="table-header  p-20 d-flex justify-content-between align-items-center">
             <h4 class="mb-0">All Buyers</h4>
-         </div>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table modern-table" id="invoice-table">
@@ -92,6 +92,14 @@
                             <th>Unit</th>
                             <th>Contract Start</th>
                             <th>Contract End</th>
+                            <th>purchase_type</th>
+
+                            <th>created_at</th>
+
+                            <th>updated_at</th>
+
+
+
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -134,6 +142,9 @@
                                         -
                                     @endif
                                 </td>
+                                <td>{{ $tenant->purchase_type }}</td>
+                                <td>{{ $tenant->created_at }}</td>
+                                <td>{{ $tenant->updated_at }}</td>
                                 <td class="text-center action-buttons">
                                     {{-- ✅ Buttons updated with distinct colors --}}
                                     <a href="{{ route('tenant.show', $tenant->id) }}"
@@ -165,4 +176,3 @@
         </div>
     </div>
 @endsection
-

@@ -147,24 +147,36 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-lg-3 mb-4">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h6>{{ __('Lease Start Date') }}</h6>
-                                    <p>{{ $tenant->installments->isNotEmpty() ? \Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('M j, Y') : '-' }}
-                                    </p>
+                        @if (count($tenant->installments) > 0)
+                            <div class="col-md-4 col-lg-3 mb-4">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h6>{{ __('Lease Start Date') }}</h6>
+                                        <p>{{ $tenant->installments->isNotEmpty() ? \Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('M j, Y') : '-' }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3 mb-4">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h6>{{ __('Lease End Date') }}</h6>
-                                    <p>{{ $tenant->installments->isNotEmpty() ? \Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('M j, Y') : '-' }}
-                                    </p>
+                            <div class="col-md-4 col-lg-3 mb-4">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h6>{{ __('Lease End Date') }}</h6>
+                                        <p>{{ $tenant->installments->isNotEmpty() ? \Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('M j, Y') : '-' }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-md-4 col-lg-3 mb-4">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h6>{{ __('Created At') }}</h6>
+                                        <p>{{ $tenant->created_at }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-md-12 mb-4">
                             <div class="media">
                                 <div class="media-body">
@@ -178,17 +190,29 @@
                                 <div class="media">
                                     <div class="media-body">
                                         <h6>{{ __('Documents') }}</h6>
+
+                                        {{-- 🔽 Add download all button --}}
+                                        <a href="{{ route('tenants.contracts.download', $tenant->id) }}"
+                                            class="btn btn-sm btn-primary mb-2" target="_blank">
+                                            <i data-feather="download-cloud" class="me-1"
+                                                style="width:16px; height:16px;"></i>
+                                            Download All Contracts
+                                        </a>
+
+                                        {{-- Existing per-document download buttons --}}
                                         @foreach ($tenant->contracts as $contract)
                                             <a href="{{ Storage::url($contract->contract_file) }}"
-                                                class="btn btn-sm btn-outline-secondary me-2" target="_blank"><i
-                                                    data-feather="download" class="me-1"
-                                                    style="width:16px; height:16px;"></i> Document
-                                                {{ $loop->iteration }}</a>
+                                                class="btn btn-sm btn-outline-secondary me-2" target="_blank">
+                                                <i data-feather="download" class="me-1"
+                                                    style="width:16px; height:16px;"></i>
+                                                Document {{ $loop->iteration }}
+                                            </a>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
                         @endif
+                        <!-- #region -->
                     </div>
                 </div>
             </div>
@@ -196,65 +220,69 @@
     </div>
 
     {{-- Installment Plan Card --}}
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4>{{ __('Installment Plan') }}</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table" id="installments-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Due Date</th>
-                                    <th>Amount</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($tenant->installments as $installment)
+    @if (count($tenant->installments) > 0)
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>{{ __('Installment Plan') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="installments-table">
+                                <thead>
                                     <tr>
-                                        <td>{{ $installment->installment_number }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('F j, Y') }}</td>
-                                        <td>${{ number_format($installment->amount, 2) }}</td>
-                                        <td class="text-center">
-                                            @if ($installment->status == 'paid')
-                                                <span class="badge bg-success text-white">Paid</span>
-                                            @elseif($installment->status == 'pending')
-                                            <span class="badge bg-warning text-dark">Pending</span>@else<span
-                                                    class="badge bg-danger text-white">Overdue</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            @if ($installment->status != 'paid')
-                                                <form action="{{ route('installments.updateStatus', $installment->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-outline-success">Mark as
-                                                        Paid</button>
-                                                </form>
-                                            @else
-                                                <span>-</span>
-                                            @endif
-                                        </td>
+                                        <th>#</th>
+                                        <th>Due Date</th>
+                                        <th>Amount</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4">
-                                            <p class="text-muted mb-0">No installment plan found.</p>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse($tenant->installments as $installment)
+                                        <tr>
+                                            <td>{{ $installment->installment_number }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('F j, Y') }}</td>
+                                            <td>${{ number_format($installment->amount, 2) }}</td>
+                                            <td class="text-center">
+                                                @if ($installment->status == 'paid')
+                                                    <span class="badge bg-success text-white">Paid</span>
+                                                @elseif($installment->status == 'pending')
+                                                <span class="badge bg-warning text-dark">Pending</span>@else<span
+                                                        class="badge bg-danger text-white">Overdue</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($installment->status != 'paid')
+                                                    <form
+                                                        action="{{ route('installments.updateStatus', $installment->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-outline-success">Mark
+                                                            as
+                                                            Paid</button>
+                                                    </form>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4">
+                                                <p class="text-muted mb-0">No installment plan found.</p>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 @endsection
 
 @push('scripts')

@@ -22,7 +22,7 @@
 <?php $__env->stopSection(); ?>
 
 
- 
+
 <?php $__env->startSection('styles'); ?>
     
     <style>
@@ -81,7 +81,7 @@
     <div class="card border-0 shadow-sm">
         <div class="table-header  p-20 d-flex justify-content-between align-items-center">
             <h4 class="mb-0">All Buyers</h4>
-         </div>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table modern-table" id="invoice-table">
@@ -92,6 +92,14 @@
                             <th>Unit</th>
                             <th>Contract Start</th>
                             <th>Contract End</th>
+                            <th>purchase_type</th>
+
+                            <th>created_at</th>
+
+                            <th>updated_at</th>
+
+
+
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -137,6 +145,9 @@
                                         -
                                     <?php endif; ?>
                                 </td>
+                                <td><?php echo e($tenant->purchase_type); ?></td>
+                                <td><?php echo e($tenant->created_at); ?></td>
+                                <td><?php echo e($tenant->updated_at); ?></td>
                                 <td class="text-center action-buttons">
                                     
                                     <a href="<?php echo e(route('tenant.show', $tenant->id)); ?>"
@@ -168,6 +179,5 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
-
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH O:\JOWEB\property\resources\views/tenant/index.blade.php ENDPATH**/ ?>

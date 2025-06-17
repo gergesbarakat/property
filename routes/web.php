@@ -20,7 +20,7 @@ use App\Http\Controllers\MaintenanceRequestController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\InvoicePaymentController;
 use App\Http\Controllers\InstallmentController;
-
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +35,7 @@ use App\Http\Controllers\InstallmentController;
 
 require __DIR__ . '/auth.php';
 
-Route::get('/', [HomeController::class, 'index'])->middleware(
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->middleware(
     [
 
         'XSS',
@@ -205,6 +205,7 @@ Route::group(
     ],
     function () {
         Route::post('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
+        Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadAllContracts'])->name('tenants.contracts.download');
 
         Route::resource('property', PropertyController::class);
         Route::get('property/{pid}/unit/create', [PropertyController::class, 'unitCreate'])->name('unit.create');

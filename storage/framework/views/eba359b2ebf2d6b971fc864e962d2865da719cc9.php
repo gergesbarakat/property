@@ -1,5 +1,5 @@
 <?php $__env->startSection('page-title'); ?>
-    <?php echo e(__('Property Create')); ?>
+    <?php echo e(__('Property Edit')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startPush('script-page'); ?>
@@ -29,9 +29,9 @@
             }
 
         });
-        $('#property-submit').on('click', function () {
+        $('#property-update').on('click', function () {
             "use strict";
-            $('#property-submit').attr('disabled', true);
+            $('#property-update').attr('disabled', true);
             var fd = new FormData();
             var file = document.getElementById('thumbnail').files[0];
 
@@ -40,13 +40,18 @@
                 fd.append('property_images[' + key + ']', $('#demo-upload')[0].dropzone
                     .getAcceptedFiles()[key]); // attach dropzone image element
             });
-            fd.append('thumbnail', file);
+            if(file==undefined){
+                fd.append('thumbnail', '');
+            }else{
+                fd.append('thumbnail', file);
+            }
+
             var other_data = $('#property_form').serializeArray();
             $.each(other_data, function (key, input) {
                 fd.append(input.name, input.value);
             });
             $.ajax({
-                url: "<?php echo e(route('property.store')); ?>",
+                url: "<?php echo e(route('property.update',$property->id)); ?>",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -56,8 +61,8 @@
                 type: 'POST',
                 success: function (data) {
                     if (data.status == "success") {
-                        $('#property-submit').attr('disabled', true);
-                        toastrs(data.status, data.msg, data.status);
+                        $('#property-update').attr('disabled', true);
+                        toastrs('success', data.msg, 'success');
                         var url = '<?php echo e(route("property.show", ":id")); ?>';
                         url = url.replace(':id', data.id);
                         setTimeout(() => {
@@ -66,11 +71,11 @@
 
                     } else {
                         toastrs('Error', data.msg, 'error');
-                        $('#property-submit').attr('disabled', false);
+                        $('#property-update').attr('disabled', false);
                     }
                 },
                 error: function (data) {
-                    $('#property-submit').attr('disabled', false);
+                    $('#property-update').attr('disabled', false);
                     if (data.error) {
                         toastrs('Error', data.error, 'error');
                     } else {
@@ -91,12 +96,12 @@
             <a href="<?php echo e(route('property.index')); ?>"><?php echo e(__('Property')); ?></a>
         </li>
         <li class="breadcrumb-item active">
-            <a href="#"><?php echo e(__('Create')); ?></a>
+            <a href="#"><?php echo e(__('Edit')); ?></a>
         </li>
     </ul>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
-    <?php echo e(Form::open(array('url'=>'property','method'=>'post', 'enctype' => "multipart/form-data","id"=>"property_form"))); ?>
+    <?php echo e(Form::model($property, array('route' => array('property.update', $property->id), 'method' => 'PUT','enctype' => "multipart/form-data","id"=>"property_form"))); ?>
 
     <div class="row">
         <div class="col-lg-6">
@@ -199,7 +204,7 @@
         </div>
         <div class="col-lg-12">
             <div class="group-button text-end">
-                <?php echo e(Form::submit(__('Create'),array('class'=>'btn btn-primary btn-rounded','id'=>'property-submit'))); ?>
+                <?php echo e(Form::submit(__('Update'),array('class'=>'btn btn-primary btn-rounded','id'=>'property-update'))); ?>
 
             </div>
         </div>
@@ -209,4 +214,6 @@
 <?php $__env->stopSection(); ?>
 
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH O:\JOWEB\property\resources\views/property/create.blade.php ENDPATH**/ ?>
+
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH O:\JOWEB\property\resources\views/property/edit.blade.php ENDPATH**/ ?>
