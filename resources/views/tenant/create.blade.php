@@ -69,11 +69,40 @@
                     }
                 },
                 error: function(data) {
+                    // Re-enable the submit button so the user can try again.
                     $('#tenant-submit').attr('disabled', false);
-                    if (data.error) {
-                        toastrs('Error', data.error, 'error');
+
+                    // 'data' here is the jqXHR object from the AJAX error.
+                    if (data.responseJSON && data.responseJSON.errors) {
+                        // This is a validation error with multiple messages.
+
+                        // 1. Create an empty array to hold the error strings.
+                        let errorList = [];
+
+                        // 2. Loop through each error and add it to the array.
+                        $.each(data.responseJSON.errors, function(key, value) {
+                            if (value.length > 0) {
+                                errorList.push(value[
+                                    0]); // Add the error message string to our list
+                            }
+                        });
+
+                        // 3. Join the array into a single string with line breaks.
+                        let errorMessage = errorList.join('<br>');
+
+                        // 4. Display the list in a single toastr notification.
+                        toastrs('Error', errorMessage, 'error');
+
+                    } else if (data.responseJSON && data.responseJSON.msg) {
+                        // This handles our custom single-message JSON errors.
+                        toastrs('Error', data.responseJSON.msg, 'error');
                     } else {
-                        toastrs('Error', data, 'error');
+                        // This is a fallback for any other type of error.
+                        let errorMessage = data.responseText || 'An unexpected error occurred.';
+                        if (errorMessage.length > 500) {
+                            errorMessage = 'An unexpected server error occurred.';
+                        }
+                        toastrs('Error', errorMessage, 'error');
                     }
                 },
             });
@@ -161,11 +190,12 @@
         }
 
         // Trigger calculation on changes
-         $('#unit_price, #deposit, #installment_duration, #installment_fee_percent, #purchase_type,#installment_start_date,  #installment_type').on('change keyup',
-            function() {
-                calculateInstallmentAmount();
-                calculateEndDate();
-            });
+        $('#unit_price, #deposit, #installment_duration, #installment_fee_percent, #purchase_type,#installment_start_date,  #installment_type')
+            .on('change keyup',
+                function() {
+                    calculateInstallmentAmount();
+                    calculateEndDate();
+                });
         // Also call once on page load in case of old values
         $(document).ready(function() {
             $('#purchase_type').trigger('change');
@@ -332,6 +362,10 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group col-lg-6 col-md-6    ">
+                                {{ Form::label('unit_price', __('Unit Price'), ['class' => 'form-label']) }}
+                                {{ Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01']) }}
+                            </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('purchase_type', __('Purchase Type'), ['class' => 'form-label']) }}
                                 {{ Form::select('purchase_type', ['full' => 'Full Payment', 'installment' => 'Installment'], null, ['class' => 'form-control', 'id' => 'purchase_type']) }}
@@ -346,6 +380,7 @@
                                 {{ Form::label('installment_type', __('Installment Type'), ['class' => 'form-label']) }}
                                 {{ Form::select('installment_type', ['monthly' => __('Monthly'), 'yearly' => __('Yearly')], null, ['class' => 'form-control', 'id' => 'installment_type']) }}
                             </div>
+
 
                             {{-- Installment Duration (number input) --}}
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
@@ -367,10 +402,6 @@
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_amount', __('Installment Amount'), ['class' => 'form-label']) }}
                                 {{ Form::number('installment_amount', null, ['class' => 'form-control', 'readonly']) }}
-                            </div>
-                            <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('unit_price', __('Unit Price'), ['class' => 'form-label']) }}
-                                {{ Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01']) }}
                             </div>
 
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
@@ -394,7 +425,7 @@
                     <h5>{{ __('Documents') }}</h5>
                 </div>
                 <div class="card-body">
-                    <div class="dropzone needsclick" id='demo-upload' action="#">
+                    <div class="dropzone needsclick" id='contracts' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
                             <h3>{{ __('Drop files here or click to upload.') }}</h3>

@@ -8,12 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class PropertyUnit extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'property_units';
+
     protected $fillable = [
         'name',
         'bedroom',
         'property_id',
         'baths',
         'kitchen',
+        'status',
+
         'rent',
         'deposit_amount',
         'deposit_type',
@@ -29,22 +39,29 @@ class PropertyUnit extends Model
         'notes',
     ];
 
-    public static $Types=[
-        'fixed'=> 'Fixed',
-        'percentage'=>'Percentage',
+    public static $Types = [
+        'fixed' => 'Fixed',
+        'percentage' => 'Percentage',
     ];
-    public static $rentTypes=[
-        'monthly'=> 'Monthly',
-        'yearly'=>'Yearly',
-        'custom'=>'Custom',
+    public static $rentTypes = [
+        'monthly' => 'Monthly',
+        'yearly' => 'Yearly',
+        'custom' => 'Custom',
     ];
     public function properties()
     {
-        return $this->hasOne('App\Models\Property','id','property_id');
+        // This defines the relationship: A Unit "Belongs To" a Property.
+        // It assumes the foreign key in your 'property_units' table is 'property_id'.
+        return $this->belongsTo(Property::class, 'property_id');
     }
-
+    public function property()
+    {
+        // This defines the relationship: A Unit "Belongs To" a Property.
+        // It assumes the foreign key in your 'property_units' table is 'property_id'.
+        return $this->belongsTo(Property::class, 'property_id');
+    }
     public function tenants()
     {
-        return Tenant::where('unit',$this->id)->first();
+        return Tenant::where('unit', $this->id)->first();
     }
 }

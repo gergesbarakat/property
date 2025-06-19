@@ -30,6 +30,8 @@
                                 <th>{{ __('Bedroom') }}</th>
                                 <th>{{ __('Kitchen') }}</th>
                                 <th>{{ __('Bath') }}</th>
+                                <th>{{ __('status') }}</th>
+
                                 {{-- <th>{{ __('Rent Type') }}</th>
                                 <th>{{ __('Rent') }}</th> --}}
                                 {{-- <th>{{ __('Start Date') }}</th>
@@ -58,6 +60,13 @@
                                     <td>{{ $unit->bedroom }}</td>
                                     <td>{{ $unit->kitchen }}</td>
                                     <td>{{ $unit->baths }}</td>
+                                    <td>
+                                        @if (ucfirst($unit->status) != 'Available')
+                                            <span class="badge bg-danger text-white">{{ $unit->status }}</span>
+                                        @else
+                                            <span class="badge bg-success text-white">{{ $unit->status }}</span>
+                                        @endif
+                                    </td>
                                     {{-- <td>{{ $unit->rent_type }}</td>
                                 <td>{{ priceFormat($unit->rent) }}</td>
                                 <td>{{ $unit->rent_type === 'custom' ? dateFormat($unit->start_date) : '-' }}</td>

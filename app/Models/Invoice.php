@@ -26,11 +26,25 @@ class Invoice extends Model
         'paid' => 'Paid',
         'partial_paid' => 'Partial Paid',
     ];
+    public function property()
+    {
+        return $this->belongsTo(Property::class, 'property_id');
+    }
+
+    /**
+     * Get the property unit associated with the invoice.
+     * ✅ ADD THIS FUNCTION
+     */
+    public function unit()
+    {
+        return $this->belongsTo(PropertyUnit::class, 'unit_id');
+    }
 
     public function properties()
     {
         return $this->hasOne('App\Models\Property', 'id', 'property_id');
     }
+
 
     public function units()
     {
@@ -72,12 +86,17 @@ class Invoice extends Model
         $invoice->save();
         return $invoice;
     }
+    public function items()
+    {
+        // This assumes 'invoice_id' in 'invoice_items' table links to 'id' in 'invoices' table.
+        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
+    }
 
     public static function addPayment($data)
     {
         $payment = new InvoicePayment();
         $payment->invoice_id = $data['invoice_id'];
-        $payment->transaction_id =$data['transaction_id'];
+        $payment->transaction_id = $data['transaction_id'];
         $payment->payment_type = $data['payment_type'];
         $payment->amount = $data['amount'];
         $payment->payment_date = date('Y-m-d');

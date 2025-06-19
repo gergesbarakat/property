@@ -56,7 +56,7 @@ $(document).on('click', '.fc-day-grid-event', function(e) {
     $.ajax({
         url: modalUrl,
         success: function(result) {
-            $('#customModal .modal-body').html(result);
+            $('#customModal .modal-body').html(JSON.parse(result));
             $("#customModal").modal('show');
         },
         error: function(result) {}
@@ -115,7 +115,7 @@ function select2() {
 }
 
 
-const table = $('#invoice-table');
+const table = $('table');
 
 if (!table.length) {
     console.warn("Table not found.");

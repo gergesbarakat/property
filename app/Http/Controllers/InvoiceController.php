@@ -13,21 +13,63 @@ use Illuminate\Http\Request;
 class InvoiceController extends Controller
 {
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
+        // 1. Check for the 'manage invoice' permission first.
         if (\Auth::user()->can('manage invoice')) {
+
+            // 2. Check if the authenticated user is a 'tenant'.
             if (\Auth::user()->type == 'tenant') {
+                // If they are a tenant, find their specific tenant profile.
                 $tenant = Tenant::where('user_id', \Auth::user()->id)->first();
-                $invoices = Invoice::where('property_id', $tenant->property)->where('unit_id', $tenant->unit)->where('parent_id', parentId())->get();
+
+                // Safety check: if for some reason a user has no tenant profile, return an empty list.
+                if (!$tenant) {
+                    $invoices = collect(); // Return an empty collection.
+                } else {
+                    // Fetch only the invoices matching the tenant's specific property and unit.
+                    // Eager loading `property` and `unit` is crucial to prevent view errors.
+                    $invoices = Invoice::with(['property', 'unit'])
+                        ->where('property_id', $tenant->property)
+                        ->where('unit_id', $tenant->unit)
+                        // Assuming parentId() is a helper function in your project.
+                        ->where('parent_id', parentId())
+                        ->latest()
+                        ->get();
+                }
             } else {
-                $invoices = Invoice::where('parent_id', parentId())->get();
+                // If the user is an admin or another type, fetch all invoices for their account.
+                $invoices = Invoice::with(['property', 'unit'])
+                    ->latest()
+                    ->get();
             }
 
+            // 3. Return the view with the correct set of invoices.
             return view('invoice.index', compact('invoices'));
         } else {
+            // If the user does not have permission, redirect back with an error.
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public function create()
@@ -50,7 +92,8 @@ class InvoiceController extends Controller
     {
         if (\Auth::user()->can('create invoice')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'property_id' => 'required',
                     'unit_id' => 'required',
                     'invoice_month' => 'required',
@@ -97,7 +140,7 @@ class InvoiceController extends Controller
             $tenant = Tenant::where('property', $invoice->property_id)->where('unit', $invoice->unit_id)->first();
 
             $invoicePaymentSettings = invoicePaymentSettings($invoice->parent_id);
-            return view('invoice.show', compact('invoiceNumber', 'invoice', 'tenant','invoicePaymentSettings'));
+            return view('invoice.show', compact('invoiceNumber', 'invoice', 'tenant', 'invoicePaymentSettings'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
@@ -124,7 +167,8 @@ class InvoiceController extends Controller
     {
         if (\Auth::user()->can('edit invoice')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'property_id' => 'required',
                     'unit_id' => 'required',
                     'invoice_month' => 'required',
@@ -204,14 +248,15 @@ class InvoiceController extends Controller
     public function invoicePaymentCreate($invoice_id)
     {
         $invoice = Invoice::find($invoice_id);
-        return view( 'invoice.payment' , compact('invoice_id', 'invoice'));
+        return view('invoice.payment', compact('invoice_id', 'invoice'));
     }
 
     public function invoicePaymentStore(Request $request, $invoice_id)
     {
         if (\Auth::user()->can('create invoice payment')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'payment_date' => 'required',
                     'amount' => 'required',
                 ]
@@ -232,7 +277,6 @@ class InvoiceController extends Controller
                     mkdir($dir, 0777, true);
                 }
                 $request->file('receipt')->storeAs('upload/receipt/', $receiptFileName);
-
             }
 
             $payment = new InvoicePayment();
@@ -256,7 +300,6 @@ class InvoiceController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
-
     }
 
     public function invoicePaymentDestroy($invoice_id, $id)
@@ -279,5 +322,4 @@ class InvoiceController extends Controller
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-
 }
