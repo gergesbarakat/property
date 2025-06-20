@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Models\Invoice;
+use App\Models\InvoicePayment;
+use App\Models\InvoiceItem;
 
 use App\Models\Property;
 use App\Models\TenantDocument;
@@ -58,7 +61,7 @@ class TenantController extends Controller
         if (\Auth::user()->can('create tenant')) {
             // 1. Fetch all properties for the property dropdown.
             // ✅ CORRECTED: Changed variable name to $property to match the view.
-            $property = Property::where('parent_id', parentId())->get()->pluck('name', 'id');
+            $property = Property::get()->pluck('name', 'id');
             $property->prepend(__('Select Property'), '');
 
             // 2. Fetch all units where the status is NOT 'sold'.
@@ -194,7 +197,44 @@ class TenantController extends Controller
             $unit->status = 'sold';
             $unit->save();
 
-            if ($validatedData['purchase_type'] === 'installment') {
+            if ($validatedData['purchase_type'] === 'full') {
+                // Create single installment for full payment
+                $installment = Installment::create([
+                    'buyer_id' => $tenant->id,
+                    'installment_number' => 1,
+                    'due_date' => $validatedData['payment_date'],
+                    'amount' => $validatedData['unit_price'],
+                    'status' => 'paid',
+                    'paid_date' => $validatedData['payment_date'],
+                    'notes' => 'Full payment for unit purchase',
+                ]);
+
+                // Generate unique invoice ID
+                $invoiceId = 'INV-' . date('Ymd') . '-' . str_pad($tenant->id, 4, '0', STR_PAD_LEFT);
+
+                // Create invoice for full payment
+                $invoice = Invoice::create([
+                    'invoice_id' => $invoiceId,
+                    'property_id' => $validatedData['property'],
+                    'unit_id' => $validatedData['unit'],
+                    'invoice_month' => date('Y-m-01', strtotime($validatedData['payment_date'])),
+                    'end_date' => $validatedData['payment_date'],
+                    'status' => 'paid',
+                    'notes' => 'Full payment invoice for unit purchase',
+                    'parent_id' => 0,
+                ]);
+
+                // Create invoice payment record
+                InvoicePayment::create([
+                    'invoice_id' => $invoice->id,
+                    'transaction_id' => 'TXN-' . time() . '-' . $tenant->id,
+                    'payment_type' => 'full_payment',
+                    'amount' => $validatedData['unit_price'],
+                    'payment_date' => $validatedData['payment_date'],
+                    'parent_id' => 0,
+                    'notes' => 'Full payment for unit purchase',
+                ]);
+            } elseif ($validatedData['purchase_type'] === 'installment') {
                 $duration = (int) $validatedData['installment_duration'];
                 $feePercent = (float) $request->installment_fee_percent ?? 0;
                 $balance = $validatedData['unit_price'] - $validatedData['deposit'];
@@ -206,7 +246,6 @@ class TenantController extends Controller
                 for ($i = 0; $i < $duration; $i++) {
                     Installment::create([
                         'buyer_id' => $tenant->id,
-                        'unit_id' => $unit->id,
                         'installment_number' => $i + 1,
                         'due_date' => $currentDueDate->format('Y-m-d'),
                         'amount' => round($amountPerInstallment, 2),
@@ -229,7 +268,6 @@ class TenantController extends Controller
             return response()->json(['status' => 'error', 'msg' => $e->getMessage()], 500);
         }
     }
-
 
     public function edit(Tenant $tenant)
     {

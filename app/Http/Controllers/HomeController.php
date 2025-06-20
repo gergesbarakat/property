@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Contact;
 use App\Models\Custom;
 use App\Models\Expense;
@@ -28,41 +29,41 @@ class HomeController extends Controller
                 $result['totalSubscription'] = Subscription::count();
                 $result['totalTransaction'] = PackageTransaction::count();
                 $result['totalIncome'] = PackageTransaction::sum('amount');
-                $result['totalNote'] = NoticeBoard::where('parent_id', parentId())->count();
-                $result['totalContact'] = Contact::where('parent_id', parentId())->count();
+                $result['totalNote'] = NoticeBoard::count();
+                $result['totalContact'] = Contact::count();
 
                 $result['organizationByMonth'] = $this->organizationByMonth();
                 $result['paymentByMonth'] = $this->paymentByMonth();
                 return view('dashboard.super_admin', compact('result'));
             } else {
-                $result['totalNote'] = NoticeBoard::where('parent_id', parentId())->count();
-                $result['totalContact'] = Contact::where('parent_id', parentId())->count();
+                $result['totalNote'] = NoticeBoard::count();
+                $result['totalContact'] = Contact::count();
 
 
                 if (\Auth::user()->type == 'tenant') {
-                    $tenant=Tenant::where('user_id',\Auth::user()->id)->first();
-                    $result['totalInvoice']=Invoice::where('property_id',$tenant->property)->where('unit_id',$tenant->unit)->count();
-                    $result['unit']=PropertyUnit::find($tenant->unit);
+                    $tenant = Tenant::where('user_id', \Auth::user()->id)->first();
+                    $result['totalInvoice'] = Invoice::where('property_id', $tenant->property)->where('unit_id', $tenant->unit)->count();
+                    $result['unit'] = PropertyUnit::find($tenant->unit);
 
-                    return view('dashboard.tenant', compact('result','tenant'));
+                    return view('dashboard.tenant', compact('result', 'tenant'));
                 }
 
                 if (\Auth::user()->type == 'maintainer') {
-                    $maintainer=Maintainer::where('user_id',\Auth::user()->id)->first();
-                    $result['totalRequest']=MaintenanceRequest::where('maintainer_id',\Auth::user()->id)->count();
-                    $result['todayRequest']=MaintenanceRequest::whereDate('request_date', '=', date('Y-m-d'))->where('maintainer_id',\Auth::user()->id)->count();
+                    $maintainer = Maintainer::where('user_id', \Auth::user()->id)->first();
+                    $result['totalRequest'] = MaintenanceRequest::where('maintainer_id', \Auth::user()->id)->count();
+                    $result['todayRequest'] = MaintenanceRequest::whereDate('request_date', '=', date('Y-m-d'))->where('maintainer_id', \Auth::user()->id)->count();
 
-                    return view('dashboard.maintainer', compact('result','maintainer'));
+                    return view('dashboard.maintainer', compact('result', 'maintainer'));
                 }
 
-                $result['totalProperty'] = Property::where('parent_id', parentId())->count();
-                $result['totalUnit'] = PropertyUnit::where('parent_id', parentId())->count();
-                $result['totalIncome'] = InvoicePayment::where('parent_id', parentId())->sum('amount');
-                $result['totalExpense'] = Expense::where('parent_id', parentId())->sum('amount');
-                $result['recentProperty'] = Property::where('parent_id', parentId())->orderby('id', 'desc')->limit(5)->get();
-                $result['recentTenant'] = Tenant::where('parent_id', parentId())->orderby('id', 'desc')->limit(5)->get();
+                $result['totalProperty'] = Property::count();
+                $result['totalUnit'] = PropertyUnit::count();
+                $result['totalIncome'] = InvoicePayment::sum('amount');
+                $result['totalExpense'] = Expense::sum('amount');
+                $result['recentProperty'] = Property::orderby('id', 'desc')->limit(5)->get();
+                $result['recentTenant'] = Tenant::orderby('id', 'desc')->limit(5)->get();
                 $result['incomeExpenseByMonth'] = $this->incomeByMonth();
-                $result['settings']=settings();
+                $result['settings'] = settings();
 
 
                 return view('dashboard.index', compact('result'));
@@ -72,17 +73,15 @@ class HomeController extends Controller
                 header('location:install');
                 die;
             } else {
-                $landingPage=getSettingsValByName('landing_page');
-                if($landingPage=='on'){
-                    $subscriptions=Subscription::get();
-                    return view('layouts.landing',compact('subscriptions'));
-                }else{
+                $landingPage = getSettingsValByName('landing_page');
+                if ($landingPage == 'on') {
+                    $subscriptions = Subscription::get();
+                    return view('layouts.landing', compact('subscriptions'));
+                } else {
                     return redirect()->route('login');
                 }
             }
-
         }
-
     }
 
     public function organizationByMonth()
@@ -104,7 +103,6 @@ class HomeController extends Controller
 
 
         return $organization;
-
     }
 
     public function paymentByMonth()
@@ -125,7 +123,6 @@ class HomeController extends Controller
         }
 
         return $payment;
-
     }
 
     public function incomeByMonth()
@@ -141,13 +138,11 @@ class HomeController extends Controller
 
             $month = date('m', $currentdate);
             $year = date('Y', $currentdate);
-            $payment['income'][] = InvoicePayment::where('parent_id', parentId())->whereMonth('payment_date', $month)->whereYear('payment_date', $year)->sum('amount');
-            $payment['expense'][] = Expense::where('parent_id', parentId())->whereMonth('date', $month)->whereYear('date', $year)->sum('amount');
+            $payment['income'][] = InvoicePayment::whereMonth('payment_date', $month)->whereYear('payment_date', $year)->sum('amount');
+            $payment['expense'][] = Expense::whereMonth('date', $month)->whereYear('date', $year)->sum('amount');
             $currentdate = strtotime('+1 month', $currentdate);
         }
 
         return $payment;
-
     }
-
 }

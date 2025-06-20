@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->foreign('buyer_id')->references('id')->on('buyers')->onDelete('cascade');
+            $table->foreign('buyer_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->index(['buyer_id', 'status']);
         });
     }

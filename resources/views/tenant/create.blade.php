@@ -125,6 +125,7 @@
                 processData: false,
                 type: 'GET',
                 success: function(data) {
+                
                     $('.unit').empty();
                     var unit =
                         `<select class="form-control hidesearch unit" id="unit" name="unit"></select>`;
@@ -425,7 +426,7 @@
                     <h5>{{ __('Documents') }}</h5>
                 </div>
                 <div class="card-body">
-                    <div class="dropzone needsclick" id='contracts' action="#">
+                    <div class="dropzone needsclick" id='demo-upload' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
                             <h3>{{ __('Drop files here or click to upload.') }}</h3>
