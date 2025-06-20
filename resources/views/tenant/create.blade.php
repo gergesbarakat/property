@@ -21,7 +21,7 @@
                         var thumbnailElement = images[i];
                         thumbnailElement.alt = file.name;
                         thumbnailElement.src = dataUrl;
-                    }
+                    }   
                     setTimeout(function() {
                         file.previewElement.classList.add("dz-image-preview");
                     }, 1);
@@ -426,7 +426,7 @@
                     <h5>{{ __('Documents') }}</h5>
                 </div>
                 <div class="card-body">
-                    <div class="dropzone needsclick" id='demo-upload' action="#">
+                    <div class="dropzone needsclick" id='contracts' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
                             <h3>{{ __('Drop files here or click to upload.') }}</h3>
