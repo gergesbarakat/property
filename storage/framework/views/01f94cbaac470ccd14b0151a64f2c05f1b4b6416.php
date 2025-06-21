@@ -111,13 +111,7 @@ unset($__errorArgs, $__bag); ?>
         </div>
         <?php echo e(Form::close()); ?>
 
-        <div class="auth-footer">
-            <?php if($registerPage=='on'): ?>
-                <h6 class="text-center"><?php echo e(__("Don't Have An Account?")); ?> <a class="text-primary"
-                                                        href="<?php echo e(route('register')); ?>"><?php echo e(__('Create an account')); ?></a>
-                </h6>
-            <?php endif; ?>
-        </div>
+        
 
 
     </div>

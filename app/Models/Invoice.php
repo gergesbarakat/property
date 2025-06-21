@@ -45,6 +45,11 @@ class Invoice extends Model
         return $this->hasOne('App\Models\Property', 'id', 'property_id');
     }
 
+    /**
+     * Get the remaining due amount for this invoice.
+     *
+     * @return float
+     */
 
     public function units()
     {
@@ -55,29 +60,60 @@ class Invoice extends Model
     {
         return $this->hasMany('App\Models\InvoiceItem', 'invoice_id', 'id');
     }
-
     public function payments()
     {
-        return $this->hasMany('App\Models\InvoicePayment', 'invoice_id', 'id');
+        return $this->hasMany(InvoicePayment::class); // Or whatever your payment model is named
     }
 
-    public function getInvoiceSubTotalAmount()
+    /**
+     * Get the total amount paid for this invoice.
+     *
+     * @return float
+     */
+    public function getInvoicePaidAmount(): float
     {
-        $invoiceSubTotal = 0;
-        foreach ($this->types as $type) {
-            $invoiceSubTotal += $type->amount;
-        }
-        return $invoiceSubTotal;
+        // Sum the 'amount' column from all related payments
+        return $this->payments->sum('amount');
     }
 
-    public function getInvoiceDueAmount()
+    /**
+     * Get the total amount of the invoice.
+     * (You likely already have this or a similar method)
+     * @return float
+     */
+    public function getInvoiceTotalAmount(): float
     {
-        $invoiceDue = 0;
-        foreach ($this->payments as $payment) {
-            $invoiceDue += $payment->amount;
-        }
-        return $this->getInvoiceSubTotalAmount() - $invoiceDue;
+        // This method would calculate the total amount of the invoice
+        // based on its line items or other charges.
+        // Example:
+        return $this->items->sum('total_price');
+        // // Or, if it's stored directly:
+        // return (float) $this->total_amount; // Assuming you have a 'total_amount' column
     }
+
+    /**
+     * Get the remaining due amount for this invoice.
+     *
+     * @return float
+     */
+    public function getInvoiceDueAmount(): float
+    {
+        return $this->getInvoiceTotalAmount() - $this->getInvoicePaidAmount();
+    }
+
+    /**
+     * Get the sub-total amount of the invoice (before payments or other deductions).
+     * (You likely already have this or a similar method)
+     * @return float
+     */
+    public function getInvoiceSubTotalAmount(): float
+    {
+        // This would sum up the amounts of the line items that make up the invoice.
+        // Example:
+        // return $this->types->sum('amount'); // If 'types' is your relationship for invoice line items
+        return (float) $this->sub_total; // Assuming you have a 'sub_total' column
+    }
+
 
     public static function statusChange($invoice_id, $status)
     {

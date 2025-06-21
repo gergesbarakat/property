@@ -82,6 +82,123 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
 
+    
+    <style>
+        .table-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #e9ecef;
+        }
 
+        .modern-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .modern-table thead th {
+            font-weight: 600;
+            background-color: #fff;
+            border-bottom: 2px solid #dee2e6;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+        }
+
+        .modern-table td,
+        .modern-table th {
+            vertical-align: middle !important;
+            padding: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .modern-table tbody tr {
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .modern-table .avatar {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+        }
+
+        /* ✅ CSS for ghost buttons has been removed to allow for colors. */
+        .modern-table .action-buttons .btn {
+            width: 32px;
+            height: 32px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 3px;
+        }
+
+        /* Optional: Give a light background and padding to the entire filter section */
+        #filters {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Style the form labels */
+        #filters .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Enhance form selects */
+        #filters .form-select-sm {
+            border-radius: 0.375rem;
+            border-color: #ced4da;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        #filters .form-select-sm:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25);
+        }
+
+        /* Responsive spacing between filters */
+        @media (max-width: 768px) {
+            #filters .col-md-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .dt-buttons {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* Style for each button */
+        .dt-button {
+            background-color: #0d6efd !important;
+            /* Bootstrap primary */
+            color: #fff !important;
+            border: none !important;
+            border-radius: 0.375rem;
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+            transition: background-color 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Hover effect */
+        .dt-button:hover {
+            background-color: #0b5ed7 !important;
+        }
+
+        /* Active/focus style */
+        .dt-button:active,
+        .dt-button:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.3) !important;
+        }
+    </style>
 </head>
 <?php /**PATH E:\JOWEB\property\resources\views/admin/head.blade.php ENDPATH**/ ?>

@@ -10,6 +10,8 @@
 <script src="{{ asset('assets/js/jquery.js') }}"></script>
 <!-- Theme Customizer-->
 <script src="{{ asset('assets/js/layout-storage.js') }}"></script>
+
+
 @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'owner')
     <script>
         var public_path = '{{ asset('assets/css/') }}';
@@ -88,6 +90,14 @@
             '');
     </script>
 @endif
+<!-- Datatable-->
+<script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script src="{{ asset('assets/js/jquery.js') }}"></script>
+
 <script src="{{ asset('assets/js/customizer.js') }}"></script>
 <!-- Feather icons js-->
 <script src="{{ asset('assets/js/icons/feather-icon/feather.js') }}"></script>
@@ -97,8 +107,28 @@
 <script src="{{ asset('assets/js/vendors/simplebar.js') }}"></script>
 <!-- apex chart-->
 <script src="{{ asset('assets/js/vendors/chart/apexcharts.js') }}"></script>
+<script src="{{ asset('assets/js/vendors/datatable/datatables.js') }}"></script>
 
+@if (!request()->routeIs('invoice.show'))
+    <script>
+        const table = $('table');
 
+        if (!table.length) {
+            console.warn("Table not found.");
+        }
+
+        let dataTable;
+
+        dataTable = table.DataTable({
+            "scrollX": true,
+            stateSave: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'print', 'excel', 'pdf', 'csv', 'copy',
+            ]
+        });
+    </script>
+@endif
 <script src="{{ asset('assets/js/vendors/select2/select2.js') }}"></script>
 
 <script src="{{ asset('assets/js/vendors/sweetalert/sweetalert2.js') }}"></script>
@@ -106,11 +136,6 @@
 
 <script src="{{ asset('assets/js/vendors/slider/slick-sldier/slick.js') }}"></script>
 <script src="{{ asset('assets/js/vendors/slider/slick-sldier/slick-custom.js') }}"></script>
-<!-- Datatable-->
-<script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 {{-- <script src="{{ asset('assets/js/vendors/datatable/jquery.dataTables.js') }}"></script>
 <script src="{{ asset('assets/js/vendors/datatable/dataTables.buttons.js') }}"></script>

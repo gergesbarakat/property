@@ -23,59 +23,7 @@
 
 
 
-<?php $__env->startSection('styles'); ?>
-    
-    <style>
-        .table-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .modern-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .modern-table thead th {
-            font-weight: 600;
-            background-color: #fff;
-            border-bottom: 2px solid #dee2e6;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-        }
-
-        .modern-table td,
-        .modern-table th {
-            vertical-align: middle !important;
-            padding: 1rem;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .modern-table tbody tr {
-            transition: background-color 0.15s ease-in-out;
-        }
-
-        .modern-table .avatar {
-            width: 45px;
-            height: 45px;
-            object-fit: cover;
-        }
-
-        /* ✅ CSS for ghost buttons has been removed to allow for colors. */
-        .modern-table .action-buttons .btn {
-            width: 32px;
-            height: 32px;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin: 0 3px;
-        }
-    </style>
-<?php $__env->stopSection(); ?>
+ 
 
 <?php $__env->startSection('content'); ?>
     <div class="card border-0 shadow-sm">
@@ -84,6 +32,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
+
                 <table class="table modern-table" id="invoice-table">
                     <thead>
                         <tr>

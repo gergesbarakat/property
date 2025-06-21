@@ -115,22 +115,7 @@ function select2() {
 }
 
 
-const table = $('table');
 
-if (!table.length) {
-    console.warn("Table not found.");
-}
-
-let dataTable;
-
-dataTable = table.DataTable({
-    "scrollX": true,
-    // stateSave: true,
-    // dom: 'Bfrtip',
-    // buttons: [
-    //     'print', 'excel', 'pdf', 'csv', 'copy',
-    // ]
-});
 
 
 
@@ -149,12 +134,12 @@ function getDateColumnIndex() {
 dataTable.order([getDateColumnIndex(), 'desc']).draw();
 
 // Bootstrap filter container
-const filterContainer = $('<div id="filters" class="d-flex flex-wrap gap-3 mb-3"></div>');
+const filterContainer = $('<div id="filters" class="d-flex flex-wrap gap-3 mb-3 w-full"></div>');
 $('#invoice-table_wrapper').before(filterContainer);
 
 for (let colIdx = 0; colIdx < columnCount - 1; colIdx++) {
     const columnHeader = $(dataTable.column(colIdx).header()).text().trim();
-    const $wrapper = $('<div class="d-flex flex-column me-3"></div>');
+    const $wrapper = $('<div class="d-flex flex-column col me-3"></div>');
     const $label = $(`<label class="form-label fw-bold">${columnHeader}</label>`);
 
     if (columnHeader === "تاريخ الإنشاء") {

@@ -34,17 +34,16 @@ class InvoiceController extends Controller
                 } else {
                     // Fetch only the invoices matching the tenant's specific property and unit.
                     // Eager loading `property` and `unit` is crucial to prevent view errors.
-                    $invoices = Invoice::with(['property', 'unit'])
+                    $invoices = Invoice::with(['property', 'unit', 'payments'])
                         ->where('property_id', $tenant->property)
                         ->where('unit_id', $tenant->unit)
                         // Assuming parentId() is a helper function in your project.
-                        ->where('parent_id', parentId())
                         ->latest()
                         ->get();
                 }
             } else {
                 // If the user is an admin or another type, fetch all invoices for their account.
-                $invoices = Invoice::with(['property', 'unit'])
+                $invoices = Invoice::with(['property', 'unit', 'payments'])
                     ->latest()
                     ->get();
             }
@@ -138,9 +137,9 @@ class InvoiceController extends Controller
         if (\Auth::user()->can('show invoice')) {
             $invoiceNumber = $invoice->invoice_id;
             $tenant = Tenant::where('property', $invoice->property_id)->where('unit', $invoice->unit_id)->first();
-
+            $payments = InvoicePayment::where('invoice_id', $invoice->id)->get();
             $invoicePaymentSettings = invoicePaymentSettings($invoice->parent_id);
-            return view('invoice.show', compact('invoiceNumber', 'invoice', 'tenant', 'invoicePaymentSettings'));
+            return view('invoice.show', compact('invoiceNumber', 'invoice', 'tenant', 'invoicePaymentSettings', 'payments'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }

@@ -125,6 +125,7 @@
                 processData: false,
                 type: 'GET',
                 success: function(data) {
+
                     $('.unit').empty();
                     var unit =
                         `<select class="form-control hidesearch unit" id="unit" name="unit"></select>`;
