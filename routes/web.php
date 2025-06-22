@@ -21,6 +21,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\InvoicePaymentController;
 use App\Http\Controllers\InstallmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ExportController; // Make sure to import your ExportController
 
 /*
 |--------------------------------------------------------------------------
@@ -249,6 +250,8 @@ Route::group(
         Route::delete('invoice/{id}/payment/{pid}/destroy', [InvoiceController::class, 'invoicePaymentDestroy'])->name('invoice.payment.destroy');
         Route::delete('invoice/type/destroy', [InvoiceController::class, 'invoiceTypeDestroy'])->name('invoice.type.destroy');
         Route::resource('invoice', InvoiceController::class);
+        Route::get('invoices/export/excel', [ExportController::class, 'exportInvoicesExcel'])->name('invoices.export.excel');
+        Route::get('invoices/{id}/export/pdf', [ExportController::class, 'exportInvoicePdf'])->name('invoices.export.pdf');
     }
 );
 

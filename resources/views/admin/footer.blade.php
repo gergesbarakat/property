@@ -7,9 +7,38 @@
 <div class="scroll-top"><i class="fa fa-angle-double-up"></i></div>
 <!-- back to top end //-->
 <!-- main jquery-->
-<script src="{{ asset('assets/js/jquery.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/jquery.js') }}"></script> --}}
 <!-- Theme Customizer-->
 <script src="{{ asset('assets/js/layout-storage.js') }}"></script>
+{{-- <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> --}}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script src="{{ asset('assets/js/jquery.js') }}"></script>
+<script src="{{ asset('assets/js/customizer.js') }}"></script>
+<!-- Feather icons js-->
+<script src="{{ asset('assets/js/icons/feather-icon/feather.js') }}"></script>
+<!-- Bootstrap js-->
+<script src="{{ asset('assets/js/bootstrap.bundle.js') }}"></script>
+<!-- Scrollbar-->
+<script src="{{ asset('assets/js/vendors/simplebar.js') }}"></script>
+<!-- apex chart-->
+<script src="{{ asset('assets/js/vendors/chart/apexcharts.js') }}"></script>
+<script src="{{ asset('assets/js/vendors/datatable/datatables.js') }}"></script>
 
 
 @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'owner')
@@ -91,25 +120,8 @@
     </script>
 @endif
 <!-- Datatable-->
-<script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<script src="{{ asset('assets/js/jquery.js') }}"></script>
-
-<script src="{{ asset('assets/js/customizer.js') }}"></script>
-<!-- Feather icons js-->
-<script src="{{ asset('assets/js/icons/feather-icon/feather.js') }}"></script>
-<!-- Bootstrap js-->
-<script src="{{ asset('assets/js/bootstrap.bundle.js') }}"></script>
-<!-- Scrollbar-->
-<script src="{{ asset('assets/js/vendors/simplebar.js') }}"></script>
-<!-- apex chart-->
-<script src="{{ asset('assets/js/vendors/chart/apexcharts.js') }}"></script>
-<script src="{{ asset('assets/js/vendors/datatable/datatables.js') }}"></script>
-
-@if (!request()->routeIs('invoice.show'))
+{{-- @if (!request()->routeIs('invoice.show'))
     <script>
         const table = $('table');
 
@@ -121,14 +133,153 @@
 
         dataTable = table.DataTable({
             "scrollX": true,
-            stateSave: true,
-            dom: 'Bfrtip',
-            buttons: [
-                'print', 'excel', 'pdf', 'csv', 'copy',
+            dom: 'Bfrtip', // Add B for Buttons
+            buttons: [{
+                    extend: 'csvHtml5',
+                    text: 'Export CSV',
+                    exportOptions: {
+                        columns: ':visible:not(.no-export)', // Exclude columns with 'no-export' class
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Strip HTML, but keep badge text
+                                return node.innerText.trim();
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export Excel',
+                    exportOptions: {
+                        columns: ':visible:not(.no-export)',
+                        format: {
+                            body: function(data, row, column, node) {
+                                return node.innerText.trim();
+                            }
+                        }
+                    }
+                }
             ]
         });
     </script>
-@endif
+@endif --}}
+<script>
+    $(document).ready(function() {
+        const table = $('table');
+
+        if (!table.length) {
+            console.warn("Table not found.");
+        }
+
+        let dataTable;
+
+        dataTable = table.DataTable({
+            // Your existing DataTables options
+            dom: 'Bfrtip', // Add B for Buttons. This tells DataTables to render buttons.
+            buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="ti ti-file-spreadsheet me-1"></i> {{ __('Export Excel') }}',
+                    className: 'btn btn-success me-2', // Add Bootstrap classes for styling
+                    exportOptions: {
+                        // Specify columns to export. :visible ensures only visible columns are exported.
+                        // :not(.no-export) excludes columns with the 'no-export' class.
+                        columns: ':visible:not(.no-export)',
+                        format: {
+                            // Custom format function to get innerText, useful for badges/nested elements
+                            body: function(data, row, column, node) {
+                                return node.innerText.trim();
+                            }
+                        }
+                    },
+                    filename: 'all_invoices_' + new Date().toISOString().slice(0, 10).replace(/-/g,
+                        '')
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="ti ti-file-text me-1"></i> {{ __('Export PDF') }}',
+                    className: 'btn btn-danger me-2', // Add Bootstrap classes for styling
+                    orientation: 'portrait', // 'portrait' or 'landscape'
+                    pageSize: 'A4', // 'A4', 'LETTER', etc.
+                    exportOptions: {
+                        columns: ':visible:not(.no-export)',
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Strip HTML from content before PDF export
+                                return node.innerText.trim();
+                            }
+                        }
+                    },
+                    // Custom PDF styling and title (this is where your "template" comes in)
+                    title: 'Invoice List',
+                    customize: function(doc) {
+                        // Basic styles should usually be safe
+                        doc.defaultStyle.alignment = 'center';
+                        doc.styles.tableHeader.alignment = 'center';
+                        doc.styles.tableBodyEven.alignment = 'center';
+                        doc.styles.tableBodyOdd.alignment = 'center';
+
+                        // ONLY access doc.content[0] if you are SURE it's the element you want to modify
+                        // and that it exists. Often, the first content element is the table itself.
+                        // If you are setting a custom title, you might insert it, not modify existing content[0]
+                        // Example: Add a title at the beginning of content
+                        // doc.content.splice(0, 0, { text: 'Your Custom Title Here', style: 'titleStyle' });
+
+                        // For RTL layout in PDFMake, you also need to set the default text direction
+                        doc.defaultStyle.direction = 'rtl'; // Add this for RTL support
+
+                        // Example for Arabic text support in PDFMake
+                        // PDFMake needs fonts embedded for non-Latin characters.
+                        // This is server-side (Laravel-Dompdf does it too), but for client-side
+                        // you need to configure vfs_fonts.js or customize pdfmake
+                        // by providing a custom font object in the doc.
+                        // If Arabic doesn't render, this is the most likely culprit.
+                        doc.defaultStyle.font =
+                            'Cairo'; // Example, requires Cairo font in vfs_fonts.js or custom fonts
+                        doc.content[0].text = 'قائمة الفواتير'; // Example: Arabic title
+                        doc.content[0].alignment = 'right'; // Align title to right for RTL
+
+                        // Add a header
+                        doc['header'] = (function() {
+                            return {
+                                columns: [{
+                                        // You can add your company logo here. This path needs to be accessible from the client.
+                                        // For local files, you might need base64 encoding or a publicly accessible URL.
+                                        // Using an image path from server:
+                                        // image: '{{ asset(Storage::url('upload/logo/')) . '/' . (isset($admin_logo) && !empty($admin_logo) ? $admin_logo : 'logo.png') }}', // THIS IS SERVER-SIDE. IF YOU CANNOT USE PHP, YOU MUST HOST THIS IMAGE PUBLICLY AND USE ITS URL.
+                                        // width: 80,
+                                        // alignment: 'left'
+                                    },
+                                    {
+                                        text: '{{ __('Invoice List') }}', // Or a client-side string
+                                        alignment: 'right',
+                                        margin: [10, 10, 20, 0]
+                                    }
+                                ],
+                                margin: [40, 20]
+                            }
+                        });
+
+                        // Add a footer
+                        doc['footer'] = (function(page, pages) {
+                            return {
+                                columns: [{
+                                    text: 'Page ' + page.toString() + ' of ' +
+                                        pages,
+                                    alignment: 'center'
+                                }],
+                                margin: [40, 0]
+                            }
+                        });
+                    },
+                    filename: 'all_invoices_' + new Date().toISOString().slice(0, 10).replace(/-/g,
+                        '')
+                }
+            ]
+        });
+    });
+</script>
+
+
 <script src="{{ asset('assets/js/vendors/select2/select2.js') }}"></script>
 
 <script src="{{ asset('assets/js/vendors/sweetalert/sweetalert2.js') }}"></script>

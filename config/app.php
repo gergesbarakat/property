@@ -56,7 +56,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost/property'),
 
-    'asset_url' => env('ASSET_URL','http://localhost/property/public'),
+    'asset_url' => env('ASSET_URL', 'http://localhost/property/public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => env('TIMEZONE','UTC'),
+    'timezone' => env('TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -181,6 +181,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -219,7 +221,9 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Custom' => \App\Models\Custom::class,
         'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+
     ])->toArray(),
 
 ];
- 

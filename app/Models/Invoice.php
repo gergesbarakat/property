@@ -39,7 +39,10 @@ class Invoice extends Model
     {
         return $this->belongsTo(PropertyUnit::class, 'unit_id');
     }
-
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class, 'tenant_id'); //
+    }
     public function properties()
     {
         return $this->hasOne('App\Models\Property', 'id', 'property_id');
