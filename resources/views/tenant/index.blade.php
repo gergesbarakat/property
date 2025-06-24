@@ -103,14 +103,7 @@
                                     <a href="{{ route('tenant.edit', $tenant->id) }}"
                                         class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" title="Edit"><i
                                             data-feather="edit"></i></a>
-                                    <form action="{{ route('tenant.destroy', $tenant->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger text-white"
-                                            data-bs-toggle="tooltip" title="Delete"
-                                            onclick="return confirm('Are you sure?')"><i data-feather="trash"></i></button>
-                                    </form>
+                                    
                                 </td>
                             </tr>
                         @empty

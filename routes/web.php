@@ -207,6 +207,7 @@ Route::group(
     function () {
         Route::post('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
         Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadAllContracts'])->name('tenants.contracts.download');
+        Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadContracts'])->name('tenants.contracts.download');
 
         Route::resource('property', PropertyController::class);
         Route::get('property/{pid}/unit/create', [PropertyController::class, 'unitCreate'])->name('unit.create');

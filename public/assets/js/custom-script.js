@@ -92,8 +92,7 @@ $(document).ready(function () {
             }, 250);
         } else {
             setTimeout(function () {
-                inp.attr('type', 'password');
-                ;
+                inp.attr('type', 'password');;
                 $(".toggle-show").removeClass('fa-eye-slash');
             }, 250);
         }
@@ -158,7 +157,11 @@ $(document).ready(function () {
     //*** SINGLE NUMBER COUNTER ***//
     $('.counter').each(function () {
         var $this = $(this);
-        jQuery({Counter: 0}).animate({Counter: $this.text()}, {
+        jQuery({
+            Counter: 0
+        }).animate({
+            Counter: $this.text()
+        }, {
             duration: 3000,
             easing: 'swing',
             step: function () {
@@ -185,17 +188,22 @@ $(document).ready(function () {
         var bar = $(this).find('.progress-bar');
         var value = $(this).find('.count');
         bar.prop('Counter', 0).animate({
-                Counter: parseFloat(bar.attr('aria-valuenow'))
-            },
-            {
-                duration: 2000,
-                easing: 'swing',
-                step: function (now) {
-                    var number = parseFloat(Math.round(now * 100) / 100).toFixed(2);
-                    bar.css({'width': number + '%'});
-                }
-            });
-        jQuery({Counter: 0}).animate({Counter: value.text()}, {
+            Counter: parseFloat(bar.attr('aria-valuenow'))
+        }, {
+            duration: 2000,
+            easing: 'swing',
+            step: function (now) {
+                var number = parseFloat(Math.round(now * 100) / 100).toFixed(2);
+                bar.css({
+                    'width': number + '%'
+                });
+            }
+        });
+        jQuery({
+            Counter: 0
+        }).animate({
+            Counter: value.text()
+        }, {
             duration: 2000,
             easing: 'swing',
             step: function (num) {
@@ -289,7 +297,9 @@ $(document).ready(function () {
     });
     $(document).ready(function () {
         $(document).on("click", '.scroll-top', function () {
-            $('html, body').animate({scrollTop: 0}, '450');
+            $('html, body').animate({
+                scrollTop: 0
+            }, '450');
         });
     });
 
@@ -349,7 +359,39 @@ function getDate(date) {
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
-    return [day, month, year,].join('/');
+    return [day, month, year, ].join('/');
 }
 
 $('.getDate').text(getDate(new Date))
+
+
+
+// Password toggle with Bootstrap
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('input[type="password"]').forEach(function (input) {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('position-relative');
+
+        const clonedInput = input.cloneNode(true);
+        input.replaceWith(wrapper);
+        wrapper.appendChild(clonedInput);
+
+        const toggleIcon = document.createElement('span');
+        toggleIcon.innerHTML = '👁️';
+        toggleIcon.classList.add(
+            'position-absolute', 'top-50', 'end-0', 'translate-middle-y', 'pe-2',
+            'cursor-pointer'
+        );
+        wrapper.appendChild(toggleIcon);
+
+        toggleIcon.addEventListener('click', () => {
+            if (clonedInput.type === 'password') {
+                clonedInput.type = 'text';
+                toggleIcon.innerHTML = '🙈';
+            } else {
+                clonedInput.type = 'password';
+                toggleIcon.innerHTML = '👁️';
+            }
+        });
+    });
+});

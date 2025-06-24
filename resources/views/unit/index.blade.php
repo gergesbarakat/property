@@ -97,11 +97,7 @@
                                                         data-bs-toggle="tooltip" data-bs-original-title="{{ __('Edit') }}">
                                                         <i data-feather="edit"></i></a>
                                                 @endcan
-                                                @can('delete unit')
-                                                    <a class=" text-danger confirm_dialog" data-bs-toggle="tooltip"
-                                                        data-bs-original-title="{{ __('Detete') }}" href="#"> <i
-                                                            data-feather="trash-2"></i></a>
-                                                @endcan
+                                                
                                                 {!! Form::close() !!}
                                             </div>
                                         </td>

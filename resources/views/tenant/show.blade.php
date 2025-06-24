@@ -78,6 +78,14 @@
                         <h3>{{ optional($tenant->user)->first_name }} {{ optional($tenant->user)->last_name }}</h3>
                         <h6>{{ optional($tenant->user)->email ?? '-' }}</h6>
                         <h6>{{ optional($tenant->user)->phone_number ?? '-' }}</h6>
+                        {{-- ✅ NEW: Download All Button --}}
+                        @if ($tenant->contracts->isNotEmpty())
+                            <a href="{{ route('tenants.contracts.download', $tenant->id) }}"
+                                class="btn btn-primary btn-sm mt-3">
+                                <i data-feather="download-cloud" class="me-1" style="width:16px; height:16px;"></i>
+                                {{ __('Download Documents') }}
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -126,7 +134,7 @@
                         <div class="col-md-4 col-lg-3 mb-4">
                             <div class="media">
                                 <div class="media-body">
-                                    <h6>{{ __('Zip Code') }}</h6>
+                                    <h6>{{ __('National ID') }}</h6>
                                     <p>{{ $tenant->zip_code ?? '-' }}</p>
                                 </div>
                             </div>
@@ -185,21 +193,20 @@
                                 </div>
                             </div>
                         </div>
-                        @if ($tenant->contracts->isNotEmpty())
+                        {{-- @if ($tenant->contracts->isNotEmpty())
                             <div class="col-md-12 mb-4">
                                 <div class="media">
                                     <div class="media-body">
                                         <h6>{{ __('Documents') }}</h6>
 
-                                        {{-- 🔽 Add download all button --}}
-                                        <a href="{{ route('tenants.contracts.download', $tenant->id) }}"
+                                         <a href="{{ route('tenants.contracts.download', $tenant->id) }}"
                                             class="btn btn-sm btn-primary mb-2" target="_blank">
                                             <i data-feather="download-cloud" class="me-1"
                                                 style="width:16px; height:16px;"></i>
                                             Download All Contracts
                                         </a>
 
-                                        {{-- Existing per-document download buttons --}}
+
                                         @foreach ($tenant->contracts as $contract)
                                             <a href="{{ Storage::url($contract->contract_file) }}"
                                                 class="btn btn-sm btn-outline-secondary me-2" target="_blank">
@@ -211,7 +218,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
+                        @endif --}}
                         <!-- #region -->
                     </div>
                 </div>

@@ -146,6 +146,7 @@ class PropertyController extends Controller
     {
         if (\Auth::user()->can('edit property')) {
             $types = Property::$Type;
+
             return view('property.edit', compact('types', 'property'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -433,4 +434,4 @@ class PropertyController extends Controller
         return response()->json($units);
     }
 }
- 
+

@@ -9,12 +9,14 @@ use App\Models\Tenant;
 use App\Models\Installment;
 use App\Models\PropertyUnit;
 use App\Models\Invoice;
+use App\Models\Contract;
 
 use App\Models\InvoicePayment;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // ✅ FIX: Added the missing import for the Storage facade.
 
 
 use Illuminate\Http\Request;
@@ -147,12 +149,12 @@ class TenantController extends Controller
                 'profile_image' => $user->profile,
             ]);
 
-            if ($request->hasFile('contracts')) {
-                foreach ($request->file('contracts') as $file) {
+            if ($request->hasFile('tenant_images')) {
+                foreach ($request->file('tenant_images') as $file) {
                     $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
                     $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-                    $path = $file->storeAs('contracts', $fileNameToStore, 'public');
+                    $path = $file->storeAs('tenant_images', $fileNameToStore, 'public');
                     Contract::create(['tenant_id' => $tenant->id, 'contract_file' => $path]);
                 }
             }
@@ -394,5 +396,52 @@ class TenantController extends Controller
         }
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
+    }
+
+
+
+
+
+    public function downloadContracts(Tenant $tenant)
+    {
+        // Ensure the contracts relationship is loaded
+        $tenant->load('contracts', 'user');
+
+        // Check if there are any contracts to download
+        if ($tenant->contracts->isEmpty()) {
+            return redirect()->back()->with('error', 'This tenant has no documents to download.');
+        }
+
+        // Create a unique name for the zip file
+        $zipFileName = 'contracts-' . str_replace(' ', '_', optional($tenant->user)->first_name) . '.zip';
+
+        // ✅ FIX: Call ZipArchive from the global namespace using a preceding backslash.
+        $zip = new \ZipArchive();
+
+        // Create a temporary file path for the zip archive
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'zip');
+
+        if ($zip->open($tempFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+
+            // Loop through each contract document
+            foreach ($tenant->contracts as $contract) {
+                // Use the Storage facade to get the file path safely
+                $filePath = Storage::disk('public')->path($contract->contract_file);
+
+                // Check if the file actually exists before adding it
+                if (file_exists($filePath)) {
+                    // Add the file to the zip archive, giving it its original name
+                    $zip->addFile($filePath, basename($contract->contract_file));
+                }
+            }
+
+            // Close the zip archive
+            $zip->close();
+
+            // Return the zip file as a download and delete the temporary file after it's sent
+            return response()->download($tempFilePath, $zipFileName)->deleteFileAfterSend(true);
+        } else {
+            return redirect()->back()->with('error', 'Could not create the zip archive.');
+        }
     }
 }

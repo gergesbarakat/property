@@ -40,16 +40,20 @@
 
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 
 
     <!-- Font awesome -->
     <link href="{{ asset('assets/css/vendor/font-awesome.css') }}" rel="stylesheet">
     <!-- themify icon-->
     <link href="{{ asset('assets/css/vendor/themify-icons.css') }}" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
+
+
 
 
     <!-- Slick slider-->
@@ -80,7 +84,6 @@
 
 
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
 
     {{-- Custom styles for the modern table UI. --}}
     <style>
@@ -200,4 +203,16 @@
             box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.3) !important;
         }
     </style>
+
+    <script src="{{ asset('assets/js/vendors/datatable/datatables.js') }}"></script>
+
+    {{-- <script src="{{ asset('assets/js/vendors/datatable/jquery.dataTables.js') }}"></script> --}}
+    <script src="{{ asset('assets/js/vendors/datatable/dataTables.buttons.js') }}"></script>
+    <script src="{{ asset('assets/js/vendors/datatable/buttons.print.js') }}"></script>
+    <script src="{{ asset('assets/js/vendors/datatable/jszip.js') }}"></script>
+    <script src="{{ asset('assets/js/vendors/datatable/pdfmake.js') }}"></script>
+    <script src="{{ asset('assets/js/vendors/datatable/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/js/vendors/datatable/buttons.html5.js') }}"></script>
+
+
 </head>
