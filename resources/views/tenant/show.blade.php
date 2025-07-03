@@ -212,87 +212,84 @@
                                 </div>
                             </div>
                         @endif
-                        <!-- #region -->
+                    @section('card-action-btn')
+                        {{-- ✅ FIX: The button is now a link pointing to the new, flexible PDF route. --}}
+                        <a href="{{ route('pdf.download', ['type' => 'tenant', 'id' => $tenant->id]) }}" target="_blank"
+                            class="btn btn-primary btn-sm">
+                            <i data-feather="download" class="me-1" style="width:16px; height:16px;"></i>
+                            {{ __('Export as PDF') }}
+                        </a>
+                    @endsection
+                    <!-- #region -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Installment Plan Card --}}
+@if (count($tenant->installments) > 0)
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ __('Installment Plan') }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="installments-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Due Date</th>
+                                    <th>Amount</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($tenant->installments as $installment)
+                                    <tr>
+                                        <td>{{ $installment->installment_number }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('F j, Y') }}</td>
+                                        <td>${{ number_format($installment->amount, 2) }}</td>
+                                        <td class="text-center">
+                                            @if ($installment->status == 'paid')
+                                                <span class="badge bg-success text-white">Paid</span>
+                                            @elseif($installment->status == 'pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>@else<span
+                                                    class="badge bg-danger text-white">Overdue</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            @if ($installment->status != 'paid')
+                                                <form
+                                                    action="{{ route('installments.updateStatus', $installment->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">Mark
+                                                        as
+                                                        Paid</button>
+                                                </form>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">
+                                            <p class="text-muted mb-0">No installment plan found.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {{-- Installment Plan Card --}}
-    @if (count($tenant->installments) > 0)
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>{{ __('Installment Plan') }}</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table" id="installments-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Due Date</th>
-                                        <th>Amount</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($tenant->installments as $installment)
-                                        <tr>
-                                            <td>{{ $installment->installment_number }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('F j, Y') }}</td>
-                                            <td>${{ number_format($installment->amount, 2) }}</td>
-                                            <td class="text-center">
-                                                @if ($installment->status == 'paid')
-                                                    <span class="badge bg-success text-white">Paid</span>
-                                                @elseif($installment->status == 'pending')
-                                                <span class="badge bg-warning text-dark">Pending</span>@else<span
-                                                        class="badge bg-danger text-white">Overdue</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($installment->status != 'paid')
-                                                    <form
-                                                        action="{{ route('installments.updateStatus', $installment->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-outline-success">Mark
-                                                            as
-                                                            Paid</button>
-                                                    </form>
-                                                @else
-                                                    <span>-</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center py-4">
-                                                <p class="text-muted mb-0">No installment plan found.</p>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+@endif
 @endsection
-
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#installments-table').DataTable({
-                "order": [
-                    [0, "asc"]
-                ]
-            });
-        });
-    </script>
-@endpush
+ 

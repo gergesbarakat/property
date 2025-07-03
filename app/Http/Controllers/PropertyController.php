@@ -385,7 +385,9 @@ class PropertyController extends Controller
             $unit->kitchen = $request->kitchen;
             $unit->baths = $request->baths;
             $unit->notes = $request->notes;
-            $unit->status = 'Available';
+            if ($unit->status == 'deactivated') {
+                $unit->status = 'Available';
+            }
 
             // Note: The property_id does not need to be updated as the unit belongs to it.
             // The parent_id also remains the same.
@@ -400,37 +402,43 @@ class PropertyController extends Controller
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-
     public function unitDestroy($property_id, $unit_id)
     {
+        // 1. Check for 'delete unit' permission
         if (\Auth::user()->can('delete unit')) {
-            $unit = PropertyUnit::find($unit_id);
-            try {
-                // Check if the unit is already deactivated to avoid unnecessary database writes.
-                if ($unit->status === 'deactivated') {
-                    return redirect()->back()->with('warning', 'This unit is already deactivated.');
-                }
 
+            // 2. Find the unit or fail gracefully
+            $unit = PropertyUnit::find($unit_id);
+            if (!$unit) {
+                return redirect()->back()->with('error', 'Unit not found.');
+            }
+
+            // 3. ✅ NEW: Check if the unit's status is 'available'.
+            // If it's 'sold' or already 'deactivated', return an error.
+            if ($unit->status !== 'Available') {
+                return redirect()->back()->with('error', __('This unit is already sold or deactivated and cannot be changed.'));
+            }
+
+            // 4. Proceed with deactivation inside a try-catch block
+            try {
                 // Set the status to 'deactivated' instead of deleting the record.
                 $unit->status = 'deactivated';
                 $unit->save();
 
                 // Redirect back with a success message.
-                return redirect()->back()->with('success', 'unit successfully deactivated.');
+                return redirect()->back()->with('success', 'Unit successfully deactivated.');
             } catch (\Exception $e) {
-                // In case of an unexpected error, redirect back with an error message.
+                // In case of an unexpected database error, redirect back with an error message.
                 return redirect()->back()->with('error', 'Failed to deactivate unit. Please try again.');
             }
-            return redirect()->back()->with('success', 'unit successfully deleted.');
         } else {
+            // If the user does not have permission, redirect back.
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-
     public function getPropertyUnit($property_id)
     {
         $units = PropertyUnit::where('property_id', $property_id)->where('status', 'Available')->get()->pluck('name', 'id');
         return response()->json($units);
     }
 }
- 

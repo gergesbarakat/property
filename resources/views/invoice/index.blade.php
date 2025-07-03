@@ -23,7 +23,7 @@
 
 
 
- @section('content')
+@section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -51,10 +51,7 @@
                                 <td>{{ optional($invoice->unit)->name ?? '-'}}</td>
                                 <td>{{ \Carbon\Carbon::parse($invoice->invoice_month)->format('F Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($invoice->end_date)->format('M j, Y') }}</td>
-
-                                {{-- ✅ CORRECTED: Calculates the total amount by summing all item amounts --}}
                                 <td>${{ number_format($invoice->items->sum('amount'), 2) }}</td>
-
                                 <td>
                                     @if($invoice->status=='paid')
                                         <span class="badge badge-success">{{ ucfirst($invoice->status) }}</span>
@@ -64,7 +61,32 @@
                                 </td>
                                 @if(Gate::check('edit invoice') || Gate::check('delete invoice') || Gate::check('show invoice'))
                                     <td class="text-right">
-                                        {{-- Actions --}}
+                                        {{-- ✅ ACTIONS: Completed this section --}}
+                                        <div class="cart-action">
+                                            {!! Form::open(['method' => 'DELETE', 'route' => ['invoice.destroy', $invoice->id], 'id' => 'delete-form-'.$invoice->id]) !!}
+
+                                            @can('show invoice')
+                                                <a class="text-warning" href="{{ route('invoice.show',$invoice->id) }}"
+                                                   data-bs-toggle="tooltip"
+                                                   data-bs-original-title="{{__('View')}}"> <i
+                                                        data-feather="eye"></i></a>
+                                            @endcan
+
+                                            @can('edit invoice')
+                                                <a class="text-success" href="{{ route('invoice.edit',$invoice->id) }}"
+                                                   data-bs-toggle="tooltip"
+                                                   data-bs-original-title="{{__('Edit')}}"> <i data-feather="edit"></i></a>
+                                            @endcan
+
+                                            @can('delete invoice')
+                                                <a class="text-danger confirm_dialog" href="#" data-bs-toggle="tooltip"
+                                                   data-bs-original-title="{{__('Delete')}}"
+                                                   onclick="document.getElementById('delete-form-{{$invoice->id}}').submit();">
+                                                    <i data-feather="trash-2"></i>
+                                                </a>
+                                            @endcan
+                                            {!! Form::close() !!}
+                                        </div>
                                     </td>
                                 @endif
                             </tr>

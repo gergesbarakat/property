@@ -21,7 +21,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\InvoicePaymentController;
 use App\Http\Controllers\InstallmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
+use App\Http\Controllers\PdfExportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -206,6 +206,7 @@ Route::group(
     function () {
         Route::post('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
         Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadAllContracts'])->name('tenants.contracts.download');
+        // This route will trigger the PDF download for a specific tenant.
 
         Route::resource('property', PropertyController::class);
         Route::get('property/{pid}/unit/create', [PropertyController::class, 'unitCreate'])->name('unit.create');
@@ -244,6 +245,8 @@ Route::group(
         ],
     ],
     function () {
+        Route::get('/pdf/{type}/{id}/download', [PdfExportController::class, 'downloadPdf'])->name('pdf.download');
+
         Route::get('invoice/{id}/payment/create', [InvoiceController::class, 'invoicePaymentCreate'])->name('invoice.payment.create');
         Route::post('invoice/{id}/payment/store', [InvoiceController::class, 'invoicePaymentStore'])->name('invoice.payment.store');
         Route::delete('invoice/{id}/payment/{pid}/destroy', [InvoiceController::class, 'invoicePaymentDestroy'])->name('invoice.payment.destroy');

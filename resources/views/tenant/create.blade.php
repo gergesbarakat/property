@@ -5,258 +5,165 @@
 @push('script-page')
     <script src="{{ asset('assets/js/vendors/dropzone/dropzone.js') }}"></script>
     <script>
-        var dropzone = new Dropzone('#demo-upload', {
-            previewTemplate: document.querySelector('.preview-dropzon').innerHTML,
-            parallelUploads: 10,
-            thumbnailHeight: 120,
-            thumbnailWidth: 120,
-            maxFilesize: 10,
-            filesizeBase: 1000,
-            autoProcessQueue: false,
-            thumbnail: function(file, dataUrl) {
-                if (file.previewElement) {
-                    file.previewElement.classList.remove("dz-file-preview");
-                    var images = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-                    for (var i = 0; i < images.length; i++) {
-                        var thumbnailElement = images[i];
-                        thumbnailElement.alt = file.name;
-                        thumbnailElement.src = dataUrl;
-                    }   
-                    setTimeout(function() {
-                        file.previewElement.classList.add("dz-image-preview");
-                    }, 1);
-                }
-            }
-
-        });
-        $('#tenant-submit').on('click', function() {
+        // Use a document ready function to ensure scripts run after the page is loaded.
+        $(function() {
             "use strict";
-            $('#tenant-submit').attr('disabled', true);
-            var fd = new FormData();
-            var file = document.getElementById('profile').files[0];
 
-            var files = $('#demo-upload').get(0).dropzone.getAcceptedFiles();
-            $.each(files, function(key, file) {
-                fd.append('tenant_images[' + key + ']', $('#demo-upload')[0].dropzone
-                    .getAcceptedFiles()[key]); // attach dropzone image element
-            });
-            fd.append('profile', file);
-            var other_data = $('#tenant_form').serializeArray();
-            $.each(other_data, function(key, input) {
-                fd.append(input.name, input.value);
-            });
-            $.ajax({
-                url: "{{ route('tenant.store') }}",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: fd,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status == "success") {
-                        $('#tenant-submit').attr('disabled', true);
-                        toastrs(data.status, data.msg, data.status);
-                        var url = '{{ route('tenant.index') }}';
-                        setTimeout(() => {
-                            window.location.href = url;
-                        }, "1000");
-
-                    } else {
-                        toastrs('Error', data.msg, 'error');
-                        $('#tenant-submit').attr('disabled', false);
+            // --- Dropzone Initialization ---
+            Dropzone.autoDiscover = false; // Disable auto-discovery
+            var myDropzone = new Dropzone('#demo-upload', {
+                previewTemplate: document.querySelector('.preview-dropzon').innerHTML,
+                parallelUploads: 10,
+                thumbnailHeight: 120,
+                thumbnailWidth: 120,
+                maxFilesize: 10,
+                filesizeBase: 1000,
+                autoProcessQueue: false,
+                thumbnail: function(file, dataUrl) {
+                    if (file.previewElement) {
+                        file.previewElement.classList.remove("dz-file-preview");
+                        var images = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                        for (var i = 0; i < images.length; i++) {
+                            var thumbnailElement = images[i];
+                            thumbnailElement.alt = file.name;
+                            thumbnailElement.src = dataUrl;
+                        }
+                        setTimeout(function() {
+                            file.previewElement.classList.add("dz-image-preview");
+                        }, 1);
                     }
-                },
-                error: function(data) {
-                    // Re-enable the submit button so the user can try again.
-                    $('#tenant-submit').attr('disabled', false);
+                }
+            });
 
-                    // 'data' here is the jqXHR object from the AJAX error.
-                    if (data.responseJSON && data.responseJSON.errors) {
-                        // This is a validation error with multiple messages.
+            // --- AJAX Form Submission ---
+            $('#tenant-submit').on('click', function(e) {
+                e.preventDefault();
+                $('#tenant-submit').attr('disabled', true);
 
-                        // 1. Create an empty array to hold the error strings.
-                        let errorList = [];
+                var fd = new FormData($('#tenant_form')[0]);
+                var files = myDropzone.getAcceptedFiles();
+                $.each(files, function(key, file) {
+                    fd.append('contracts[]', file, file.name);
+                });
 
-                        // 2. Loop through each error and add it to the array.
-                        $.each(data.responseJSON.errors, function(key, value) {
-                            if (value.length > 0) {
-                                errorList.push(value[
-                                    0]); // Add the error message string to our list
-                            }
-                        });
-
-                        // 3. Join the array into a single string with line breaks.
-                        let errorMessage = errorList.join('<br>');
-
-                        // 4. Display the list in a single toastr notification.
-                        toastrs('Error', errorMessage, 'error');
-
-                    } else if (data.responseJSON && data.responseJSON.msg) {
-                        // This handles our custom single-message JSON errors.
-                        toastrs('Error', data.responseJSON.msg, 'error');
-                    } else {
-                        // This is a fallback for any other type of error.
-                        let errorMessage = data.responseText || 'An unexpected error occurred.';
-                        if (errorMessage.length > 500) {
-                            errorMessage = 'An unexpected server error occurred.';
+                $.ajax({
+                    url: "{{ route('tenant.store') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(data) {
+                        $('#tenant-submit').attr('disabled', false);
+                        if (data.status == "success") {
+                            toastrs('Success', data.msg, 'success');
+                            setTimeout(() => {
+                                window.location.href = "{{ route('tenant.index') }}";
+                            }, 1000);
+                        } else {
+                            toastrs('Error', data.msg, 'error');
+                        }
+                    },
+                    error: function(data) {
+                        $('#tenant-submit').attr('disabled', false);
+                        let errorMessage = 'An unexpected error occurred.';
+                        if (data.responseJSON && data.responseJSON.errors) {
+                            let errorList = [];
+                            $.each(data.responseJSON.errors, function(key, value) {
+                                errorList.push(value[0]);
+                            });
+                            errorMessage = errorList.join('<br>');
+                        } else if (data.responseJSON && data.responseJSON.msg) {
+                            errorMessage = data.responseJSON.msg;
                         }
                         toastrs('Error', errorMessage, 'error');
-                    }
-                },
-            });
-        });
-
-        $('#property').on('change', function() {
-            "use strict";
-            var property_id = $(this).val();
-            var url = '{{ route('property.unit', ':id') }}';
-            url = url.replace(':id', property_id);
-            $.ajax({
-                url: url,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    property_id: property_id,
-                },
-                contentType: false,
-                processData: false,
-                type: 'GET',
-                success: function(data) {
-                
-                    $('.unit').empty();
-                    var unit =
-                        `<select class="form-control hidesearch unit" id="unit" name="unit"></select>`;
-                    $('.unit_div').html(unit);
-
-                    $.each(data, function(key, value) {
-                        $('.unit').append('<option value="' + key + '">' + value + '</option>');
-                    });
-                    $('.hidesearch').select2({
-                        minimumResultsForSearch: -1
-                    });
-                },
-
-            });
-        });
-        $('#purchase_type').on('change', function() {
-            let type = $(this).val();
-
-            if (type === 'installment') {
-                $('.purchase_installment').removeClass('d-none');
-            } else {
-                $('.purchase_installment').addClass('d-none');
-                $('#installment_amount').val('');
-            }
-            calculateInstallmentAmount();
-            calculateEndDate();
-        });
-
-        $(document).ready(function() {
-            $('#purchase_type').trigger('change');
-        });
-
-        function calculateEndDate() {
-            let startDateStr = $('#installment_start_date').val();
-            let duration = parseInt($('#installment_duration').val());
-            let type = $('#installment_type').val();
-
-            if (!startDateStr || !duration || duration <= 0 || !type) {
-                $('#installment_end_date').val('');
-                return;
-            }
-
-            let startDate = new Date(startDateStr);
-            if (isNaN(startDate)) {
-                $('#installment_end_date').val('');
-                return;
-            }
-
-            let endDate = new Date(startDate.getTime());
-
-            if (type === 'monthly') {
-                endDate.setMonth(endDate.getMonth() + duration);
-            } else if (type === 'yearly') {
-                endDate.setFullYear(endDate.getFullYear() + duration);
-            }
-
-            // Format date as YYYY-MM-DD
-            let year = endDate.getFullYear();
-            let month = (endDate.getMonth() + 1).toString().padStart(2, '0');
-            let day = endDate.getDate().toString().padStart(2, '0');
-
-            $('#installment_end_date').val(`${year}-${month}-${day}`);
-        }
-
-        // Trigger calculation on changes
-        $('#unit_price, #deposit, #installment_duration, #installment_fee_percent, #purchase_type,#installment_start_date,  #installment_type')
-            .on('change keyup',
-                function() {
-                    calculateInstallmentAmount();
-                    calculateEndDate();
+                    },
                 });
-        // Also call once on page load in case of old values
-        $(document).ready(function() {
-            $('#purchase_type').trigger('change');
+            });
+
+            // --- Installment Fields Logic ---
+            function calculateEndDate() {
+                let startDateStr = $('#installment_start_date').val();
+                let duration = parseInt($('#installment_duration').val());
+                let type = $('#installment_type').val();
+
+                if (!startDateStr || !duration || duration <= 0 || !type) {
+                    $('#installment_end_date').val('');
+                    return;
+                }
+
+                let startDate = new Date(startDateStr);
+                if (isNaN(startDate)) {
+                    $('#installment_end_date').val('');
+                    return;
+                }
+
+                let endDate = new Date(startDate.getTime());
+                let monthsToAdd = 0;
+                switch(type) {
+                    case 'monthly': monthsToAdd = duration; break;
+                    case 'quarter_year': monthsToAdd = duration * 3; break;
+                    case 'half_year': monthsToAdd = duration * 6; break;
+                    case 'yearly': monthsToAdd = duration * 12; break;
+                }
+                endDate.setMonth(endDate.getMonth() + monthsToAdd);
+
+                let year = endDate.getFullYear();
+                let month = (endDate.getMonth() + 1).toString().padStart(2, '0');
+                let day = endDate.getDate().toString().padStart(2, '0');
+                $('#installment_end_date').val(`${year}-${month}-${day}`);
+            }
+
+            function calculateInstallmentAmount() {
+                let unitPrice = parseFloat($('#unit_price').val());
+                let deposit = parseFloat($('#deposit').val());
+                let duration = parseInt($('#installment_duration').val());
+                let feePercent = parseFloat($('#installment_fee_percent').val());
+                let purchaseType = $('#purchase_type').val();
+
+                if (purchaseType !== 'installment') {
+                    $('.purchase_installment').addClass('d-none');
+                    $('#installment_amount, #price_after_deposit').val('');
+                    return;
+                }
+
+                $('.purchase_installment').removeClass('d-none');
+
+                if (isNaN(unitPrice) || isNaN(deposit) || isNaN(duration) || duration <= 0) {
+                    $('#installment_amount, #price_after_deposit').val('');
+                    return;
+                }
+
+                let priceAfterDeposit = unitPrice - deposit;
+                if (priceAfterDeposit < 0) priceAfterDeposit = 0;
+                $('#price_after_deposit').val(priceAfterDeposit.toFixed(2));
+
+                let totalInstallmentAmount = priceAfterDeposit;
+                if (!isNaN(feePercent) && feePercent > 0) {
+                    totalInstallmentAmount += priceAfterDeposit * (feePercent / 100);
+                }
+
+                let installmentAmount = totalInstallmentAmount / duration;
+                $('#installment_amount').val(installmentAmount.toFixed(2));
+            }
+
+            $('#purchase_type, #unit_price, #deposit, #installment_duration, #installment_fee_percent, #installment_start_date, #installment_type').on('change keyup', function() {
+                calculateInstallmentAmount();
+                calculateEndDate();
+            });
+
+            // Initial calculation on page load
             calculateInstallmentAmount();
             calculateEndDate();
-        });
-
-        function calculateInstallmentAmount() {
-            let unitPrice = parseFloat($('#unit_price').val());
-            let deposit = parseFloat($('#deposit').val());
-            let duration = parseInt($('#installment_duration').val());
-            let feePercent = parseFloat($('#installment_fee_percent').val());
-            let purchaseType = $('#purchase_type').val();
-
-            if (purchaseType !== 'installment') {
-                $('#installment_amount').val('');
-                $('#price_after_deposit').val('');
-                return;
-            }
-
-            if (isNaN(unitPrice) || isNaN(deposit) || isNaN(duration) || duration <= 0) {
-                $('#installment_amount').val('');
-                $('#price_after_deposit').val('');
-                return;
-            }
-
-            let priceAfterDeposit = unitPrice - deposit;
-            if (priceAfterDeposit < 0) priceAfterDeposit = 0;
-
-            // Display price after deposit
-            $('#price_after_deposit').val(priceAfterDeposit.toFixed(2));
-
-            let installmentAmount = priceAfterDeposit / duration;
-
-            // Add fee percent if provided
-            if (!isNaN(feePercent) && feePercent > 0) {
-                installmentAmount += installmentAmount * (feePercent / 100);
-            }
-
-            $('#installment_amount').val(installmentAmount.toFixed(2));
-        }
-
-        // Trigger calculation on relevant input changes
-        $('#total_price, #deposit, #installment_duration, #purchase_type').on('change keyup', function() {
-            calculateInstallmentAmount();
-            calculateEndDate();
-        });
-
-        // Call on page load
-        $(document).ready(function() {
-            calculateInstallmentAmount();
         });
     </script>
 @endpush
 @section('breadcrumb')
     <ul class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}">
-                <h1>{{ __('Dashboard') }}</h1>
-            </a>
+            <a href="{{ route('dashboard') }}"><h1>{{ __('Dashboard') }}</h1></a>
         </li>
         <li class="breadcrumb-item">
             <a href="{{ route('tenant.index') }}">{{ __('Buyer') }}</a>
@@ -271,9 +178,7 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>{{ __('Personal Details') }}</h5>
-                </div>
+                <div class="card-header"><h5>{{ __('Personal Details') }}</h5></div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
@@ -312,9 +217,7 @@
         </div>
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>{{ __('Address Details') }}</h5>
-                </div>
+                <div class="card-header"><h5>{{ __('Address Details') }}</h5></div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
@@ -345,9 +248,7 @@
         </div>
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>{{ __('Property Details') }}</h5>
-                </div>
+                <div class="card-header"><h5>{{ __('Property Details') }}</h5></div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
@@ -357,13 +258,9 @@
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('unit', __('Unit'), ['class' => 'form-label']) }}
-                                <div class="unit_div">
-                                    <select class="form-control hidesearch unit" id="unit" name="unit">
-                                        <option value="">{{ __('Select Unit') }}</option>
-                                    </select>
-                                </div>
+                                {{ Form::select('unit', $units, null, ['class' => 'form-control hidesearch', 'id' => 'unit']) }}
                             </div>
-                            <div class="form-group col-lg-6 col-md-6    ">
+                            <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('unit_price', __('Unit Price'), ['class' => 'form-label']) }}
                                 {{ Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01']) }}
                             </div>
@@ -371,50 +268,42 @@
                                 {{ Form::label('purchase_type', __('Purchase Type'), ['class' => 'form-label']) }}
                                 {{ Form::select('purchase_type', ['full' => 'Full Payment', 'installment' => 'Installment'], null, ['class' => 'form-control', 'id' => 'purchase_type']) }}
                             </div>
-                            {{-- Full Payment --}}
                             <div class="form-group col-lg-6 col-md-6 purchase_full d-none">
                                 {{ Form::label('payment_date', __('Payment Date'), ['class' => 'form-label']) }}
                                 {{ Form::date('payment_date', null, ['class' => 'form-control', 'placeholder' => __('Enter payment date')]) }}
                             </div>
-                            {{-- Installment Type (monthly/yearly) --}}
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_type', __('Installment Type'), ['class' => 'form-label']) }}
-                                {{ Form::select('installment_type', ['monthly' => __('Monthly'), 'yearly' => __('Yearly')], null, ['class' => 'form-control', 'id' => 'installment_type']) }}
+                                {{ Form::select('installment_type', ['monthly' => __('Monthly'), 'quarter_year' => __('Quarter Year (3 Months)'), 'half_year' => __('Half Year (6 Months)'), 'yearly' => __('Yearly')], null, ['class' => 'form-control', 'id' => 'installment_type']) }}
                             </div>
-
-
-                            {{-- Installment Duration (number input) --}}
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_duration', __('Installment Duration'), ['class' => 'form-label']) }}
-                                {{ Form::number('installment_duration', null, ['class' => 'form-control', 'min' => 1]) }}
+                                {{ Form::number('installment_duration', null, ['class' => 'form-control', 'id' => 'installment_duration', 'min' => 1]) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_start_date', __('Start Date'), ['class' => 'form-label']) }}
-                                {{ Form::date('installment_start_date', null, ['class' => 'form-control']) }}
+                                {{ Form::date('installment_start_date', null, ['class' => 'form-control', 'id' => 'installment_start_date']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_end_date', __('End Date'), ['class' => 'form-label']) }}
-                                {{ Form::date('installment_end_date', null, ['class' => 'form-control', 'readonly']) }}
+                                {{ Form::date('installment_end_date', null, ['class' => 'form-control', 'id' => 'installment_end_date', 'readonly']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('deposit', __('Deposit'), ['class' => 'form-label']) }}
-                                {{ Form::number('deposit', null, ['class' => 'form-control', 'min' => 0, 'step' => '0.01']) }}
+                                {{ Form::number('deposit', null, ['class' => 'form-control', 'id' => 'deposit', 'min' => 0, 'step' => '0.01']) }}
                             </div>
-                            <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
-                                {{ Form::label('installment_amount', __('Installment Amount'), ['class' => 'form-label']) }}
-                                {{ Form::number('installment_amount', null, ['class' => 'form-control', 'readonly']) }}
-                            </div>
-
                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('price_after_deposit', __('Price After Deposit'), ['class' => 'form-label']) }}
                                 {{ Form::number('price_after_deposit', null, ['class' => 'form-control', 'id' => 'price_after_deposit', 'readonly']) }}
                             </div>
-
-                            <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
+                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_fee_percent', __('Installment Fee %'), ['class' => 'form-label']) }}
                                 {{ Form::number('installment_fee_percent', null, ['class' => 'form-control', 'id' => 'installment_fee_percent', 'step' => '0.01', 'min' => 0]) }}
                             </div>
-
+                            <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
+                                {{ Form::label('installment_amount', __('Installment Amount'), ['class' => 'form-label']) }}
+                                {{ Form::number('installment_amount', null, ['class' => 'form-control', 'id' => 'installment_amount', 'readonly']) }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -422,11 +311,9 @@
         </div>
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>{{ __('Documents') }}</h5>
-                </div>
+                <div class="card-header"><h5>{{ __('Documents') }}</h5></div>
                 <div class="card-body">
-                    <div class="dropzone needsclick" id='contracts' action="#">
+                    <div class="dropzone needsclick" id='demo-upload' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
                             <h3>{{ __('Drop files here or click to upload.') }}</h3>
@@ -435,10 +322,7 @@
                     <div class="preview-dropzon" style="display: none;">
                         <div class="dz-preview dz-file-preview">
                             <div class="dz-image"><img data-dz-thumbnail="" src="" alt=""></div>
-                            <div class="dz-details">
-                                <div class="dz-size"><span data-dz-size=""></span></div>
-                                <div class="dz-filename"><span data-dz-name=""></span></div>
-                            </div>
+                            <div class="dz-details"><div class="dz-size"><span data-dz-size=""></span></div><div class="dz-filename"><span data-dz-name=""></span></div></div>
                             <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress=""> </span></div>
                             <div class="dz-success-mark"><i class="fa fa-check" aria-hidden="true"></i></div>
                         </div>

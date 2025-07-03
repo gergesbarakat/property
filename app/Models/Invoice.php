@@ -112,4 +112,16 @@ class Invoice extends Model
         }
         Invoice::statusChange($invoice->id, $status);
     }
+
+
+    /**
+     * Get the tenant associated with this invoice.
+     * ✅ FIX: Added the complete, correct tenant() relationship method.
+     */
+    public function tenant()
+    {
+        // This finds the correct tenant by matching the property and unit IDs from the invoice
+        // to the 'property' and 'unit' columns on the tenants table.
+        return $this->belongsTo(Tenant::class, 'property_id', 'property')->where('unit', $this->unit_id);
+    }
 }

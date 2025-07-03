@@ -80,7 +80,7 @@
 @section('content')
     <div class="card border-0 shadow-sm">
         <div class="table-header  p-20 d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">All Buyers</h4>
+            <h4 class="mb-0">{{ __('All Buyers') }}</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">

@@ -37,8 +37,6 @@ class InvoiceController extends Controller
                     $invoices = Invoice::with(['property', 'unit'])
                         ->where('property_id', $tenant->property)
                         ->where('unit_id', $tenant->unit)
-                        // Assuming parentId() is a helper function in your project.
-                        ->where('parent_id', parentId())
                         ->latest()
                         ->get();
                 }
@@ -136,16 +134,39 @@ class InvoiceController extends Controller
     public function show(Invoice $invoice)
     {
         if (\Auth::user()->can('show invoice')) {
-            $invoiceNumber = $invoice->invoice_id;
-            $tenant = Tenant::where('property', $invoice->property_id)->where('unit', $invoice->unit_id)->first();
+            // Eager load the relationships on the current invoice for efficiency
+            $invoice->load('items', 'payments');
 
+            // Find the associated tenant to display their info
+            $tenant = Tenant::where('property', $invoice->property_id)
+                ->where('unit', $invoice->unit_id)
+                ->with('user') // Load the user details for the buyer
+                ->first();
+
+            // Prepare an empty collection for payments as a fallback
+            $tenantPayments = collect();
+
+            // Get all invoices that belong to this specific unit
+            $allUnitInvoices = Invoice::where('unit_id', $invoice->unit_id)
+                ->with('payments') // Eager load the payments for each invoice
+                ->get();
+
+            // ✅ FIX: Changed variable name to $tenantPayments to match the view.
+            // Collect all payments from all of the unit's invoices into a single list
+            $tenantPayments = $allUnitInvoices->flatMap(function ($inv) {
+                return $inv->payments;
+            })->sortByDesc('payment_date');
+
+
+            // Get other necessary data from your original function
             $invoicePaymentSettings = invoicePaymentSettings($invoice->parent_id);
-            return view('invoice.show', compact('invoiceNumber', 'invoice', 'tenant', 'invoicePaymentSettings'));
+
+            // ✅ FIX: Pass the correct $tenantPayments variable to the view
+            return view('invoice.show', compact('invoice', 'tenant', 'tenantPayments', 'invoicePaymentSettings'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-
 
     public function edit(Invoice $invoice)
     {

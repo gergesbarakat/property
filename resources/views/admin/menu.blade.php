@@ -248,7 +248,7 @@
                 <li class="cdxmenu-title">
                     <h5>{{ __('System Settings') }}</h5>
                 </li>
-                @if (Gate::check('manage pricing packages') || Gate::check('manage pricing transation'))
+                {{-- @if (Gate::check(abilities: 'manage pricing packages') || Gate::check('manage pricing transation'))
                     <li
                         class="menu-item {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'active' : '' }}">
                         <a href="javascript:void(0);">
@@ -293,7 +293,7 @@
                             @endif
                         </ul>
                     </li>
-                @endif
+                @endif --}}
                 @if (Gate::check('manage account settings') ||
                         Gate::check('manage password settings') ||
                         Gate::check('manage general settings') ||

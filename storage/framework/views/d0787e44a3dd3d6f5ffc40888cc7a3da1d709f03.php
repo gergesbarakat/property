@@ -250,52 +250,7 @@
                 <li class="cdxmenu-title">
                     <h5><?php echo e(__('System Settings')); ?></h5>
                 </li>
-                <?php if(Gate::check('manage pricing packages') || Gate::check('manage pricing transation')): ?>
-                    <li
-                        class="menu-item <?php echo e(in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'active' : ''); ?>">
-                        <a href="javascript:void(0);">
-                            <div class="icon-item"><i data-feather="database"></i></div>
-                            <span><?php echo e(__('Pricing')); ?></span><i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="submenu-list"
-                            style="display: <?php echo e(in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'block' : 'none'); ?>">
-                            <?php if(Gate::check('manage pricing packages')): ?>
-                                <li
-                                    class="<?php echo e(in_array($routeName, ['subscriptions.index', 'subscriptions.show']) ? 'active' : ''); ?>">
-                                    <a href="<?php echo e(route('subscriptions.index')); ?>"><?php echo e(__('Packages')); ?></a>
-                                </li>
-                            <?php endif; ?>
-                            <?php if(Gate::check('manage pricing transation')): ?>
-                                <li class="<?php echo e(in_array($routeName, ['subscription.transaction']) ? 'active' : ''); ?> ">
-                                    <a href="<?php echo e(route('subscription.transaction')); ?>"><?php echo e(__('Transactions')); ?></a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    </li>
-                <?php endif; ?>
-
-                <?php if(Gate::check('manage coupon') || Gate::check('manage coupon history')): ?>
-                    <li
-                        class="menu-item <?php echo e(in_array($routeName, ['coupons.index', 'coupons.history']) ? 'active' : ''); ?>">
-                        <a href="javascript:void(0);">
-                            <div class="icon-item"><i data-feather="gift"></i></div>
-                            <span><?php echo e(__('Coupons')); ?></span><i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="submenu-list"
-                            style="display: <?php echo e(in_array($routeName, ['coupons.index', 'coupons.history']) ? 'block' : 'none'); ?>">
-                            <?php if(Gate::check('manage coupon')): ?>
-                                <li class="<?php echo e(in_array($routeName, ['coupons.index']) ? 'active' : ''); ?>">
-                                    <a href="<?php echo e(route('coupons.index')); ?>"><?php echo e(__('All Coupon')); ?></a>
-                                </li>
-                            <?php endif; ?>
-                            <?php if(Gate::check('manage coupon history')): ?>
-                                <li class="<?php echo e(in_array($routeName, ['coupons.history']) ? 'active' : ''); ?>">
-                                    <a href="<?php echo e(route('coupons.history')); ?>"><?php echo e(__('Coupon History')); ?></a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    </li>
-                <?php endif; ?>
+                
                 <?php if(Gate::check('manage account settings') ||
                         Gate::check('manage password settings') ||
                         Gate::check('manage general settings') ||
