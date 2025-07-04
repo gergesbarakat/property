@@ -76,11 +76,12 @@
     <link href="{{ asset('assets/css/' . $style) }}" id="customstyle" rel="stylesheet">
 
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-    {{-- <link href="{{ asset('assets/css/vendor/datatable/datatables.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('assets/css/vendor/datatable/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/vendor/datatable/buttons.dataTables.css') }}" rel="stylesheet">
 
-
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
+    <link href="{{ asset('assets/css/vendor/datatable/custom-dataTables.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/vendor/datatable/jquery.dataTables.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/vendor/datatable/rowGroup.dataTables.min.css') }}" rel="stylesheet">
 
 
 </head>

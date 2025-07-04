@@ -246,6 +246,7 @@ Route::group(
     ],
     function () {
         Route::get('/pdf/{type}/{id}/download', [PdfExportController::class, 'downloadPdf'])->name('pdf.download');
+        Route::match(['get', 'post'], '/pdf/{type}/{id}/download', [PdfExportController::class, 'downloadPdf'])->name('pdf.download');
 
         Route::get('invoice/{id}/payment/create', [InvoiceController::class, 'invoicePaymentCreate'])->name('invoice.payment.create');
         Route::post('invoice/{id}/payment/store', [InvoiceController::class, 'invoicePaymentStore'])->name('invoice.payment.store');

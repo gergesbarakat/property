@@ -2,14 +2,22 @@
 <footer class="codex-footer">
     <p><?php echo e(__('Copyright')); ?> <?php echo e(date('Y')); ?> © <?php echo e(env('APP_NAME')); ?> <?php echo e(__('All rights reserved')); ?>.</p>
 </footer>
+
+
+
 <!-- footer end-->
+
 <!-- back to top start //-->
+
 <div class="scroll-top"><i class="fa fa-angle-double-up"></i></div>
 <!-- back to top end //-->
 <!-- main jquery-->
 <script src="<?php echo e(asset('assets/js/jquery.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/html2canvas.js')); ?>"></script>
+
 <!-- Theme Customizer-->
 <script src="<?php echo e(asset('assets/js/layout-storage.js')); ?>"></script>
+
 <?php if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'owner'): ?>
     <script>
         var public_path = '<?php echo e(asset('assets/css/')); ?>';
@@ -88,7 +96,7 @@
             '');
     </script>
 <?php endif; ?>
-<script src="<?php echo e(asset('assets/js/customizer.js')); ?>"></script>
+
 <!-- Feather icons js-->
 <script src="<?php echo e(asset('assets/js/icons/feather-icon/feather.js')); ?>"></script>
 <!-- Bootstrap js-->
@@ -107,21 +115,24 @@
 <script src="<?php echo e(asset('assets/js/vendors/slider/slick-sldier/slick.js')); ?>"></script>
 <script src="<?php echo e(asset('assets/js/vendors/slider/slick-sldier/slick-custom.js')); ?>"></script>
 <!-- Datatable-->
-<script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-
+<script src="<?php echo e(asset('assets/js/vendors/datatable/jquery.dataTables.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/vendors/datatable/dataTables.buttons.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/vendors/datatable/buttons.print.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/vendors/datatable/jszip.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/vendors/datatable/pdfmake.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/vendors/datatable/vfs_fonts.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/vendors/datatable/buttons.html5.js')); ?>"></script>
 
 <!-- Custom script-->
 
 <script src="<?php echo e(asset('assets/js/vendors/notify/bootstrap-notify.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/customizer.js')); ?>"></script>
 
 <script src="<?php echo e(asset('assets/js/custom-script.js')); ?>"></script>
 <?php echo $__env->yieldPushContent('script-page'); ?>
 
 <script src="<?php echo e(asset('js/custom.js')); ?>"></script>
+
 
 <?php if(!request()->routeIs('invoice.show')): ?>
     <script>
@@ -134,13 +145,54 @@
         let dataTable;
 
         dataTable = table.DataTable({
-            "scrollX": true,
-            // stateSave: true,
-            // dom: 'Bfrtip',
-            // buttons: [
-            //     'print', 'excel', 'pdf', 'csv', 'copy',
-            // ]
+            "responsive": true,
+            "autoWidth": true,
+            "lengthMenu": [10, 25, 50, 100],
+            "pageLength": 10,
+            "order": [
+                ['0', 'desc']
+            ],
+            "columnDefs": [{
+                "targets": -1,
+                "orderable": false
+            }],
+            "dom": 'Bfrtip',
+            "buttons": [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel"></i> <?php echo e(__('Export to Excel')); ?>',
+                    className: 'btn btn-success',
+                    titleAttr: 'Export to Excel',
+                    exportOptions: {
+                        columns: ':not(:last-child)' // Exclude the last column (Actions)
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fa fa-file-pdf"></i> <?php echo e(__('Export to PDF')); ?>',
+                    className: 'btn btn-danger',
+                    titleAttr: 'Export to PDF',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fa fa-print"></i> <?php echo e(__('Print')); ?>',
+                    className: 'btn btn-primary',
+                    titleAttr: 'Print',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                }
+            ],
         });
+
+        // Add margin between filters and DataTable controls (buttons/search)
+        $('#filters').addClass('mb-10');
+        $('.dt-buttons').addClass('mb-10');
+        $('.dataTables_filter').addClass('mb-11');
+
+
 
 
 
@@ -166,8 +218,7 @@
             const columnHeader = $(dataTable.column(colIdx).header()).text().trim();
             const $wrapper = $('<div class="d-flex flex-column me-3"></div>');
             const $label = $(`<label class="form-label fw-bold">${columnHeader}</label>`);
-
-            if (columnHeader === "تاريخ الإنشاء") {
+            if (columnHeader === "تاريخ الإنشاء" || columnHeader.toLowerCase().includes("date")) {
                 const $input = $('<input type="date" class="form-control form-control-sm" />');
 
                 $.fn.dataTable.ext.search.push(function(settings, data) {

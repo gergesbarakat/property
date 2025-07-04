@@ -6,18 +6,21 @@ use App\Models\Tenant;
 use App\Models\Invoice;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf; // Import the PDF facade
 
 class PdfExportController extends Controller
 {
     /**
      * Generate and download a PDF for various model types.
+     * Can handle both template-based generation and image-based generation for invoices.
      *
-     * @param  string  $type The type of model to export (e.g., 'tenant', 'invoice', 'property').
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $type The type of model to export.
      * @param  int  $id The ID of the model instance.
      * @return \Illuminate\Http\Response
      */
-    public function downloadPdf($type, $id)
+    public function downloadPdf(Request $request, $type, $id)
     {
         $data = [];
         $view = '';
@@ -26,60 +29,50 @@ class PdfExportController extends Controller
         // Use a switch statement to handle different export types
         switch ($type) {
             case 'tenant':
-                // Find the tenant and load all its necessary relationships
                 $tenant = Tenant::with(['user', 'linked_property', 'propertyUnit', 'installments'])->find($id);
-
                 if (!$tenant) {
                     return redirect()->back()->with('error', 'Tenant not found.');
                 }
-
-                // Prepare the data for the view
                 $data = ['tenant' => $tenant];
                 $view = 'pdf.tenant_details';
                 $fileName = 'tenant_details_' . str_replace(' ', '_', optional($tenant->user)->first_name) . '.pdf';
                 break;
 
             case 'invoice':
-                // First, find the invoice and its direct items.
-                $invoice = Invoice::with(['property', 'unit', 'items'])->find($id);
+                if ($request->has('imageData')) {
+                    // ✅ FIX: Instead of saving a file, we now pass the raw base64 data to the view.
 
-                if (!$invoice) {
-                    return redirect()->back()->with('error', 'Invoice not found.');
+                    // 1. Get the full data URI from the request.
+                    $imageDataURI = $request->input('imageData');
+
+                    // 2. Extract just the base64 part of the string.
+                    list(, $base64Data) = explode(',', $imageDataURI);
+
+                    // 3. Load the view, passing the base64 data.
+                    $pdf = PDF::loadView('pdf.invoice_details', ['imageData' => $base64Data]);
+
+                    return $pdf->stream('invoice_' . $id . '.pdf');
+                } else {
+                    // Fallback to the template-based PDF generation if no image is sent.
+                    $invoice = Invoice::with(['property', 'unit', 'items', 'tenant.user'])->find($id);
+                    if (!$invoice) {
+                        return redirect()->back()->with('error', 'Invoice not found.');
+                    }
+
+                    $options = ['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'];
+                    $pdf = PDF::setOptions($options)->loadView('pdf.invoice_details', ['invoice' => $invoice]);
+
+                    return $pdf->stream('invoice_' . $invoice->invoice_id . '.pdf');
                 }
-
-                // Second, find the tenant separately using the invoice's details.
-                $tenant = Tenant::where('property', $invoice->property_id)
-                    ->where('unit', $invoice->unit_id)
-                    ->with('user') // Eager load the user details
-                    ->first();
-
-                // Pass both the invoice and the tenant to the view.
-                $data = [
-                    'invoice' => $invoice,
-                    'tenant' => $tenant,
-                ];
-                $view = 'pdf.invoice_details';
-                $fileName = 'invoice_' . $invoice->invoice_id . '.pdf';
                 break;
 
-            // You can add more cases here for other types like 'property'
-
             default:
-                // Handle unknown types
                 return redirect()->back()->with('error', 'Invalid export type specified.');
         }
 
-        // ✅ FIX: Set domPDF options to correctly handle Arabic and complex HTML.
-        $options = [
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'defaultFont' => 'DejaVu Sans'
-        ];
-
-        // Load the appropriate view with the fetched data and options
+        // This part is now only for template-based PDFs.
+        $options = ['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'];
         $pdf = PDF::setOptions($options)->loadView($view, $data);
-
-        // Stream the generated PDF to the browser for download
         return $pdf->stream($fileName);
     }
 }

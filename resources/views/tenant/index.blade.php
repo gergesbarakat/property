@@ -87,7 +87,7 @@
                 <table class="table modern-table" id="invoice-table">
                     <thead>
                         <tr>
-                            <th style="width: 30%;">Buyer</th>
+                            <th >Buyer</th>
                             <th>Property</th>
                             <th>Unit</th>
                             <th>Contract Start</th>
@@ -100,7 +100,7 @@
 
 
 
-                            <th class="text-center">Actions</th>
+                            <th >Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,16 +109,7 @@
 
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        @if (optional($tenant->user)->profile)
-                                            <img class="rounded-circle avatar"
-                                                src="{{ Storage::url($tenant->user->profile) }}" alt="Profile">
-                                        @else
-                                            <div
-                                                class="avatar rounded-circle bg-light d-flex align-items-center justify-content-center text-secondary">
-                                                <span
-                                                    style="font-size: 1rem; font-weight: 600;">{{ substr(optional($tenant->user)->first_name, 0, 1) }}{{ substr(optional($tenant->user)->last_name, 0, 1) }}</span>
-                                            </div>
-                                        @endif
+
                                         <div class="ms-3">
                                             <strong class="d-block">{{ optional($tenant->user)->first_name }}
                                                 {{ optional($tenant->user)->last_name }}</strong>
@@ -150,7 +141,7 @@
                                     <a href="{{ route('tenant.show', $tenant->id) }}"
                                         class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="View"><i
                                             data-feather="eye"></i></a>
-                                    <a href="{{ route('tenant.edit', $tenant->id) }}"
+                                    {{-- <a href="{{ route('tenant.edit', $tenant->id) }}"
                                         class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" title="Edit"><i
                                             data-feather="edit"></i></a>
                                     <form action="{{ route('tenant.destroy', $tenant->id) }}" method="POST"
@@ -160,7 +151,7 @@
                                         <button type="submit" class="btn btn-sm btn-danger text-white"
                                             data-bs-toggle="tooltip" title="Delete"
                                             onclick="return confirm('Are you sure?')"><i data-feather="trash"></i></button>
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                         @empty
