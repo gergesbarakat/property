@@ -203,7 +203,7 @@ Route::group(
             'XSS',
         ],
     ],
-    function () {
+    function (): void {
         Route::post('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
         Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadAllContracts'])->name('tenants.contracts.download');
         // This route will trigger the PDF download for a specific tenant.

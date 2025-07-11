@@ -12,7 +12,6 @@
     <meta name="keywords" content="{{ $settings['meta_seo_keyword'] }}">
     <meta name="description" content="{{ $settings['meta_seo_description'] }}">
 
-
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ env('APP_URL') }}">
     <meta property="og:title" content="{{ $settings['meta_seo_title'] }}">
@@ -79,9 +78,6 @@
     <link href="{{ asset('assets/css/vendor/datatable/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/vendor/datatable/buttons.dataTables.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('assets/css/vendor/datatable/custom-dataTables.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/vendor/datatable/jquery.dataTables.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/vendor/datatable/rowGroup.dataTables.min.css') }}" rel="stylesheet">
-
 
 </head>

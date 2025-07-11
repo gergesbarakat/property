@@ -1,202 +1,230 @@
 @extends('layouts.app')
 @section('page-title')
-    {{__('Dashboard')}}
+    {{ __('Dashboard') }}
 @endsection
+@push('script-page')
+    <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
+    <script>
+        (function() {
+            var options = {
+                series: [{
+                    name: "{{ __('Income') }}",
+                    type: 'column',
+                    data: {!! json_encode($result['incomeExpenseByMonth']['income']) !!},
+                }, {
+                    name: " {{ __('Expense') }}",
+                    type: 'area',
+                    data: {!! json_encode($result['incomeExpenseByMonth']['expense']) !!},
+                }],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    toolbar: {
+                        show: false
+                    },
+                },
+                legend: {
+                    show: false
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    width: [0, 2],
+                    curve: 'smooth',
+                },
+                plotOptions: {
+                    bar: {
+                        columnWidth: "20%",
+                        borderRadius: 5,
+                    }
+                },
+                fill: {
+                    opacity: [1, 0.1],
+                },
+                colors: ['#5c6ac4', '#5c6ac4'],
+                yaxis: {
+                    labels: {
+                        formatter: function(y) {
+                            return "{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}" + y.toFixed(0);
+                        },
+                    },
+                },
+                xaxis: {
+                    categories: {!! json_encode($result['incomeExpenseByMonth']['label']) !!},
+                },
+            };
+            var chart = new ApexCharts(document.querySelector("#incomeExpense"), options);
+            chart.render();
+
+            // --- Upcoming Installments Filter Logic ---
+            $('.installment-filter-btn').on('click', function() {
+                $('.installment-filter-btn').removeClass('btn-primary').addClass('btn-outline-primary');
+                $(this).removeClass('btn-outline-primary').addClass('btn-primary');
+                var target = $(this).data('target');
+                $('.installments-list').hide();
+                $('#' + target).show();
+            });
+        })();
+    </script>
+@endpush
 @section('breadcrumb')
     <ul class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-            <a href="{{route('dashboard')}}"><h1>{{__('Dashboard')}}</h1></a>
+            <a href="{{ route('dashboard') }}">
+                <h1>{{ __('Dashboard') }}</h1>
+            </a>
         </li>
-
     </ul>
 @endsection
 
-@push('script-page')
-    <script>
-        var options = {
-
-            series: [{
-                name: "{{__('Income')}}",
-                type: 'column',
-                data: {!! json_encode($result['incomeExpenseByMonth']['income']) !!},
-            }, {
-                name: " {{__('Expense')}}",
-                type: 'area',
-                data: {!! json_encode($result['incomeExpenseByMonth']['expense']) !!},
-            }],
-            chart: {
-                height: 452,
-                type: 'line',
-                toolbar:{
-                    show: false
-                },
-                zoom: {
-                    enabled: false
-                }
-            },
-            legend:{
-                show:false
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                width: [0,0],
-                curve: 'smooth',
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth:"20%",
-                    startingShape:"rounded",
-                    endingShape: "rounded",
-                }
-            },
-            fill:{
-                opacity:[1, 0.08],
-                gradient:{
-                    type:"horizontal",
-                    opacityFrom:0.5,
-                    opacityTo:0.1,
-                    stops: [100, 100, 100]
-                }
-            },
-            colors: [Codexdmeki.themeprimary,Codexdmeki.themesecondary],
-            states: {
-                normal: {
-                    filter: {
-                        type: 'darken',
-                        value: 1,
-                    }
-                },
-                hover: {
-                    filter: {
-                        type: 'darken',
-                        value: 1,
-                    }
-                },
-                active: {
-                    allowMultipleDataPointsSelection: false,
-                    filter: {
-                        type: 'darken',
-                        value: 1,
-                    }
-                },
-            },
-            grid:{
-                strokeDashArray: 2,
-            },
-
-            yaxis:{
-                tickAmount: 10 ,
-                labels:{
-                    formatter: function (y) {
-                        return  "{{$result['settings']['CURRENCY_SYMBOL']}}" + y.toFixed(0);
-                    },
-                    style: {
-                        colors: '#262626',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        fontFamily: 'Roboto, sans-serif'
-                    }
-                },
-            },
-            xaxis: {
-                categories: {!! json_encode($result['incomeExpenseByMonth']['label']) !!} ,
-                axisTicks: {
-                    show:false
-                },
-                axisBorder:{
-                    show:false
-                },
-                labels:{
-                    style: {
-                        colors: '#262626',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        fontFamily: 'Roboto, sans-serif'
-                    },
-                },
-            },
-            responsive:[
-                {
-                    breakpoint: 1441,
-                    options:{
-                        chart:{
-                            height: 445
-                        }
-                    },
-                },
-                {
-                    breakpoint: 1366,
-                    options:{
-                        chart:{
-                            height: 320
-                        }
-                    },
-                },
-            ]
-        };
-        var chart = new ApexCharts(document.querySelector("#incomeExpense"), options);
-        chart.render();
-    </script>
-@endpush
-@php
-$settings=settings();
-
-@endphp
 @section('content')
+    {{-- Statistics Cards --}}
     <div class="row">
-        <div class="col-xxl-3 col-sm-6 cdx-xxl-50">
-            <div class="card sale-revenue">
-                <div class="card-header">
-                    <h4>{{__('Total Property')}}</h4>
-                </div>
-                <div class="card-body progressCounter">
-                    <h2>
-                        <span class="count">{{$result['totalProperty']}}</span>
-                    </h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-xxl-3 col-sm-6 cdx-xxl-50">
-            <div class="card sale-revenue">
-                <div class="card-header">
-                    <h4>{{__('Total Unit')}}</h4>
-                </div>
-                <div class="card-body progressCounter">
-                    <h2>
-                        <span class="count">{{$result['totalUnit']}}</span>
-                    </h2>
+        <div class="col-xxl-3 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar-sm rounded"><span
+                                    class="avatar-title bg-primary-lighten text-primary rounded"><i
+                                        class="fa fa-building"></i></span></div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1">{{ __('Total Property') }}</p>
+                            <h4 class="mb-0">{{ $result['totalProperty'] }}</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xxl-3 col-sm-6 cdx-xxl-50">
-            <div class="card sale-revenue">
-                <div class="card-header">
-                    <h4>{{__('Total Invoice')}}</h4>
-                </div>
-                <div class="card-body progressCounter">
-                    <h2>{{$settings['CURRENCY_SYMBOL']}}<span class="count">{{$result['totalIncome']}}</span> </h2>
+        <div class="col-xxl-3 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar-sm rounded"><span
+                                    class="avatar-title bg-primary-lighten text-primary rounded"><i
+                                        class="fa fa-home"></i></span></div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1">{{ __('Total Unit') }}</p>
+                            <h4 class="mb-0">{{ $result['totalUnit'] }}</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xxl-3 col-sm-6 cdx-xxl-50">
-            <div class="card sale-revenue">
-                <div class="card-header">
-                    <h4>{{__('Total Expense')}}</h4>
+        <div class="col-xxl-3 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar-sm rounded"><span
+                                    class="avatar-title bg-success-lighten text-success rounded"><i
+                                        class="fa fa-money-bill-wave"></i></span></div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1">{{ __('Total Income') }}</p>
+                            <h4 class="mb-0">
+                                {{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ $result['totalIncome'] }}</h4>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body progressCounter">
-                    <h2>{{$settings['CURRENCY_SYMBOL']}}<span class="count">{{$result['totalExpense']}}</span> </h2>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar-sm rounded"><span
+                                    class="avatar-title bg-danger-lighten text-danger rounded"><i
+                                        class="fa fa-arrow-circle-down"></i></span></div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1">{{ __('Total Expense') }}</p>
+                            <h4 class="mb-0">
+                                {{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ $result['totalExpense'] }}</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xxl-12 cdx-xxl-50">
-            <div class="card overall-revenuetbl">
-                <div class="card-header">
-                    <h4>{{__('Income Vs Expense')}}</h4>
 
+    <div class="row">
+        {{-- Upcoming Installments Card --}}
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ __('Upcoming Installment Payments') }}</h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary btn-sm installment-filter-btn"
+                            data-target="week-installments">{{ __('This Week') }}</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm installment-filter-btn"
+                            data-target="month-installments">{{ __('This Month') }}</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {{-- List for "This Week" --}}
+                    <ul class="list-group list-group-flush installments-list" id="week-installments">
+                        @forelse($dueThisWeek as $installment)
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                <div>
+                                    {{-- ✅ FIX: Using the correct 'buyer' relationship to generate the link and get the name --}}
+                                    <a href="{{ route('tenant.show', $installment->buyer->id) }}" class="text-dark">
+                                        <strong>{{ optional($installment->buyer->user)->first_name }}</strong>
+                                    </a>
+                                    <small
+                                        class="d-block text-muted">{{ optional($installment->buyer->propertyUnit->property)->name }}
+                                        - {{ optional($installment->buyer->propertyUnit)->name }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <strong
+                                        class="text-dark">{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($installment->amount, 2) }}</strong>
+                                    <small class="d-block text-muted">Due:
+                                        {{ \Carbon\Carbon::parse($installment->due_date)->format('D, M j') }}</small>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="list-group-item text-center text-muted">{{ __('No payments due this week.') }}</li>
+                        @endforelse
+                    </ul>
+                    {{-- List for "This Month" (initially hidden) --}}
+                    <ul class="list-group list-group-flush installments-list" id="month-installments"
+                        style="display: none;">
+                        @forelse($dueThisMonth as $installment)
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                <div>
+                                    {{-- ✅ FIX: Using the correct 'buyer' relationship to generate the link and get the name --}}
+                                    <a href="{{ route('tenant.show', $installment->buyer->id) }}" class="text-dark">
+                                        <strong>{{ optional($installment->buyer->user)->first_name }}</strong>
+                                    </a>
+                                    <small
+                                        class="d-block text-muted">{{ optional($installment->buyer->propertyUnit->property)->name }}
+                                        - {{ optional($installment->buyer->propertyUnit)->name }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <strong
+                                        class="text-dark">{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($installment->amount, 2) }}</strong>
+                                    <small class="d-block text-muted">Due:
+                                        {{ \Carbon\Carbon::parse($installment->due_date)->format('D, M j') }}</small>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="list-group-item text-center text-muted">{{ __('No payments due this month.') }}</li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- Income vs Expense Chart --}}
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ __('Income Vs Expense') }}</h4>
                 </div>
                 <div class="card-body">
                     <div id="incomeExpense"></div>

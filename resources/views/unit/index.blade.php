@@ -30,6 +30,7 @@
                                 <th>{{ __('Bedroom') }}</th>
                                 <th>{{ __('Kitchen') }}</th>
                                 <th>{{ __('Bath') }}</th>
+                                <th>{{ __('Unit Size') }}</th>
                                 <th>{{ __('status') }}</th>
 
                                 {{-- <th>{{ __('Rent Type') }}</th>
@@ -60,6 +61,7 @@
                                     <td>{{ $unit->bedroom }}</td>
                                     <td>{{ $unit->kitchen }}</td>
                                     <td>{{ $unit->baths }}</td>
+                                    <td>{{ $unit->unit_size }}</td>
                                     <td>
                                         @if (ucfirst($unit->status) != 'Available')
                                             <span class="badge bg-danger text-white">{{ $unit->status }}</span>

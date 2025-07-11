@@ -7,49 +7,63 @@
     $settings = settings();
 ?>
 <?php $__env->startPush('script-page'); ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script>
+        // ✅ UPDATED: This script now temporarily increases font size for a clearer PDF.
         $(document).on('click', '.print', function() {
-    const elementToCapture = document.getElementById('invoice-print');
-    const invoiceId = "<?php echo e($invoice->id); ?>"; // Get the invoice ID from Blade
-    const fileName = 'invoice-<?php echo e(invoicePrefix() . $invoice->invoice_id); ?>.pdf';
+            const elementToCapture = document.getElementById('invoice-print');
+            const invoiceId = "<?php echo e($invoice->id); ?>";
+            const fileName = 'invoice-<?php echo e(invoicePrefix() . $invoice->invoice_id); ?>.pdf';
 
-    html2canvas(elementToCapture, { scale: 2, useCORS: true }).then(function(canvas) {
-        var imgData = canvas.toDataURL('image/png');
+            // Temporarily increase font size for better PDF quality
+            elementToCapture.style.fontSize = '1.2em';
 
-        // Create a temporary form to submit the data via POST
-        var form = document.createElement('form');
-        form.method = 'POST';
-        // ✅ The action now points to the same route used for template PDFs
-        form.action = "<?php echo e(route('pdf.download', ['type' => 'invoice', 'id' => $invoice->id])); ?>";
-        form.target = '_blank';
+            html2canvas(elementToCapture, {
+                scale: 2, // Improve image resolution
+                useCORS: true
+            }).then(function(canvas) {
+                // Return font size to normal after capture
+                elementToCapture.style.fontSize = '';
 
-        // Add CSRF token
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = '<?php echo e(csrf_token()); ?>';
-        form.appendChild(csrfInput);
+                var imgData = canvas.toDataURL('image/png');
 
-        // Add image data
-        var imageDataInput = document.createElement('input');
-        imageDataInput.type = 'hidden';
-        imageDataInput.name = 'imageData';
-        imageDataInput.value = imgData;
-        form.appendChild(imageDataInput);
+                // Create a temporary form to submit the data via POST
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "<?php echo e(route('pdf.download', ['type' => 'invoice', 'id' => $invoice->id])); ?>";
+                form.target = '_blank';
 
-        // Add filename
-        var fileNameInput = document.createElement('input');
-        fileNameInput.type = 'hidden';
-        fileNameInput.name = 'filename';
-        fileNameInput.value = fileName;
-        form.appendChild(fileNameInput);
+                // Add CSRF token
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '<?php echo e(csrf_token()); ?>';
+                form.appendChild(csrfInput);
 
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-    });
-});
+                // Add image data
+                var imageDataInput = document.createElement('input');
+                imageDataInput.type = 'hidden';
+                imageDataInput.name = 'imageData';
+                imageDataInput.value = imgData;
+                form.appendChild(imageDataInput);
 
+                // Add filename
+                var fileNameInput = document.createElement('input');
+                fileNameInput.type = 'hidden';
+                fileNameInput.name = 'filename';
+                fileNameInput.value = fileName;
+                form.appendChild(fileNameInput);
+
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+            }).catch(function(error) {
+                // Ensure font size is reset even if there's an error
+                elementToCapture.style.fontSize = '';
+                console.error('oops, something went wrong!', error);
+            });
+        });
     </script>
     <script src="https://js.stripe.com/v3/"></script>
 
@@ -372,11 +386,14 @@
                                             <th><?php echo e(__('Status')); ?></th>
                                             <td>
                                                 <?php if($invoice->status == 'open'): ?>
-                                                    <span class="badge badge-primary"><?php echo e(\App\Models\Invoice::$status[$invoice->status]); ?></span>
+                                                    <span
+                                                        class="badge badge-primary"><?php echo e(\App\Models\Invoice::$status[$invoice->status]); ?></span>
                                                 <?php elseif($invoice->status == 'paid'): ?>
-                                                    <span class="badge badge-success"><?php echo e(\App\Models\Invoice::$status[$invoice->status]); ?></span>
+                                                    <span
+                                                        class="badge badge-success"><?php echo e(\App\Models\Invoice::$status[$invoice->status]); ?></span>
                                                 <?php elseif($invoice->status == 'partial_paid'): ?>
-                                                    <span class="badge badge-warning"><?php echo e(\App\Models\Invoice::$status[$invoice->status]); ?></span>
+                                                    <span
+                                                        class="badge badge-warning"><?php echo e(\App\Models\Invoice::$status[$invoice->status]); ?></span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
@@ -399,19 +416,25 @@
                                     <table class="table table-bordered">
                                         <tr>
                                             <th><?php echo e(__('Name')); ?></th>
-                                            <td><?php echo e(!empty($tenant) && !empty($tenant->user) ? $tenant->user->first_name . ' ' . $tenant->user->last_name : '-'); ?></td>
+                                            <td><?php echo e(!empty($tenant) && !empty($tenant->user) ? $tenant->user->first_name . ' ' . $tenant->user->last_name : '-'); ?>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th><?php echo e(__('Email')); ?></th>
-                                            <td><?php echo e(!empty($tenant) && !empty($tenant->user) ? $tenant->user->email : '-'); ?></td>
+                                            <td><?php echo e(!empty($tenant) && !empty($tenant->user) ? $tenant->user->email : '-'); ?>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th><?php echo e(__('Phone')); ?></th>
-                                            <td><?php echo e(!empty($tenant) && !empty($tenant->user) ? $tenant->user->phone_number : '-'); ?></td>
+                                            <td><?php echo e(!empty($tenant) && !empty($tenant->user) ? $tenant->user->phone_number : '-'); ?>
+
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th><?php echo e(__('Address')); ?></th>
-                                            <td><?php echo e(!empty($tenant) ? $tenant->address : '-'); ?></td>
+                                            <th><?php echo e(__('National_ID')); ?></th>
+                                            <td><?php echo e(!empty($tenant) ? $tenant->national_id : '-'); ?></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -420,19 +443,22 @@
                                     <table class="table table-bordered">
                                         <tr>
                                             <th><?php echo e(__('Property')); ?></th>
-                                            <td><?php echo e(!empty($property) ? $property->name : '-'); ?></td>
+                                            <td><?php echo e(!empty($invoice->property) ? $invoice->property->name : '-'); ?></td>
+
                                         </tr>
                                         <tr>
                                             <th><?php echo e(__('Unit')); ?></th>
-                                            <td><?php echo e(!empty($unit) ? $unit->name : '-'); ?></td>
+                                            <td><?php echo e(!empty($invoice->unit) ? $invoice->unit->name : '-'); ?></td>
                                         </tr>
                                         <tr>
                                             <th><?php echo e(__('Unit Type')); ?></th>
-                                            <td><?php echo e(!empty($unit) && !empty($unit->type) ? $unit->type->name : '-'); ?></td>
+                                            <td><?php echo e(!empty($invoice->unit) && !empty($invoice->unit->status) ? $invoice->unit->status : '-'); ?>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th><?php echo e(__('Unit Size')); ?></th>
-                                            <td><?php echo e(!empty($unit) ? $unit->size : '-'); ?></td>
+                                            <td><?php echo e(!empty($invoice->unit) ? $invoice->unit->unit_size : '-'); ?></td>
                                         </tr>
                                     </table>
                                 </div>

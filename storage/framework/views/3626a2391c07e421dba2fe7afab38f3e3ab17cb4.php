@@ -1,36 +1,38 @@
-<?php echo e(Form::model($unit, ['route' => ['unit.update', $property_id, $unit->id], 'method' => 'PUT'])); ?>
 
+<?php echo e(Form::model($unit, ['route' => ['unit.update', [$property_id, $unit->id]], 'method' => 'PUT'])); ?>
 
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
             <?php echo e(Form::label('name', __('Name'), ['class' => 'form-label'])); ?>
 
-            <?php echo e(Form::text('name', null, ['class' => 'form-control', 'placeholder' => __('Enter unit name')])); ?>
+            <?php echo e(Form::text('name', null, ['class' => 'form-control', 'placeholder' => __('Enter unit name'), 'required'])); ?>
 
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <?php echo e(Form::label('bedroom', __('Bedroom'), ['class' => 'form-label'])); ?>
 
-            <?php echo e(Form::number('bedroom', null, ['class' => 'form-control', 'placeholder' => __('Enter number of bedroom')])); ?>
+            <?php echo e(Form::number('bedroom', null, ['class' => 'form-control', 'placeholder' => __('e.g. 2'), 'required'])); ?>
 
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
+            <?php echo e(Form::label('baths', __('Baths'), ['class' => 'form-label'])); ?>
+
+            <?php echo e(Form::number('baths', null, ['class' => 'form-control', 'placeholder' => __('e.g. 1'), 'required'])); ?>
+
+        </div>
+        <div class="form-group col-md-3">
             <?php echo e(Form::label('kitchen', __('Kitchen'), ['class' => 'form-label'])); ?>
 
-            <?php echo e(Form::number('kitchen', null, ['class' => 'form-control', 'placeholder' => __('Enter number of kitchen')])); ?>
+            <?php echo e(Form::number('kitchen', null, ['class' => 'form-control', 'placeholder' => __('e.g. 1'), 'required'])); ?>
 
         </div>
-        <div class="form-group col-md-4">
-            <?php echo e(Form::label('baths', __('Bath'), ['class' => 'form-label'])); ?>
+        <div class="form-group col-md-3">
+            <?php echo e(Form::label('unit_size', __('Unit Size (Sq. Ft.)'), ['class' => 'form-label'])); ?>
 
-            <?php echo e(Form::number('baths', null, ['class' => 'form-control', 'placeholder' => __('Enter number of bath')])); ?>
+            <?php echo e(Form::number('unit_size', null, ['class' => 'form-control', 'placeholder' => __('e.g. 1200')])); ?>
 
         </div>
-
-        
-        
-
         <div class="form-group col-md-12">
             <?php echo e(Form::label('notes', __('Notes'), ['class' => 'form-label'])); ?>
 
@@ -41,25 +43,9 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><?php echo e(__('Close')); ?></button>
-    
     <?php echo e(Form::submit(__('Update'), ['class' => 'btn btn-primary btn-rounded'])); ?>
 
 </div>
 <?php echo e(Form::close()); ?>
 
-
-
-<script>
-    $('#rent_type').on('change', function() {
-        "use strict";
-        var type = this.value;
-        $('.rent_type').addClass('d-none')
-        $('.' + type).removeClass('d-none')
-
-        var input1 = $('.rent_type').find('input');
-        input1.prop('disabled', true);
-        var input2 = $('.' + type).find('input');
-        input2.prop('disabled', false);
-    });
-</script>
 <?php /**PATH E:\JOWEB\property\resources\views/unit/edit.blade.php ENDPATH**/ ?>

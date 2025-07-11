@@ -79,10 +79,7 @@
     <link href="<?php echo e(asset('assets/css/vendor/datatable/datatables.min.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('assets/css/vendor/datatable/buttons.dataTables.css')); ?>" rel="stylesheet">
 
-    <link href="<?php echo e(asset('assets/css/vendor/datatable/custom-dataTables.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('assets/css/vendor/datatable/jquery.dataTables.css')); ?>" rel="stylesheet">
-    <link href="<?php echo e(asset('assets/css/vendor/datatable/rowGroup.dataTables.min.css')); ?>" rel="stylesheet">
-
 
 </head>
 <?php /**PATH E:\JOWEB\property\resources\views/admin/head.blade.php ENDPATH**/ ?>

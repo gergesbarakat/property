@@ -18,6 +18,7 @@ class Invoice extends Model
         'end_date',
         'status',
         'notes',
+        'tenant_id',
         'parent_id',
     ];
 

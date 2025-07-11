@@ -5,12 +5,11 @@
 @push('script-page')
     <script src="{{ asset('assets/js/vendors/dropzone/dropzone.js') }}"></script>
     <script>
-        // Use a document ready function to ensure scripts run after the page is loaded.
         $(function() {
             "use strict";
 
             // --- Dropzone Initialization ---
-            Dropzone.autoDiscover = false; // Disable auto-discovery
+            Dropzone.autoDiscover = false;
             var myDropzone = new Dropzone('#demo-upload', {
                 previewTemplate: document.querySelector('.preview-dropzon').innerHTML,
                 parallelUploads: 10,
@@ -39,13 +38,11 @@
             $('#tenant-submit').on('click', function(e) {
                 e.preventDefault();
                 $('#tenant-submit').attr('disabled', true);
-
                 var fd = new FormData($('#tenant_form')[0]);
                 var files = myDropzone.getAcceptedFiles();
                 $.each(files, function(key, file) {
                     fd.append('contracts[]', file, file.name);
                 });
-
                 $.ajax({
                     url: "{{ route('tenant.store') }}",
                     headers: {
@@ -83,23 +80,61 @@
                 });
             });
 
+            // ✅ FIX: Dependent Dropdown now uses your existing 'property.unit' route
+            $('#property').on('change', function() {
+                var propertyId = $(this).val();
+                var unitDropdown = $('#unit');
+
+                unitDropdown.html('<option value="">{{ __('Loading...') }}</option>');
+                unitDropdown.prop('disabled', true);
+
+                if (propertyId) {
+                    // Construct the correct URL using the existing route
+                    var url = '{{ route("property.unit", ":id") }}';
+                    url = url.replace(':id', propertyId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET', // Your route uses GET
+                        dataType: 'json',
+                        success: function (data) {
+                            unitDropdown.html('<option value="">{{ __('Select Unit') }}</option>');
+                            unitDropdown.prop('disabled', false);
+
+                            if (data && !$.isEmptyObject(data)) {
+                                $.each(data, function (id, name) {
+                                    unitDropdown.append('<option value="' + id + '">' + name + '</option>');
+                                });
+                            } else {
+                                unitDropdown.html('<option value="">{{ __('No Available Units') }}</option>');
+                                unitDropdown.prop('disabled', true);
+                            }
+                        },
+                        error: function () {
+                            unitDropdown.html('<option value="">{{ __('Could not load units') }}</option>');
+                            unitDropdown.prop('disabled', true);
+                        }
+                    });
+                } else {
+                    unitDropdown.html('<option value="">{{ __('Select Property First') }}</option>');
+                    unitDropdown.prop('disabled', true);
+                }
+            });
+
             // --- Installment Fields Logic ---
             function calculateEndDate() {
                 let startDateStr = $('#installment_start_date').val();
                 let duration = parseInt($('#installment_duration').val());
                 let type = $('#installment_type').val();
-
                 if (!startDateStr || !duration || duration <= 0 || !type) {
                     $('#installment_end_date').val('');
                     return;
                 }
-
                 let startDate = new Date(startDateStr);
                 if (isNaN(startDate)) {
                     $('#installment_end_date').val('');
                     return;
                 }
-
                 let endDate = new Date(startDate.getTime());
                 let monthsToAdd = 0;
                 switch(type) {
@@ -109,7 +144,6 @@
                     case 'yearly': monthsToAdd = duration * 12; break;
                 }
                 endDate.setMonth(endDate.getMonth() + monthsToAdd);
-
                 let year = endDate.getFullYear();
                 let month = (endDate.getMonth() + 1).toString().padStart(2, '0');
                 let day = endDate.getDate().toString().padStart(2, '0');
@@ -154,7 +188,6 @@
                 calculateEndDate();
             });
 
-            // Initial calculation on page load
             calculateInstallmentAmount();
             calculateEndDate();
         });
@@ -184,29 +217,33 @@
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('first_name', __('First Name'), ['class' => 'form-label']) }}
-                                {{ Form::text('first_name', null, ['class' => 'form-control', 'placeholder' => __('Enter First Name')]) }}
+                                {{ Form::text('first_name', null, ['class' => 'form-control', 'placeholder' => __('Enter First Name'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('last_name', __('Last Name'), ['class' => 'form-label']) }}
-                                {{ Form::text('last_name', null, ['class' => 'form-control', 'placeholder' => __('Enter Last Name')]) }}
+                                {{ Form::text('last_name', null, ['class' => 'form-control', 'placeholder' => __('Enter Last Name'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
-                                {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Email')]) }}
+                                {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Email'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('password', __('Password'), ['class' => 'form-label']) }}
-                                {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Password')]) }}
+                                {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Password'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('phone_number', __('Phone Number'), ['class' => 'form-label']) }}
-                                {{ Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number')]) }}
+                                {{ Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('family_member', __('Total Family Member'), ['class' => 'form-label']) }}
                                 {{ Form::number('family_member', null, ['class' => 'form-control', 'placeholder' => __('Enter Total Family Member')]) }}
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6 col-md-6">
+                                {{ Form::label('national_id', __('National ID'), ['class' => 'form-label']) }}
+                                {{ Form::text('national_id', null, ['class' => 'form-control', 'placeholder' => __('Enter National ID')]) }}
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('profile', __('Profile'), ['class' => 'form-label']) }}
                                 {{ Form::file('profile', ['class' => 'form-control']) }}
                             </div>
@@ -223,23 +260,23 @@
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('country', __('Country'), ['class' => 'form-label']) }}
-                                {{ Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Country')]) }}
+                                {{ Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Country'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('state', __('State'), ['class' => 'form-label']) }}
-                                {{ Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter State')]) }}
+                                {{ Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter State'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('city', __('City'), ['class' => 'form-label']) }}
-                                {{ Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter City')]) }}
+                                {{ Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter City'), 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('zip_code', __('Zip Code'), ['class' => 'form-label']) }}
-                                {{ Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Zip Code')]) }}
+                                {{ Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Zip Code'), 'required']) }}
                             </div>
                             <div class="form-group ">
                                 {{ Form::label('address', __('Address'), ['class' => 'form-label']) }}
-                                {{ Form::textarea('address', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => __('Enter Address')]) }}
+                                {{ Form::textarea('address', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => __('Enter Address'), 'required']) }}
                             </div>
                         </div>
                     </div>
@@ -254,15 +291,17 @@
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('property', __('Property'), ['class' => 'form-label']) }}
-                                {{ Form::select('property', $property, null, ['class' => 'form-control hidesearch', 'id' => 'property']) }}
+                                {{ Form::select('property', $property, null, ['class' => 'form-control hidesearch', 'id' => 'property', 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('unit', __('Unit'), ['class' => 'form-label']) }}
-                                {{ Form::select('unit', $units, null, ['class' => 'form-control hidesearch', 'id' => 'unit']) }}
+                                <select class="form-control hidesearch" id="unit" name="unit" required disabled>
+                                    <option value="">{{ __('Select Property First') }}</option>
+                                </select>
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('unit_price', __('Unit Price'), ['class' => 'form-label']) }}
-                                {{ Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01']) }}
+                                {{ Form::number('unit_price', null, ['class' => 'form-control', 'id' => 'unit_price', 'min' => 0, 'step' => '0.01', 'required']) }}
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
                                 {{ Form::label('purchase_type', __('Purchase Type'), ['class' => 'form-label']) }}

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Property;
+use App\Models\PropertyImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -36,5 +37,29 @@ class PropertyFactory extends Factory
             'parent_id' => 1, // Or use a User factory to get a real ID
             'is_active' => 1,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Property $property) {
+            // After a property is created, automatically generate images for it.
+
+            // Create one thumbnail image.
+            PropertyImage::factory()->create([
+                'property_id' => $property->id,
+                'type' => 'thumbnail',
+            ]);
+
+            // Create 3 extra images.
+            PropertyImage::factory()->count(3)->create([
+                'property_id' => $property->id,
+                'type' => 'extra',
+            ]);
+        });
     }
 }

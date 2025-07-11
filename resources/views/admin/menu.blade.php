@@ -5,6 +5,28 @@
     $subscription = \App\Models\Subscription::find($authUser->subscription);
     $routeName = \Request::route()->getName();
 @endphp
+
+{{-- ✅ FINAL FIX: This CSS is designed to work with the SimpleBar.js library. --}}
+<style>
+    .codex-sidebar {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        /* Make the sidebar take the full viewport height */
+        position: fixed;
+        /* Ensures it stays in place on scroll */
+    }
+
+    .codex-menuwrapper {
+        flex: 1 1 auto;
+        /* A robust way to make this element fill all available vertical space */
+        position: relative;
+        /* Helps with internal height calculations for the scrollbar */
+        overflow-y: auto;
+        /* Provides a fallback scrollbar and a boundary for SimpleBar */
+    }
+</style>
+
 <aside class="codex-sidebar sidebar-{{ $settings['sidebar_mode'] }}">
     <div class="logo-gridwrap">
         <a class="codexbrand-logo" href="{{ route('home') }}">
@@ -248,52 +270,7 @@
                 <li class="cdxmenu-title">
                     <h5>{{ __('System Settings') }}</h5>
                 </li>
-                {{-- @if (Gate::check(abilities: 'manage pricing packages') || Gate::check('manage pricing transation'))
-                    <li
-                        class="menu-item {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'active' : '' }}">
-                        <a href="javascript:void(0);">
-                            <div class="icon-item"><i data-feather="database"></i></div>
-                            <span>{{ __('Pricing') }}</span><i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="submenu-list"
-                            style="display: {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'block' : 'none' }}">
-                            @if (Gate::check('manage pricing packages'))
-                                <li
-                                    class="{{ in_array($routeName, ['subscriptions.index', 'subscriptions.show']) ? 'active' : '' }}">
-                                    <a href="{{ route('subscriptions.index') }}">{{ __('Packages') }}</a>
-                                </li>
-                            @endif
-                            @if (Gate::check('manage pricing transation'))
-                                <li class="{{ in_array($routeName, ['subscription.transaction']) ? 'active' : '' }} ">
-                                    <a href="{{ route('subscription.transaction') }}">{{ __('Transactions') }}</a>
-                                </li>
-                            @endif
-                        </ul>
-                    </li>
-                @endif
 
-                @if (Gate::check('manage coupon') || Gate::check('manage coupon history'))
-                    <li
-                        class="menu-item {{ in_array($routeName, ['coupons.index', 'coupons.history']) ? 'active' : '' }}">
-                        <a href="javascript:void(0);">
-                            <div class="icon-item"><i data-feather="gift"></i></div>
-                            <span>{{ __('Coupons') }}</span><i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="submenu-list"
-                            style="display: {{ in_array($routeName, ['coupons.index', 'coupons.history']) ? 'block' : 'none' }}">
-                            @if (Gate::check('manage coupon'))
-                                <li class="{{ in_array($routeName, ['coupons.index']) ? 'active' : '' }}">
-                                    <a href="{{ route('coupons.index') }}">{{ __('All Coupon') }}</a>
-                                </li>
-                            @endif
-                            @if (Gate::check('manage coupon history'))
-                                <li class="{{ in_array($routeName, ['coupons.history']) ? 'active' : '' }}">
-                                    <a href="{{ route('coupons.history') }}">{{ __('Coupon History') }}</a>
-                                </li>
-                            @endif
-                        </ul>
-                    </li>
-                @endif --}}
                 @if (Gate::check('manage account settings') ||
                         Gate::check('manage password settings') ||
                         Gate::check('manage general settings') ||
@@ -344,8 +321,7 @@
                                 </li>
                             @endif
                             @if (Gate::check('manage google recaptcha settings'))
-                                <li
-                                    class="{{ in_array($routeName, ['setting.google.recaptcha']) ? 'active' : '' }} ">
+                                <li class="{{ in_array($routeName, ['setting.google.recaptcha']) ? 'active' : '' }} ">
                                     <a
                                         href="{{ route('setting.google.recaptcha') }}">{{ __('ReCaptcha Setting') }}</a>
                                 </li>

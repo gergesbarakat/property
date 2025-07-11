@@ -23,7 +23,7 @@ class PropertyUnit extends Model
         'baths',
         'kitchen',
         'status',
-
+        'unit_size',
         'rent',
         'deposit_amount',
         'deposit_type',

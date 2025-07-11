@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Models\Property;
-use App\Models\TenantDocument;
-use App\Models\User;
-use App\Models\Tenant;
-use App\Models\Installment;
 use App\Models\Contract;
+use App\Models\Installment;
+use App\Models\Property;
 use App\Models\PropertyUnit;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-
-
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class TenantController extends Controller
 {
@@ -29,7 +22,7 @@ class TenantController extends Controller
         if (\Auth::user()->can('manage tenant')) {
             $tenants = Tenant::with([
                 'user',
-                'linked_property', // ✅ Use the new relationship name
+                'linked_property',
                 'propertyUnit',
                 'installments'
             ])->latest()->get();
@@ -42,241 +35,192 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant)
     {
-        // ✅ FIX: Add 'contracts' to the list of relationships to load.
         $tenant->load(['user', 'linked_property', 'propertyUnit', 'installments', 'contracts']);
-
         return view('tenant.show', compact('tenant'));
     }
 
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */    public function create()
+    public function create()
     {
         if (\Auth::user()->can('create tenant')) {
-            // 1. Fetch all properties for the property dropdown.
-            // ✅ CORRECTED: Changed variable name to $property to match the view.
-            $property = Property::where('parent_id', parentId())->get()->pluck('name', 'id');
+            $property = Property::where('is_active', 1)->get()->pluck('name', 'id');
             $property->prepend(__('Select Property'), '');
 
-            // 2. Fetch all units where the status is NOT 'sold'.
-            // This collection will populate the unit dropdown.
-            $units = PropertyUnit::where('status', '!=', 'sold')
-                ->get()
-                ->pluck('name', 'id');
-            $units->prepend(__('Select Unit'), '');
+            $units = []; // Units will be loaded via AJAX
 
-            // 3. Pass both collections to the view.
-            // ✅ CORRECTED: Updated compact() to send the correct variable name.
             return view('tenant.create', compact('property', 'units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
 
-    // ... your other methods (store, index, etc.)
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function getUnits(Request $request)
     {
-        // Automatically set payment date for full payments if not provided
-        if ($request->purchase_type === 'full' && !$request->filled('payment_date')) {
-            $request->merge(['payment_date' => now()->format('Y-m-d')]);
-        }
-
-        try {
-            // Validate all incoming form data
-            $validatedData = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8',
-                'phone_number' => 'required|string|max:20',
-                'profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-                'family_member' => 'nullable|integer|min:0',
-                'country' => 'required|string|max:255',
-                'state' => 'string|max:255',
-                'city' => 'required|string|max:255',
-                'zip_code' => 'required|string|max:20',
-                'address' => 'required|string',
-                'property' => 'required|exists:properties,id',
-                'unit' => 'required|exists:property_units,id',
-                'unit_price' => 'required|numeric|min:0',
-                'purchase_type' => 'required|in:full,installment',
-                'payment_date' => 'required_if:purchase_type,full|date',
-                'installment_type' => 'required_if:purchase_type,installment|in:monthly,quarter_year,half_year,yearly',
-                'installment_duration' => 'required_if:purchase_type,installment|integer|min:1',
-                'installment_start_date' => 'required_if:purchase_type,installment|date',
-                'deposit' => 'required_if:purchase_type,installment|numeric|min:0|lte:unit_price',
-                'contracts' => 'nullable|array',
-                'contracts.*' => 'file|mimes:pdf,doc,docx,jpg,png|max:5120',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json(['status' => 'error', 'msg' => $e->validator->errors()->first()], 422);
-        }
-
-        DB::beginTransaction();
-        try {
-            // Handle Profile Picture Upload
-            $profileImagePath = null;
-            if ($request->hasFile('profile')) {
-                $file = $request->file('profile');
-                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = $file->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-                $path = $file->storeAs('profiles', $fileNameToStore, 'public');
-                $profileImagePath = $path;
-            }
-
-            // Create the User
-            $user = User::create([
-                'first_name' => $validatedData['first_name'],
-                'last_name' => $validatedData['last_name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
-                'phone_number' => $validatedData['phone_number'],
-                'profile' => $profileImagePath,
-                'type' => 'tenant',
-                'is_active' => 1,
-            ]);
-
-            // Calculate Lease End Date for installments
-            $leaseEndDate = null;
-            if ($validatedData['purchase_type'] === 'installment') {
-                $leaseEndDate = \Carbon\Carbon::parse($validatedData['installment_start_date']);
-                $duration = (int) $validatedData['installment_duration'];
-                $monthsToAdd = 0;
-                switch ($validatedData['installment_type']) {
-                    case 'quarter_year':
-                        $monthsToAdd = $duration * 3;
-                        break;
-                    case 'half_year':
-                        $monthsToAdd = $duration * 6;
-                        break;
-                    case 'yearly':
-                        $monthsToAdd = $duration * 12;
-                        break;
-                    default:
-                        $monthsToAdd = $duration;
-                        break; // monthly
-                }
-                $leaseEndDate->addMonths($monthsToAdd);
-                $leaseEndDate = $leaseEndDate->format('Y-m-d');
-            }
-
-            // Create the Tenant record
-            $tenant = Tenant::create([
-                'user_id' => $user->id,
-                'family_member' => $validatedData['family_member'] ?? null,
-                'address' => $validatedData['address'],
-                'country' => $validatedData['country'],
-                'state' => $validatedData['state'],
-                'city' => $validatedData['city'],
-                'zip_code' => $validatedData['zip_code'],
-                'property' => $validatedData['property'],
-                'unit' => $validatedData['unit'],
-                'purchase_type' => $validatedData['purchase_type'],
-                'lease_start_date' => $validatedData['installment_start_date'] ?? null,
-                'lease_end_date' =>  $leaseEndDate,
-                'email' => $user->email,
-                'phone' => $user->phone_number,
-                'profile_image' => $user->profile,
-            ]);
-
-            // Handle Contract Documents Upload
-            if ($request->hasFile('contracts')) {
-                foreach ($request->file('contracts') as $file) {
-                    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $extension = $file->getClientOriginalExtension();
-                    $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-                    $path = $file->storeAs('contracts', $fileNameToStore, 'public');
-                    Contract::create(['tenant_id' => $tenant->id, 'contract_file' => $path]);
-                }
-            }
-
-            // Update Unit Status
-            $unit = PropertyUnit::findOrFail($validatedData['unit']);
-            $unit->status = 'sold';
-            $unit->save();
-
-            // Create Installment Records if applicable
-            if ($validatedData['purchase_type'] === 'installment') {
-                $duration = (int) $validatedData['installment_duration'];
-                $feePercent = (float) $request->installment_fee_percent ?? 0;
-                $balance = $validatedData['unit_price'] - $validatedData['deposit'];
-                $totalFee = $balance * ($feePercent / 100);
-                $totalInstallmentAmount = $balance + $totalFee;
-                $amountPerInstallment = ($duration > 0) ? $totalInstallmentAmount / $duration : 0;
-                $currentDueDate = \Carbon\Carbon::parse($validatedData['installment_start_date']);
-
-                for ($i = 0; $i < $duration; $i++) {
-                    Installment::create([
-                        'buyer_id' => $tenant->id,
-                        'unit_id' => $unit->id,
-                        'installment_number' => $i + 1,
-                        'due_date' => $currentDueDate->format('Y-m-d'),
-                        'amount' => round($amountPerInstallment, 2),
-                        'status' => 'pending',
-                    ]);
-
-                    switch ($validatedData['installment_type']) {
-                        case 'quarter_year':
-                            $currentDueDate->addMonths(3);
-                            break;
-                        case 'half_year':
-                            $currentDueDate->addMonths(6);
-                            break;
-                        case 'yearly':
-                            $currentDueDate->addYear();
-                            break;
-                        default:
-                            $currentDueDate->addMonth();
-                            break;
-                    }
-                }
-            }
-
-            DB::commit();
-
-            return response()->json(['status' => 'success', 'msg' => __('Tenant successfully created.')]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Tenant Creation Failed: ' . $e->getMessage());
-            return response()->json(['status' => 'error', 'msg' => $e->getMessage()], 500);
-        }
+        $request->validate(['property_id' => 'required|exists:properties,id']);
+        $units = PropertyUnit::where('property_id', $request->property_id)
+            ->where('status', 'available')
+            ->get()->pluck('name', 'id');
+        return response()->json($units);
     }
 
+    public function store(Request $request)
+    {
+        if (\Auth::user()->can('create tenant')) {
+            if ($request->purchase_type === 'full' && !$request->filled('payment_date')) {
+                $request->merge(['payment_date' => now()->format('Y-m-d')]);
+            }
+
+            try {
+                $validatedData = $request->validate([
+                    'first_name' => 'required|string|max:255',
+                    'last_name' => 'required|string|max:255',
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required|string|min:8',
+                    'phone_number' => 'required|string|max:20',
+                    'profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                    'family_member' => 'nullable|integer|min:0',
+                    'national_id' => 'nullable|string|max:255',
+                    'country' => 'required|string|max:255',
+                    'state' => 'required|string|max:255',
+                    'city' => 'required|string|max:255',
+                    'zip_code' => 'required|string|max:20',
+                    'address' => 'required|string',
+                    'property' => 'required|exists:properties,id',
+                    'unit' => 'required|exists:property_units,id',
+                    'unit_price' => 'required|numeric|min:0',
+                    'purchase_type' => 'required|in:full,installment',
+                    'payment_date' => 'required_if:purchase_type,full|date',
+                    'installment_type' => 'required_if:purchase_type,installment|in:monthly,quarter_year,half_year,yearly',
+                    'installment_duration' => 'required_if:purchase_type,installment|integer|min:1',
+                    'installment_start_date' => 'required_if:purchase_type,installment|date',
+                    'deposit' => 'required_if:purchase_type,installment|numeric|min:0|lte:unit_price',
+                    'contracts' => 'nullable|array',
+                    'contracts.*' => 'file|mimes:pdf,doc,docx,jpg,png|max:5120',
+                ]);
+            } catch (ValidationException $e) {
+                return response()->json(['status' => 'error', 'msg' => $e->validator->errors()->first()], 422);
+            }
+
+            DB::beginTransaction();
+            try {
+                $profileImagePath = null;
+                if ($request->hasFile('profile')) {
+                    $profileImagePath = $request->file('profile')->store('upload/profiles', 'public');
+                }
+
+                $user = User::create([
+                    'first_name' => $validatedData['first_name'],
+                    'last_name' => $validatedData['last_name'],
+                    'email' => $validatedData['email'],
+                    'password' => Hash::make($validatedData['password']),
+                    'phone_number' => $validatedData['phone_number'],
+                    'profile' => $profileImagePath,
+                    'type' => 'tenant',
+                    'is_active' => 1,
+                ]);
+
+                $leaseEndDate = null;
+                if ($validatedData['purchase_type'] === 'installment') {
+                    $leaseEndDate = \Carbon\Carbon::parse($validatedData['installment_start_date']);
+                    $duration = (int) $validatedData['installment_duration'];
+                    $monthsToAdd = match ($validatedData['installment_type']) {
+                        'quarter_year' => $duration * 3,
+                        'half_year' => $duration * 6,
+                        'yearly' => $duration * 12,
+                        default => $duration,
+                    };
+                    $leaseEndDate->addMonths($monthsToAdd);
+                    $leaseEndDate = $leaseEndDate->format('Y-m-d');
+                }
+
+                $tenant = Tenant::create([
+                    'user_id' => $user->id,
+                    'family_member' => $validatedData['family_member'] ?? null,
+                    'national_id' => $validatedData['national_id'] ?? null,
+                    'address' => $validatedData['address'],
+                    'country' => $validatedData['country'],
+                    'state' => $validatedData['state'],
+                    'city' => $validatedData['city'],
+                    'zip_code' => $validatedData['zip_code'],
+                    'property' => $validatedData['property'],
+                    'unit' => $validatedData['unit'],
+                    'purchase_type' => $validatedData['purchase_type'],
+                    'lease_start_date' => $validatedData['installment_start_date'] ?? null,
+                    'lease_end_date' =>  $leaseEndDate,
+                    'email' => $user->email,
+                    
+                    'phone' => $user->phone_number,
+                    'profile_image' => $user->profile,
+                ]);
+
+                if ($request->hasFile('contracts')) {
+                    foreach ($request->file('contracts') as $file) {
+                        $path = $file->store('contracts', 'public');
+                        Contract::create(['tenant_id' => $tenant->id, 'contract_file' => $path]);
+                    }
+                }
+
+                $unit = PropertyUnit::findOrFail($validatedData['unit']);
+                $unit->status = 'sold';
+                $unit->save();
+
+                // ✅ FIX: This entire block handles the creation of installment records.
+                if ($validatedData['purchase_type'] === 'installment') {
+                    $duration = (int) $validatedData['installment_duration'];
+                    $feePercent = (float) $request->installment_fee_percent ?? 0;
+                    $balance = $validatedData['unit_price'] - $validatedData['deposit'];
+                    $totalFee = $balance * ($feePercent / 100);
+                    $totalInstallmentAmount = $balance + $totalFee;
+                    $amountPerInstallment = ($duration > 0) ? $totalInstallmentAmount / $duration : 0;
+                    $currentDueDate = \Carbon\Carbon::parse($validatedData['installment_start_date']);
+
+                    for ($i = 0; $i < $duration; $i++) {
+                        Installment::create([
+                            'buyer_id' => $tenant->id,
+                            'unit_id' => $unit->id,
+                            'installment_number' => $i + 1,
+                            'due_date' => $currentDueDate->format('Y-m-d'),
+                            'amount' => round($amountPerInstallment, 2),
+                            'status' => 'pending',
+                        ]);
+
+                        switch ($validatedData['installment_type']) {
+                            case 'quarter_year':
+                                $currentDueDate->addMonths(3);
+                                break;
+                            case 'half_year':
+                                $currentDueDate->addMonths(6);
+                                break;
+                            case 'yearly':
+                                $currentDueDate->addYear();
+                                break;
+                            default:
+                                $currentDueDate->addMonth();
+                                break;
+                        }
+                    }
+                }
+
+                DB::commit();
+                return response()->json(['status' => 'success', 'msg' => __('Tenant successfully created.')]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Tenant Creation Failed: ' . $e->getMessage());
+                return response()->json(['status' => 'error', 'msg' => $e->getMessage()], 500);
+            }
+        }
+        return redirect()->back()->with('error', __('Permission Denied!'));
+    }
 
 
     public function edit(Tenant $tenant)
     {
         if (\Auth::user()->can('edit tenant')) {
-            $property = Property::where('parent_id', parentId())->get()->pluck('name', 'id');
-            $property->prepend(__('Select Property'), 0);
-
+            $property = Property::where('is_active', 1)->get()->pluck('name', 'id');
+            $property->prepend(__('Select Property'), '');
             $user = User::find($tenant->user_id);
-            return view('tenant.edit', compact('property', 'tenant', 'user'));
+            // Also fetch available units for the current property
+            $units = PropertyUnit::where('property_id', $tenant->property)->where('status', '!=', 'sold')->get()->pluck('name', 'id');
+            return view('tenant.edit', compact('property', 'tenant', 'user', 'units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
@@ -286,94 +230,51 @@ class TenantController extends Controller
     public function update(Request $request, Tenant $tenant)
     {
         if (\Auth::user()->can('edit tenant')) {
-            $validator = \Validator::make(
-                $request->all(),
-                [
-                    'first_name' => 'required',
-                    'last_name' => 'required',
-                    'email' => 'required',
-                    'phone_number' => 'required',
-                    'family_member' => 'required',
-                    'country' => 'required',
-                    'state' => 'required',
-                    'city' => 'required',
-                    'zip_code' => 'required',
-                    'address' => 'required',
-                    'property' => 'required',
-                    'unit' => 'required',
-                    'lease_start_date' => 'required',
-                    'lease_end_date' => 'required',
-                ]
-            );
-            if ($validator->fails()) {
-                $messages = $validator->getMessageBag();
-                return response()->json([
-                    'status' => 'error',
-                    'msg' => $messages->first(),
-
-                ]);
+            $user = User::find($tenant->user_id);
+            if (!$user) {
+                return response()->json(['status' => 'error', 'msg' => 'Associated user not found.']);
             }
 
-            $user = User::find($tenant->user_id);
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->phone_number = $request->phone_number;
-            $user->save();
+            $validator = \Validator::make($request->all(), [
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+                'phone_number' => 'required|string|max:20',
+                'national_id' => 'nullable|string|max:255',
+                // ... other rules ...
+            ]);
 
-            if ($request->profile != '') {
-                $tenantFilenameWithExt = $request->file('profile')->getClientOriginalName();
-                $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                $tenantExtension = $request->file('profile')->getClientOriginalExtension();
-                $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                $dir = storage_path('upload/profile');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'msg' => $validator->errors()->first()]);
+            }
+
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+            ]);
+
+            if ($request->hasFile('profile')) {
+                if ($user->profile) {
+                    Storage::disk('public')->delete($user->profile);
                 }
-                $request->file('profile')->storeAs('upload/profile/', $tenantFileName);
-                $user->profile = $tenantFileName;
+                $path = $request->file('profile')->store('profiles', 'public');
+                $user->profile = $path;
                 $user->save();
             }
 
-            $tenant->family_member = $request->family_member;
-            $tenant->country = $request->country;
-            $tenant->state = $request->state;
-            $tenant->city = $request->city;
-            $tenant->zip_code = $request->zip_code;
-            $tenant->address = $request->address;
-            $tenant->property = $request->property;
-            $tenant->unit = $request->unit;
-            $tenant->lease_start_date = $request->lease_start_date;
-            $tenant->lease_end_date = $request->lease_end_date;
-            $tenant->save();
-
-
-
-            if (!empty($request->tenant_images)) {
-                foreach ($request->tenant_images as $file) {
-                    $tenantFilenameWithExt = $file->getClientOriginalName();
-                    $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                    $tenantExtension = $file->getClientOriginalExtension();
-                    $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                    $dir = storage_path('upload/tenant');
-                    if (!file_exists($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
-                    $file->storeAs('upload/tenant/', $tenantFileName);
-
-                    $tenantImage = new TenantDocument();
-                    $tenantImage->property_id = $request->property;
-                    $tenantImage->tenant_id = $tenant->id;
-                    $tenantImage->document = $tenantFileName;
-                    $tenantImage->parent_id = parentId();
-                    $tenantImage->save();
-                }
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'msg' => __('Tenant successfully updated.'),
+            $tenant->update([
+                'family_member' => $request->family_member,
+                'national_id' => $request->national_id,
+                'country' => $request->country,
+                'state' => $request->state,
+                'city' => $request->city,
+                'zip_code' => $request->zip_code,
+                'address' => $request->address,
             ]);
+
+            return response()->json(['status' => 'success', 'msg' => __('Tenant successfully updated.')]);
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
@@ -390,27 +291,19 @@ class TenantController extends Controller
         }
     }
 
-
-
-
-
-
-
     public function downloadAllContracts($tenantId)
     {
         $tenant = Tenant::with('contracts')->findOrFail($tenantId);
-
         if ($tenant->contracts->isEmpty()) {
             return back()->with('error', 'No documents available.');
         }
-
         $zipFileName = 'contracts_' . $tenant->id . '.zip';
-        $zipPath = storage_path("app/public/temp/{$zipFileName}");
+        $zip = new \ZipArchive;
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'zip');
 
-        $zip = new ZipArchive;
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+        if ($zip->open($tempFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
             foreach ($tenant->contracts as $contract) {
-                $filePath = storage_path('app/public/' . $contract->contract_file);
+                $filePath = Storage::disk('public')->path($contract->contract_file);
                 if (file_exists($filePath)) {
                     $zip->addFile($filePath, basename($filePath));
                 }
@@ -419,7 +312,6 @@ class TenantController extends Controller
         } else {
             return back()->with('error', 'Could not create ZIP file.');
         }
-
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        return response()->download($tempFilePath, $zipFileName)->deleteFileAfterSend(true);
     }
 }

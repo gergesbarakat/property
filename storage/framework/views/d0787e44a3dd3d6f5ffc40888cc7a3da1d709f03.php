@@ -5,6 +5,28 @@
     $subscription = \App\Models\Subscription::find($authUser->subscription);
     $routeName = \Request::route()->getName();
 ?>
+
+
+<style>
+    .codex-sidebar {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        /* Make the sidebar take the full viewport height */
+        position: fixed;
+        /* Ensures it stays in place on scroll */
+    }
+
+    .codex-menuwrapper {
+        flex: 1 1 auto;
+        /* A robust way to make this element fill all available vertical space */
+        position: relative;
+        /* Helps with internal height calculations for the scrollbar */
+        overflow-y: auto;
+        /* Provides a fallback scrollbar and a boundary for SimpleBar */
+    }
+</style>
+
 <aside class="codex-sidebar sidebar-<?php echo e($settings['sidebar_mode']); ?>">
     <div class="logo-gridwrap">
         <a class="codexbrand-logo" href="<?php echo e(route('home')); ?>">
@@ -250,7 +272,7 @@
                 <li class="cdxmenu-title">
                     <h5><?php echo e(__('System Settings')); ?></h5>
                 </li>
-                
+
                 <?php if(Gate::check('manage account settings') ||
                         Gate::check('manage password settings') ||
                         Gate::check('manage general settings') ||
@@ -301,8 +323,7 @@
                                 </li>
                             <?php endif; ?>
                             <?php if(Gate::check('manage google recaptcha settings')): ?>
-                                <li
-                                    class="<?php echo e(in_array($routeName, ['setting.google.recaptcha']) ? 'active' : ''); ?> ">
+                                <li class="<?php echo e(in_array($routeName, ['setting.google.recaptcha']) ? 'active' : ''); ?> ">
                                     <a
                                         href="<?php echo e(route('setting.google.recaptcha')); ?>"><?php echo e(__('ReCaptcha Setting')); ?></a>
                                 </li>

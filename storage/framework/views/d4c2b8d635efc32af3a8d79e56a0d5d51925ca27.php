@@ -72,7 +72,7 @@
                 <div class="card-header" style="min-height: 50px;"></div>
                 <div class="card-body text-center">
                     <div class="user-imgwrap"><img class="img-fluid rounded-circle"
-                            src="<?php echo e(optional($tenant->user)->profile ? Storage::url($tenant->user->profile) : asset('path/to/default/avatar.png')); ?>"
+                            src="<?php echo e(optional($tenant->user)->profile ? Storage::url('upload/' . $tenant->user->profile) : asset('path/to/default/avatar.png')); ?>"
                             alt="Profile Image"></div>
                     <div class="user-detailwrap">
                         <h3><?php echo e(optional($tenant->user)->first_name); ?> <?php echo e(optional($tenant->user)->last_name); ?></h3>
@@ -203,15 +203,7 @@
                                         </a>
 
                                         
-                                        <?php $__currentLoopData = $tenant->contracts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $contract): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <a href="<?php echo e(Storage::url($contract->contract_file)); ?>"
-                                                class="btn btn-sm btn-outline-secondary me-2" target="_blank">
-                                                <i data-feather="download" class="me-1"
-                                                    style="width:16px; height:16px;"></i>
-                                                Document <?php echo e($loop->iteration); ?>
-
-                                            </a>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -297,5 +289,5 @@
     </div>
 <?php endif; ?>
 <?php $__env->stopSection(); ?>
- 
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\JOWEB\property\resources\views/tenant/show.blade.php ENDPATH**/ ?>

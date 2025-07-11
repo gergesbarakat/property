@@ -149,12 +149,10 @@
             "autoWidth": true,
             "lengthMenu": [10, 25, 50, 100],
             "pageLength": 10,
-            "order": [
-                ['0', 'desc']
-            ],
+
             "columnDefs": [{
-                "targets": -1,
-                "orderable": false
+                "targets": -1, // Target the last column
+                "orderable": false // Disable sorting on the 'Actions' column
             }],
             "dom": 'Bfrtip',
             "buttons": [{

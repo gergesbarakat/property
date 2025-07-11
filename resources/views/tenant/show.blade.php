@@ -72,7 +72,7 @@
                 <div class="card-header" style="min-height: 50px;"></div>
                 <div class="card-body text-center">
                     <div class="user-imgwrap"><img class="img-fluid rounded-circle"
-                            src="{{ optional($tenant->user)->profile ? Storage::url($tenant->user->profile) : asset('path/to/default/avatar.png') }}"
+                            src="{{ optional($tenant->user)->profile ? Storage::url('upload/' . $tenant->user->profile) : asset('path/to/default/avatar.png') }}"
                             alt="Profile Image"></div>
                     <div class="user-detailwrap">
                         <h3>{{ optional($tenant->user)->first_name }} {{ optional($tenant->user)->last_name }}</h3>
@@ -200,14 +200,14 @@
                                         </a>
 
                                         {{-- Existing per-document download buttons --}}
-                                        @foreach ($tenant->contracts as $contract)
+                                        {{-- @foreach ($tenant->contracts as $contract)
                                             <a href="{{ Storage::url($contract->contract_file) }}"
                                                 class="btn btn-sm btn-outline-secondary me-2" target="_blank">
                                                 <i data-feather="download" class="me-1"
                                                     style="width:16px; height:16px;"></i>
                                                 Document {{ $loop->iteration }}
                                             </a>
-                                        @endforeach
+                                        @endforeach --}}
                                     </div>
                                 </div>
                             </div>
@@ -292,4 +292,3 @@
     </div>
 @endif
 @endsection
- 

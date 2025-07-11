@@ -44,6 +44,7 @@ class InstallmentController extends Controller
                 'invoice_month' => \Carbon\Carbon::parse($installment->due_date)->startOfMonth()->format('Y-m-d'),
                 'end_date'      => $installment->due_date,
                 'status'        => 'paid',
+                'paid_date'   => now(), // Set the paid date to now.
             ]);
 
             // ✅ Action 3: Create the related Invoice Item.

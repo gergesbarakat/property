@@ -7,49 +7,63 @@
     $settings = settings();
 @endphp
 @push('script-page')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script>
+        // ✅ UPDATED: This script now temporarily increases font size for a clearer PDF.
         $(document).on('click', '.print', function() {
-    const elementToCapture = document.getElementById('invoice-print');
-    const invoiceId = "{{ $invoice->id }}"; // Get the invoice ID from Blade
-    const fileName = 'invoice-{{ invoicePrefix() . $invoice->invoice_id }}.pdf';
+            const elementToCapture = document.getElementById('invoice-print');
+            const invoiceId = "{{ $invoice->id }}";
+            const fileName = 'invoice-{{ invoicePrefix() . $invoice->invoice_id }}.pdf';
 
-    html2canvas(elementToCapture, { scale: 2, useCORS: true }).then(function(canvas) {
-        var imgData = canvas.toDataURL('image/png');
+            // Temporarily increase font size for better PDF quality
+            elementToCapture.style.fontSize = '1.2em';
 
-        // Create a temporary form to submit the data via POST
-        var form = document.createElement('form');
-        form.method = 'POST';
-        // ✅ The action now points to the same route used for template PDFs
-        form.action = "{{ route('pdf.download', ['type' => 'invoice', 'id' => $invoice->id]) }}";
-        form.target = '_blank';
+            html2canvas(elementToCapture, {
+                scale: 2, // Improve image resolution
+                useCORS: true
+            }).then(function(canvas) {
+                // Return font size to normal after capture
+                elementToCapture.style.fontSize = '';
 
-        // Add CSRF token
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = '{{ csrf_token() }}';
-        form.appendChild(csrfInput);
+                var imgData = canvas.toDataURL('image/png');
 
-        // Add image data
-        var imageDataInput = document.createElement('input');
-        imageDataInput.type = 'hidden';
-        imageDataInput.name = 'imageData';
-        imageDataInput.value = imgData;
-        form.appendChild(imageDataInput);
+                // Create a temporary form to submit the data via POST
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ route('pdf.download', ['type' => 'invoice', 'id' => $invoice->id]) }}";
+                form.target = '_blank';
 
-        // Add filename
-        var fileNameInput = document.createElement('input');
-        fileNameInput.type = 'hidden';
-        fileNameInput.name = 'filename';
-        fileNameInput.value = fileName;
-        form.appendChild(fileNameInput);
+                // Add CSRF token
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
 
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-    });
-});
+                // Add image data
+                var imageDataInput = document.createElement('input');
+                imageDataInput.type = 'hidden';
+                imageDataInput.name = 'imageData';
+                imageDataInput.value = imgData;
+                form.appendChild(imageDataInput);
 
+                // Add filename
+                var fileNameInput = document.createElement('input');
+                fileNameInput.type = 'hidden';
+                fileNameInput.name = 'filename';
+                fileNameInput.value = fileName;
+                form.appendChild(fileNameInput);
+
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+            }).catch(function(error) {
+                // Ensure font size is reset even if there's an error
+                elementToCapture.style.fontSize = '';
+                console.error('oops, something went wrong!', error);
+            });
+        });
     </script>
     <script src="https://js.stripe.com/v3/"></script>
 
@@ -369,11 +383,14 @@
                                             <th>{{ __('Status') }}</th>
                                             <td>
                                                 @if ($invoice->status == 'open')
-                                                    <span class="badge badge-primary">{{ \App\Models\Invoice::$status[$invoice->status] }}</span>
+                                                    <span
+                                                        class="badge badge-primary">{{ \App\Models\Invoice::$status[$invoice->status] }}</span>
                                                 @elseif($invoice->status == 'paid')
-                                                    <span class="badge badge-success">{{ \App\Models\Invoice::$status[$invoice->status] }}</span>
+                                                    <span
+                                                        class="badge badge-success">{{ \App\Models\Invoice::$status[$invoice->status] }}</span>
                                                 @elseif($invoice->status == 'partial_paid')
-                                                    <span class="badge badge-warning">{{ \App\Models\Invoice::$status[$invoice->status] }}</span>
+                                                    <span
+                                                        class="badge badge-warning">{{ \App\Models\Invoice::$status[$invoice->status] }}</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -396,19 +413,22 @@
                                     <table class="table table-bordered">
                                         <tr>
                                             <th>{{ __('Name') }}</th>
-                                            <td>{{ !empty($tenant) && !empty($tenant->user) ? $tenant->user->first_name . ' ' . $tenant->user->last_name : '-' }}</td>
+                                            <td>{{ !empty($tenant) && !empty($tenant->user) ? $tenant->user->first_name . ' ' . $tenant->user->last_name : '-' }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>{{ __('Email') }}</th>
-                                            <td>{{ !empty($tenant) && !empty($tenant->user) ? $tenant->user->email : '-' }}</td>
+                                            <td>{{ !empty($tenant) && !empty($tenant->user) ? $tenant->user->email : '-' }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>{{ __('Phone') }}</th>
-                                            <td>{{ !empty($tenant) && !empty($tenant->user) ? $tenant->user->phone_number : '-' }}</td>
+                                            <td>{{ !empty($tenant) && !empty($tenant->user) ? $tenant->user->phone_number : '-' }}
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th>{{ __('Address') }}</th>
-                                            <td>{{ !empty($tenant) ? $tenant->address : '-' }}</td>
+                                            <th>{{ __('National_ID') }}</th>
+                                            <td>{{ !empty($tenant) ? $tenant->national_id : '-' }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -417,19 +437,21 @@
                                     <table class="table table-bordered">
                                         <tr>
                                             <th>{{ __('Property') }}</th>
-                                            <td>{{ !empty($property) ? $property->name : '-' }}</td>
+                                            <td>{{ !empty($invoice->property) ? $invoice->property->name : '-' }}</td>
+
                                         </tr>
                                         <tr>
                                             <th>{{ __('Unit') }}</th>
-                                            <td>{{ !empty($unit) ? $unit->name : '-' }}</td>
+                                            <td>{{ !empty($invoice->unit) ? $invoice->unit->name : '-' }}</td>
                                         </tr>
                                         <tr>
                                             <th>{{ __('Unit Type') }}</th>
-                                            <td>{{ !empty($unit) && !empty($unit->type) ? $unit->type->name : '-' }}</td>
+                                            <td>{{ !empty($invoice->unit) && !empty($invoice->unit->status) ? $invoice->unit->status : '-' }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>{{ __('Unit Size') }}</th>
-                                            <td>{{ !empty($unit) ? $unit->size : '-' }}</td>
+                                            <td>{{ !empty($invoice->unit) ? $invoice->unit->unit_size : '-' }}</td>
                                         </tr>
                                     </table>
                                 </div>

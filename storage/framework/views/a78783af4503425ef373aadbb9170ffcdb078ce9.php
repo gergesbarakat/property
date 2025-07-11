@@ -1,4 +1,3 @@
-
 <?php $__env->startSection('page-title'); ?>
     <?php echo e(__('Units')); ?>
 
@@ -31,6 +30,7 @@
                                 <th><?php echo e(__('Bedroom')); ?></th>
                                 <th><?php echo e(__('Kitchen')); ?></th>
                                 <th><?php echo e(__('Bath')); ?></th>
+                                <th><?php echo e(__('Unit Size')); ?></th>
                                 <th><?php echo e(__('status')); ?></th>
 
                                 
@@ -52,6 +52,7 @@
                                     <td><?php echo e($unit->bedroom); ?></td>
                                     <td><?php echo e($unit->kitchen); ?></td>
                                     <td><?php echo e($unit->baths); ?></td>
+                                    <td><?php echo e($unit->unit_size); ?></td>
                                     <td>
                                         <?php if(ucfirst($unit->status) != 'Available'): ?>
                                             <span class="badge bg-danger text-white"><?php echo e($unit->status); ?></span>

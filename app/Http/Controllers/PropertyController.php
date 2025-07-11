@@ -274,7 +274,9 @@ class PropertyController extends Controller
     public function units()
     {
         if (\Auth::user()->can('manage unit')) {
-            $units = PropertyUnit::with(['properties'])->get();
+            $units = PropertyUnit::whereHas('property', function ($query) {
+                $query->where('is_active', 1);
+            })->with('property')->get();
             return view('unit.index', compact('units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
@@ -290,14 +292,15 @@ class PropertyController extends Controller
 
     public function unitStore(Request $request, $property_id)
     {
-        if (\Auth::user()->can('create unit')) {
+        if (\Auth::user()->can(abilities: 'create unit')) {
             $validator = \Validator::make(
                 $request->all(),
                 [
-                    'name' => 'required',
+                    'name' => 'required|unique:properties', // Rule changed here
                     'bedroom' => 'required',
                     'kitchen' => 'required',
                     'baths' => 'required',
+                    'unit_size' => 'required|numeric|min:0', // Uncomment if unit size is required
                     // 'rent' => 'required',
                     // 'rent_type' => 'required',
                     // 'deposit_type' => 'required',
@@ -318,6 +321,7 @@ class PropertyController extends Controller
             $unit->bedroom = $request->bedroom;
             $unit->kitchen = $request->kitchen;
             $unit->baths = $request->baths;
+            $unit->unit_size = $request->unit_size; // Add unit size field
             // $unit->rent = $request->rent;
             // $unit->rent_type = $request->rent_type;
             // if ($request->rent_type == 'custom') {
@@ -358,10 +362,11 @@ class PropertyController extends Controller
             $validator = \Validator::make(
                 $request->all(),
                 [
-                    'name' => 'required',
+                    'name' => 'required|unique:properties', // Rule changed here
                     'bedroom' => 'required|integer|min:0',
                     'kitchen' => 'required|integer|min:0',
                     'baths' => 'required|integer|min:0',
+                    'unit_size' => 'required|numeric|min:0',
                 ]
             );
 
@@ -385,6 +390,7 @@ class PropertyController extends Controller
             $unit->kitchen = $request->kitchen;
             $unit->baths = $request->baths;
             $unit->notes = $request->notes;
+            $unit->unit_size = $request->unit_size; // Update unit size field
             if ($unit->status == 'deactivated') {
                 $unit->status = 'Available';
             }
