@@ -12,7 +12,6 @@
     <meta name="keywords" content="<?php echo e($settings['meta_seo_keyword']); ?>">
     <meta name="description" content="<?php echo e($settings['meta_seo_description']); ?>">
 
-
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?php echo e(env('APP_URL')); ?>">
     <meta property="og:title" content="<?php echo e($settings['meta_seo_title']); ?>">

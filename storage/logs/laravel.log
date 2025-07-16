@@ -34101,3 +34101,276 @@ Stack trace:
 [2025-07-08 17:12:57] local.INFO: SetLocale middleware is running.  
 [2025-07-08 17:12:57] local.INFO: User is authenticated. Language is: arabic  
 [2025-07-08 17:12:57] local.INFO: Locale set to: arabic  
+[2025-07-11 17:14:06] local.INFO: SetLocale middleware is running.  
+[2025-07-11 17:14:06] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-11 17:14:06] local.INFO: SetLocale middleware is running.  
+[2025-07-11 17:14:06] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 16:47:55] local.INFO: SetLocale middleware is running.  
+[2025-07-12 16:47:55] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 16:47:57] local.INFO: SetLocale middleware is running.  
+[2025-07-12 16:47:57] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 16:48:00] local.INFO: SetLocale middleware is running.  
+[2025-07-12 16:48:00] local.INFO: SetLocale middleware is running.  
+[2025-07-12 16:48:00] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 16:48:00] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 17:23:33] local.INFO: SetLocale middleware is running.  
+[2025-07-12 17:23:33] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 17:23:37] local.INFO: SetLocale middleware is running.  
+[2025-07-12 17:23:37] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 17:23:41] local.INFO: SetLocale middleware is running.  
+[2025-07-12 17:23:41] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 17:23:41] local.INFO: SetLocale middleware is running.  
+[2025-07-12 17:23:41] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 18:40:49] local.INFO: SetLocale middleware is running.  
+[2025-07-12 18:40:49] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 18:40:49] local.INFO: SetLocale middleware is running.  
+[2025-07-12 18:40:49] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 18:40:50] local.INFO: SetLocale middleware is running.  
+[2025-07-12 18:40:50] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-12 18:40:50] local.INFO: SetLocale middleware is running.  
+[2025-07-12 18:40:50] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-12 18:40:50] local.INFO: Locale set to: arabic  
+[2025-07-13 08:32:01] local.INFO: SetLocale middleware is running.  
+[2025-07-13 08:32:02] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 08:32:06] local.INFO: SetLocale middleware is running.  
+[2025-07-13 08:32:06] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 08:32:14] local.INFO: SetLocale middleware is running.  
+[2025-07-13 08:32:14] local.INFO: SetLocale middleware is running.  
+[2025-07-13 08:32:14] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 08:32:14] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 08:36:39] local.INFO: SetLocale middleware is running.  
+[2025-07-13 08:36:39] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 08:36:39] local.INFO: SetLocale middleware is running.  
+[2025-07-13 08:36:39] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 09:48:44] local.INFO: SetLocale middleware is running.  
+[2025-07-13 09:48:45] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 09:48:49] local.INFO: SetLocale middleware is running.  
+[2025-07-13 09:48:49] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:03] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:03] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:06] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:06] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:10] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:10] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:10] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:10] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:30] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:30] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:31] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:31] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:32] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:32] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:32] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:32] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:21:32] local.INFO: Locale set to: arabic  
+[2025-07-13 13:21:59] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:59] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:21:59] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:21:59] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:21:59] local.INFO: Locale set to: arabic  
+[2025-07-13 13:22:07] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:07] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:22:07] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:07] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:22:07] local.INFO: Locale set to: arabic  
+[2025-07-13 13:22:16] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:16] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:22:16] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:16] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:22:16] local.INFO: Locale set to: arabic  
+[2025-07-13 13:22:33] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:33] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:22:33] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:33] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:22:33] local.INFO: Locale set to: arabic  
+[2025-07-13 13:22:35] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:35] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:22:35] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:22:35] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:22:35] local.INFO: Locale set to: arabic  
+[2025-07-13 13:23:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:23:15] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:23:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:23:15] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:23:15] local.INFO: Locale set to: arabic  
+[2025-07-13 13:24:59] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:24:59] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:24:59] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:24:59] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:24:59] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:11] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:11] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:11] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:11] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:11] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:12] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:12] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:15] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:15] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:15] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:15] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:19] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:19] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:19] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:19] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:19] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:21] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:21] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:21] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:21] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:21] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:26] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:26] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:26] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:26] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:26] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:27] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:27] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:35] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:35] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:35] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:35] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:35] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:35] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:35] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:35] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:35] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:35] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:39] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:39] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:40] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:40] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:40] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:44] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:44] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:44] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:44] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:44] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:48] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:48] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:26:48] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:48] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:26:48] local.INFO: Locale set to: arabic  
+[2025-07-13 13:26:48] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:26:48] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:28:10] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:10] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:28:10] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:10] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:28:10] local.INFO: Locale set to: arabic  
+[2025-07-13 13:28:11] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:11] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:28:12] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:12] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:28:12] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:12] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:28:12] local.INFO: Locale set to: arabic  
+[2025-07-13 13:28:24] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:24] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:28:24] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:28:24] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:28:24] local.INFO: Locale set to: arabic  
+[2025-07-13 13:29:02] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:29:02] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:29:02] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:29:02] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:29:02] local.INFO: Locale set to: arabic  
+[2025-07-13 13:29:02] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:29:02] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:29:02] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:29:02] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:29:02] local.INFO: Locale set to: arabic  
+[2025-07-13 13:29:47] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:29:47] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:29:47] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:29:47] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:29:47] local.INFO: Locale set to: arabic  
+[2025-07-13 13:30:10] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:30:10] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:30:10] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:30:10] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:30:10] local.INFO: Locale set to: arabic  
+[2025-07-13 13:30:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:30:15] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:30:15] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:30:15] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:30:15] local.INFO: Locale set to: arabic  
+[2025-07-13 13:31:06] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:06] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:31:06] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:06] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:31:06] local.INFO: Locale set to: arabic  
+[2025-07-13 13:31:11] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:11] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:31:11] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:11] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:31:11] local.INFO: Locale set to: arabic  
+[2025-07-13 13:31:16] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:16] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:31:17] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:17] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:31:17] local.INFO: Locale set to: arabic  
+[2025-07-13 13:31:40] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:40] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:31:40] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:40] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:31:40] local.INFO: Locale set to: arabic  
+[2025-07-13 13:31:54] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:54] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:31:54] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:31:54] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:31:54] local.INFO: Locale set to: arabic  
+[2025-07-13 13:32:21] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:32:21] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:32:21] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:32:21] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:32:21] local.INFO: Locale set to: arabic  
+[2025-07-13 13:32:40] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:32:40] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 13:32:40] local.INFO: SetLocale middleware is running.  
+[2025-07-13 13:32:40] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-13 13:32:40] local.INFO: Locale set to: arabic  
+[2025-07-13 16:37:43] local.INFO: SetLocale middleware is running.  
+[2025-07-13 16:37:43] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-13 16:37:45] local.INFO: SetLocale middleware is running.  
+[2025-07-13 16:37:45] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:33] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:33] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:34] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:34] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:35] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:35] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:35] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:35] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:57] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:57] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:57] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:57] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:58] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:58] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:14:58] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:14:58] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-16 11:14:58] local.INFO: Locale set to: arabic  
+[2025-07-16 11:15:04] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:04] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:15:04] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:04] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-16 11:15:04] local.INFO: Locale set to: arabic  
+[2025-07-16 11:15:06] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:06] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:15:06] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:06] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-16 11:15:06] local.INFO: Locale set to: arabic  
+[2025-07-16 11:15:11] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:11] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:15:11] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:11] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-16 11:15:11] local.INFO: Locale set to: arabic  
+[2025-07-16 11:15:13] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:13] local.INFO: User is not authenticated. Using default locale.  
+[2025-07-16 11:15:13] local.INFO: SetLocale middleware is running.  
+[2025-07-16 11:15:13] local.INFO: User is authenticated. Language is: arabic  
+[2025-07-16 11:15:13] local.INFO: Locale set to: arabic  
