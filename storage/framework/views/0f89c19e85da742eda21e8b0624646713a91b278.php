@@ -100,34 +100,16 @@
 
 <body>
     <div class="container">
-        
-        <table class="header-table">
-            <tr>
-                <td>
-                    
-                    <img src="https://via.placeholder.com/150x60.png?text=Your+Logo" alt="Company Logo"
-                        class="company-logo">
-                </td>
-                <td class="company-details">
-                    <h1>STATEMENT</h1>
-                    <p>
-                        <strong>Your Company Name</strong><br>
-                        123 Main Street, Suite 456<br>
-                        Anytown, ST 12345<br>
-                        contact@yourcompany.com
-                    </p>
-                </td>
-            </tr>
-        </table>
-
-        <hr>
-
-        
-        <div class="section">
+         <div class="section">
             <table class="info-table">
                 <tr>
-                    <td class="label">Bill To:</td>
                     <td>
+                        <img class="img-fluid" style="width: 150px; height: auto;"
+                            src="<?php echo e(asset(Storage::url('upload/logo/')) . '/' . (isset($admin_logo) && !empty($admin_logo) ? $admin_logo : 'logo.png')); ?>"
+                            alt="theeme-logo">
+                    </td>
+                    <td>
+                        Bill To:
                         <strong><?php echo e(optional($tenant->user)->first_name); ?>
 
                             <?php echo e(optional($tenant->user)->last_name); ?></strong><br>
@@ -136,8 +118,7 @@
                         <?php echo e(optional($tenant->user)->email ?? '-'); ?>
 
                     </td>
-                    <td class="label">Property Details:</td>
-                    <td>
+                    <td>Property Details:
                         <strong><?php echo e(optional($tenant->linked_property)->name ?? '-'); ?></strong><br>
                         Unit: <?php echo e(optional($tenant->propertyUnit)->name ?? '-'); ?><br>
                         Generated on: <?php echo e(now()->format('F j, Y')); ?>

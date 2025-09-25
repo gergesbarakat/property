@@ -48,7 +48,7 @@
                                     <td><?php echo e(optional($invoice->unit)->name ?? '-'); ?></td>
                                     <td><?php echo e(\Carbon\Carbon::parse($invoice->invoice_month)->format('F Y')); ?></td>
                                     <td><?php echo e(\Carbon\Carbon::parse($invoice->end_date)->format('M j, Y')); ?></td>
-                                    <td>$<?php echo e(number_format($invoice->items->sum('amount'), 2)); ?></td>
+                                    <td><?php echo e(priceFormat(number_format($invoice->items->sum('amount'), 2))); ?></td>
                                     <td>
                                         <?php if($invoice->status == 'paid'): ?>
                                             <span class="badge badge-success"><?php echo e(ucfirst($invoice->status)); ?></span>

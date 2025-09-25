@@ -53,7 +53,7 @@
                                     <td>{{ optional($invoice->unit)->name ?? '-' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($invoice->invoice_month)->format('F Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($invoice->end_date)->format('M j, Y') }}</td>
-                                    <td>${{ number_format($invoice->items->sum('amount'), 2) }}</td>
+                                    <td>{{ priceFormat(number_format($invoice->items->sum('amount'), 2)) }}</td>
                                     <td>
                                         @if ($invoice->status == 'paid')
                                             <span class="badge badge-success">{{ ucfirst($invoice->status) }}</span>

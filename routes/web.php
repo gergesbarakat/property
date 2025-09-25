@@ -207,6 +207,7 @@ Route::group(
         Route::post('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
         Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadAllContracts'])->name('tenants.contracts.download');
         // This route will trigger the PDF download for a specific tenant.
+        Route::post('/installments/update-status', [InstallmentController::class, 'updateStatus'])->name('installment.payment.store');
 
         Route::resource('property', PropertyController::class);
         Route::get('property/{pid}/unit/create', [PropertyController::class, 'unitCreate'])->name('unit.create');

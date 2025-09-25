@@ -62,15 +62,15 @@ class PropertyController extends Controller
 
             $ids = parentId();
             $authUser = \App\Models\User::find($ids);
-            $totalProperty = $authUser->totalProperty();
-            $subscription = Subscription::find($authUser->subscription);
-            if ($totalProperty >= $subscription->property_limit && $subscription->property_limit != 0) {
-                return response()->json([
-                    'status' => 'error',
-                    'msg' => __('Your property limit is over, please upgrade your subscription.'),
-                    'id' => 0,
-                ]);
-            }
+            // $totalProperty = $authUser->totalProperty();
+            // $subscription = Subscription::find($authUser->subscription);
+            // if ($totalProperty >= $subscription->property_limit && $subscription->property_limit != 0) {
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'msg' => __('Your property limit is over, please upgrade your subscription.'),
+            //         'id' => 0,
+            //     ]);
+            // }
             $property = new Property();
             $property->name = $request->name;
             $property->description = $request->description;
@@ -248,23 +248,27 @@ class PropertyController extends Controller
     public function destroy(Property $property)
     {
         if (\Auth::user()->can('delete property')) {
+            // First, check if any units within this property are sold.
+            $hasSoldUnits = $property->totalUnits()->where('status', 'sold')->exists();
+
+            if ($hasSoldUnits) {
+                return redirect()->back()->with('error', __('This property cannot be deactivated because it has sold units.'));
+            }
+
             try {
-                // Check if the unit is already deactivated to avoid unnecessary database writes.
-                if ($property->status === 'deactivated') {
+                // Check if the property is already inactive.
+                if ($property->is_active == 0) {
                     return redirect()->back()->with('warning', 'This property is already deactivated.');
                 }
 
-                // Set the status to 'deactivated' instead of deleting the record.
-                $property->status = 'deactivated';
+                // Set the property to inactive instead of deleting.
+                $property->is_active = 0;
                 $property->save();
 
-                // Redirect back with a success message.
-                return redirect()->back()->with('success', 'property successfully deactivated.');
+                return redirect()->back()->with('success', 'Property successfully deactivated.');
             } catch (\Exception $e) {
-                // In case of an unexpected error, redirect back with an error message.
                 return redirect()->back()->with('error', 'Failed to deactivate property. Please try again.');
             }
-            return redirect()->back()->with('success', 'Property successfully deleted.');
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }

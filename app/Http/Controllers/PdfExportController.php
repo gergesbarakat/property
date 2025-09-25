@@ -20,8 +20,10 @@ class PdfExportController extends Controller
      * @param  int  $id The ID of the model instance.
      * @return \Illuminate\Http\Response
      */
-    public function downloadPdf(Request $request, $type, $id)
+    public function downloadPdf(Request $request, $type, $id   )
     {
+        // Ensure settings are available
+          // Debugging line to check settings
         $data = [];
         $view = '';
         $fileName = 'document.pdf';

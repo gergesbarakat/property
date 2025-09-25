@@ -82,7 +82,7 @@ if (!function_exists('settings')) {
             $userId = parentId();
             $settingData = $settingData->where('parent_id', $userId);
         } else {
-            $settingData = $settingData->where('parent_id',1);
+            $settingData = $settingData->where('parent_id', 1);
         }
         $settingData = $settingData->get();
         $details = settingsKeys();
@@ -238,7 +238,7 @@ if (!function_exists('priceFormat')) {
     {
         $settings = settings();
 
-        return $settings['CURRENCY_SYMBOL'] . $price;
+        return $price . ' ' . $settings['CURRENCY_SYMBOL'];
     }
 }
 if (!function_exists('parentId')) {
@@ -269,7 +269,7 @@ if (!function_exists('assignSubscription')) {
             \Auth::user()->save();
 
             $users = User::where('parent_id', '=', parentId())->whereNotIn('type', ['super admin', 'owner'])->get();
-            $propertys = Property::where('parent_id', '=',parentId())->get();
+            $propertys = Property::where('parent_id', '=', parentId())->get();
 
             if ($subscription->user_limit == 0) {
                 foreach ($users as $user) {
@@ -290,33 +290,24 @@ if (!function_exists('assignSubscription')) {
                 }
             }
 
-            if($subscription->property_limit == 0)
-            {
-                foreach($propertys as $property)
-                {
+            if ($subscription->property_limit == 0) {
+                foreach ($propertys as $property) {
                     $property->is_active = 1;
                     $property->save();
                 }
-            }
-            else
-            {
+            } else {
                 $propertyCount = 0;
-                foreach($propertys as $property)
-                {
+                foreach ($propertys as $property) {
                     $propertyCount++;
-                    if($propertyCount <= $subscription->property_limit)
-                    {
+                    if ($propertyCount <= $subscription->property_limit) {
                         $property->is_active = 1;
                         $property->save();
-                    }
-                    else
-                    {
+                    } else {
                         $property->is_active = 0;
                         $property->save();
                     }
                 }
             }
-
         } else {
             return [
                 'is_success' => false,
@@ -326,7 +317,7 @@ if (!function_exists('assignSubscription')) {
     }
 }
 if (!function_exists('assignManuallySubscription')) {
-    function assignManuallySubscription($id,$userId)
+    function assignManuallySubscription($id, $userId)
     {
         $owner = User::find($userId);
         $subscription = Subscription::find($id);
@@ -344,7 +335,7 @@ if (!function_exists('assignManuallySubscription')) {
             $owner->save();
 
             $users = User::where('parent_id', '=', parentId())->whereNotIn('type', ['super admin', 'owner'])->get();
-            $propertys = Property::where('parent_id', '=',parentId())->get();
+            $propertys = Property::where('parent_id', '=', parentId())->get();
 
             if ($subscription->user_limit == 0) {
                 foreach ($users as $user) {
@@ -365,33 +356,24 @@ if (!function_exists('assignManuallySubscription')) {
                 }
             }
 
-            if($subscription->property_limit == 0)
-            {
-                foreach($propertys as $property)
-                {
+            if ($subscription->property_limit == 0) {
+                foreach ($propertys as $property) {
                     $property->is_active = 1;
                     $property->save();
                 }
-            }
-            else
-            {
+            } else {
                 $propertyCount = 0;
-                foreach($propertys as $property)
-                {
+                foreach ($propertys as $property) {
                     $propertyCount++;
-                    if($propertyCount <= $subscription->property_limit)
-                    {
+                    if ($propertyCount <= $subscription->property_limit) {
                         $property->is_active = 1;
                         $property->save();
-                    }
-                    else
-                    {
+                    } else {
                         $property->is_active = 0;
                         $property->save();
                     }
                 }
             }
-
         } else {
             return [
                 'is_success' => false,
@@ -438,39 +420,37 @@ if (!function_exists('expensePrefix')) {
 }
 
 if (!function_exists('timeCalculation')) {
-     function timeCalculation($startDate,$startTime,$endDate,$endTime)
+    function timeCalculation($startDate, $startTime, $endDate, $endTime)
     {
-        $startdate= $startDate.' '.$startTime;
-        $enddate=$endDate.' '.$endTime;
+        $startdate = $startDate . ' ' . $startTime;
+        $enddate = $endDate . ' ' . $endTime;
 
         $startDateTime = new DateTime($startdate);
         $endDateTime = new DateTime($enddate);
 
-         $interval = $startDateTime->diff($endDateTime);
-         $totalHours = $interval->h + $interval->i / 60;
+        $interval = $startDateTime->diff($endDateTime);
+        $totalHours = $interval->h + $interval->i / 60;
 
-        return number_format($totalHours,2);
+        return number_format($totalHours, 2);
     }
 }
 
 if (!function_exists('setup')) {
-     function setup()
+    function setup()
     {
-        $setupPath=storage_path() . "/installed";
+        $setupPath = storage_path() . "/installed";
         return $setupPath;
     }
 }
 
 if (!function_exists('userLoggedHistory')) {
-     function userLoggedHistory()
+    function userLoggedHistory()
     {
         $serverip = $_SERVER['REMOTE_ADDR'];
         $data = @unserialize(file_get_contents('http://ip-api.com/php/' . $serverip));
-        if(isset($data['status']) && $data['status'] == 'success')
-        {
+        if (isset($data['status']) && $data['status'] == 'success') {
             $browser = new \WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
-            if ($browser->device->type == 'bot')
-            {
+            if ($browser->device->type == 'bot') {
                 return redirect()->intended(RouteServiceProvider::HOME);
             }
             $referrerData = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : null;
@@ -493,11 +473,11 @@ if (!function_exists('userLoggedHistory')) {
     }
 }
 
-if(!function_exists('defaultTenantCreate')){
+if (!function_exists('defaultTenantCreate')) {
     function defaultTenantCreate($id)
     {
         // Default Tenant role
-        $tenantRoleData= [
+        $tenantRoleData = [
             'name' => 'tenant',
             'parent_id' => $id,
         ];
@@ -531,10 +511,10 @@ if(!function_exists('defaultTenantCreate')){
     }
 }
 
-if(!function_exists('defaultMaintainerCreate')){
+if (!function_exists('defaultMaintainerCreate')) {
     function defaultMaintainerCreate($id)
     {
-        $maintainerRoleData=  [
+        $maintainerRoleData =  [
             'name' => 'maintainer',
             'parent_id' => $id,
         ];

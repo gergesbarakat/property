@@ -17,14 +17,14 @@
             const fileName = 'invoice-{{ invoicePrefix() . $invoice->invoice_id }}.pdf';
 
             // Temporarily increase font size for better PDF quality
-            elementToCapture.style.fontSize = '1.2em';
+            elementToCapture.style.fontSize = '2em';
 
             html2canvas(elementToCapture, {
-                scale: 2, // Improve image resolution
+                scale: 1, // Improve image resolution
                 useCORS: true
             }).then(function(canvas) {
                 // Return font size to normal after capture
-                elementToCapture.style.fontSize = '';
+                elementToCapture.style.fontSize = '20';
 
                 var imgData = canvas.toDataURL('image/png');
 
@@ -76,7 +76,7 @@
             var stripe_elements = stripe_key.elements();
             var strip_css = {
                 base: {
-                    fontSize: '14px',
+                    fontSize: '12px',
                     color: '#32325d',
                 },
             };

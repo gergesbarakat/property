@@ -36,108 +36,111 @@
     <div class="row">
         <div class="col-md-5 cdx-xl-45">
             <div class="product-card">
+                {{-- Main Image Slider --}}
                 <div class="product-for">
-                    @foreach ($property->propertyImages as $image)
-                        @php
-                            $filePath = $image->image ?? 'default.jpg';
-                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
-                                'jpg',
-                                'jpeg',
-                                'png',
-                                'gif',
-                            ]);
-                        @endphp
-
-                        @if ($isImage)
-                            <div>
-                                <div class="product-imgwrap">
-                                    <img class="img-fluid"
-                                        src="{{ asset(Storage::url('upload/property')) . '/' . $filePath }}" alt="">
-                                </div>
+                    {{-- Display Thumbnail First --}}
+                    @if ($property->thumbnail)
+                        <div>
+                            <div class="product-imgwrap">
+                                {{-- ✅ FIX: Corrected URL for the thumbnail image --}}
+                                <img class="img-fluid"
+                                    src="{{ asset(Storage::url('upload/thumbnail')) . '/' . $property->thumbnail->image }}"
+                                    alt="Thumbnail">
                             </div>
-                        @endif
+                        </div>
+                    @endif
+                    {{-- Display Extra Images --}}
+                    @foreach ($property->propertyImages as $image)
+                        <div>
+                            <div class="product-imgwrap">
+                                {{-- ✅ FIX: Corrected URL for extra property images --}}
+                                <img class="img-fluid"
+                                    src="{{ asset(Storage::url('upload/property')) . '/' . $image->image }}"
+                                    alt="Property Image">
+                            </div>
+                        </div>
                     @endforeach
                 </div>
+                {{-- Thumbnail Navigator --}}
                 <div class="product-to">
-                    @foreach ($property->propertyImages as $image)
-                        @php
-                            $filePath = $image->image ?? 'default.jpg';
-                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
-                                'jpg',
-                                'jpeg',
-                                'png',
-                                'gif',
-                            ]);
-                        @endphp
-
-                        @if ($isImage)
-                            <div>
-                                <div class="product-imgwrap">
-                                    <img class="img-fluid"
-                                        src="{{ asset(Storage::url('upload/property')) . '/' . $filePath }}"
-                                        alt="">
-                                </div>
+                    {{-- Display Thumbnail First --}}
+                    @if ($property->thumbnail)
+                        <div>
+                            <div class="product-imgwrap">
+                                <img class="img-fluid"
+                                    src="{{ asset(Storage::url('upload/thumbnail')) . '/' . $property->thumbnail->image }}"
+                                    alt="Thumbnail">
                             </div>
-                        @endif
+                        </div>
+                    @endif
+                    {{-- Display Extra Images --}}
+                    @foreach ($property->propertyImages as $image)
+                        <div>
+                            <div class="product-imgwrap">
+                                <img class="img-fluid"
+                                    src="{{ asset(Storage::url('upload/property')) . '/' . $image->image }}"
+                                    alt="Property Image">
+                            </div>
+                        </div>
                     @endforeach
                 </div>
-        </div>
+            </div>
 
-    </div>
-    <div class="col-md-7 cdx-xl-55 cdxpro-detail">
-        <div class="product-card">
-            <div class="detail-group">
-                <div class="media">
-                    <div>
-                        <h2>{{ $property->name }}</h2>
-                        <h6 class="text-light">
-                            <div class="date-info">
-                                <span class="badge badge-primary" data-bs-toggle="tooltip"
-                                    data-bs-original-title="{{ __('Type') }}">{{ $property->type }}</span>
-                            </div>
-                        </h6>
+        </div>
+        <div class="col-md-7 cdx-xl-55 cdxpro-detail">
+            <div class="product-card">
+                <div class="detail-group">
+                    <div class="media">
+                        <div>
+                            <h2>{{ $property->name }}</h2>
+                            <h6 class="text-light">
+                                <div class="date-info">
+                                    <span class="badge badge-primary" data-bs-toggle="tooltip"
+                                        data-bs-original-title="{{ __('Type') }}">{{ $property->type }}</span>
+                                </div>
+                            </h6>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="detail-group">
-                <h6>{{ __('Property Details') }}</h6>
-                <p class="mb-10">{{ $property->description }}</p>
+                <div class="detail-group">
+                    <h6>{{ __('Property Details') }}</h6>
+                    <p class="mb-10">{{ $property->description }}</p>
 
-            </div>
-            <div class="detail-group">
-                <h6>{{ __('Property Address') }}</h6>
-                <p class="mb-10">{{ $property->address }}</p>
-                <p class="mb-10">{{ $property->city . ', ' . $property->state . ', ' . $property->country }}</p>
-                <p class="mb-10">{{ $property->zip_code }}</p>
-            </div>
+                </div>
+                <div class="detail-group">
+                    <h6>{{ __('Property Address') }}</h6>
+                    <p class="mb-10">{{ $property->address }}</p>
+                    <p class="mb-10">{{ $property->city . ', ' . $property->state . ', ' . $property->country }}</p>
+                    <p class="mb-10">{{ $property->zip_code }}</p>
+                </div>
 
-            <div class="detail-group">
-                <h6>{{ __('Property Documents') }}</h6>
-                @foreach ($property->propertyImages as $document)
-                    @php
-                        $filePath = $document->image ?? null;
-                        if ($filePath) {
-                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
-                                'jpg',
-                                'jpeg',
-                                'png',
-                                'gif',
-                            ]);
-                        } else {
-                            $isImage = true; // Skip if no file path
-                        }
-                    @endphp
+                <div class="detail-group">
+                    <h6>{{ __('Property Documents') }}</h6>
+                    @foreach ($property->propertyImages as $document)
+                        @php
+                            $filePath = $document->image ?? null;
+                            if ($filePath) {
+                                $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
+                                    'jpg',
+                                    'jpeg',
+                                    'png',
+                                    'gif',
+                                ]);
+                            } else {
+                                $isImage = true; // Skip if no file path
+                            }
+                        @endphp
 
-                    @if (!$isImage)
-                        <a href="{{ asset(Storage::url('upload/property')) . '/' . $filePath }}"
-                            class="btn btn-primary mb-2" download>
-                            Download {{ basename($filePath) }}
-                        </a>
-                    @endif
-                @endforeach
+                        @if (!$isImage)
+                            <a href="{{ asset(Storage::url('upload/property')) . '/' . $filePath }}"
+                                class="btn btn-primary mb-2" download>
+                                Download {{ basename($filePath) }}
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <div class="table-responsive mt-4 bg-white p-30 rounded">
         <div class="p-2 h4">Property Units</div>

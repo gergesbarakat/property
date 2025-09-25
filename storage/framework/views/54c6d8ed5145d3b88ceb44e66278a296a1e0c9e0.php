@@ -36,7 +36,7 @@
     <div class="row">
         <div class="col-md-5 cdx-xl-45">
             <div class="product-card">
-                <div class="product-for">
+                <div class="product-for" style="max-height:400px;max-width:100%">
                     <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <?php
                             $filePath = $image->image ?? 'default.jpg';
@@ -50,15 +50,15 @@
 
                         <?php if($isImage): ?>
                             <div>
-                                <div class="product-imgwrap">
-                                    <img class="img-fluid"
+                                <div class="product-imgwrap" style="max-height:400px;max-width:100%">
+                                    <img class="img-fluid" style="max-height:400px;max-width:100%"
                                         src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $filePath); ?>" alt="">
                                 </div>
                             </div>
                         <?php endif; ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-                <div class="product-to">
+                <div class="product-to" style="max-height:200px;max-width:100%">
                     <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <?php
                             $filePath = $image->image ?? 'default.jpg';
@@ -72,8 +72,8 @@
 
                         <?php if($isImage): ?>
                             <div>
-                                <div class="product-imgwrap">
-                                    <img class="img-fluid"
+                                <div class="product-imgwrap" style="max-height:200px;max-width:100%">
+                                    <img class="img-fluid" style="max-height:200px;max-width:100%"
                                         src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $filePath); ?>"
                                         alt="">
                                 </div>
@@ -81,64 +81,64 @@
                         <?php endif; ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-        </div>
+            </div>
 
-    </div>
-    <div class="col-md-7 cdx-xl-55 cdxpro-detail">
-        <div class="product-card">
-            <div class="detail-group">
-                <div class="media">
-                    <div>
-                        <h2><?php echo e($property->name); ?></h2>
-                        <h6 class="text-light">
-                            <div class="date-info">
-                                <span class="badge badge-primary" data-bs-toggle="tooltip"
-                                    data-bs-original-title="<?php echo e(__('Type')); ?>"><?php echo e($property->type); ?></span>
-                            </div>
-                        </h6>
+        </div>
+        <div class="col-md-7 cdx-xl-55 cdxpro-detail">
+            <div class="product-card">
+                <div class="detail-group">
+                    <div class="media">
+                        <div>
+                            <h2><?php echo e($property->name); ?></h2>
+                            <h6 class="text-light">
+                                <div class="date-info">
+                                    <span class="badge badge-primary" data-bs-toggle="tooltip"
+                                        data-bs-original-title="<?php echo e(__('Type')); ?>"><?php echo e($property->type); ?></span>
+                                </div>
+                            </h6>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="detail-group">
-                <h6><?php echo e(__('Property Details')); ?></h6>
-                <p class="mb-10"><?php echo e($property->description); ?></p>
+                <div class="detail-group">
+                    <h6><?php echo e(__('Property Details')); ?></h6>
+                    <p class="mb-10"><?php echo e($property->description); ?></p>
 
-            </div>
-            <div class="detail-group">
-                <h6><?php echo e(__('Property Address')); ?></h6>
-                <p class="mb-10"><?php echo e($property->address); ?></p>
-                <p class="mb-10"><?php echo e($property->city . ', ' . $property->state . ', ' . $property->country); ?></p>
-                <p class="mb-10"><?php echo e($property->zip_code); ?></p>
-            </div>
+                </div>
+                <div class="detail-group">
+                    <h6><?php echo e(__('Property Address')); ?></h6>
+                    <p class="mb-10"><?php echo e($property->address); ?></p>
+                    <p class="mb-10"><?php echo e($property->city . ', ' . $property->state . ', ' . $property->country); ?></p>
+                    <p class="mb-10"><?php echo e($property->zip_code); ?></p>
+                </div>
 
-            <div class="detail-group">
-                <h6><?php echo e(__('Property Documents')); ?></h6>
-                <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $document): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <?php
-                        $filePath = $document->image ?? null;
-                        if ($filePath) {
-                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
-                                'jpg',
-                                'jpeg',
-                                'png',
-                                'gif',
-                            ]);
-                        } else {
-                            $isImage = true; // Skip if no file path
-                        }
-                    ?>
+                <div class="detail-group">
+                    <h6><?php echo e(__('Property Documents')); ?></h6>
+                    <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $document): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
+                            $filePath = $document->image ?? null;
+                            if ($filePath) {
+                                $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
+                                    'jpg',
+                                    'jpeg',
+                                    'png',
+                                    'gif',
+                                ]);
+                            } else {
+                                $isImage = true; // Skip if no file path
+                            }
+                        ?>
 
-                    <?php if(!$isImage): ?>
-                        <a href="<?php echo e(asset(Storage::url('upload/property')) . '/' . $filePath); ?>"
-                            class="btn btn-primary mb-2" download>
-                            Download <?php echo e(basename($filePath)); ?>
+                        <?php if(!$isImage): ?>
+                            <a href="<?php echo e(asset(Storage::url('upload/property')) . '/' . $filePath); ?>"
+                                class="btn btn-primary mb-2" download>
+                                Download <?php echo e(basename($filePath)); ?>
 
-                        </a>
-                    <?php endif; ?>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <div class="table-responsive mt-4 bg-white p-30 rounded">
         <div class="p-2 h4">Property Units</div>
