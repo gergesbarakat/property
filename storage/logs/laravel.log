@@ -41474,3 +41474,17 @@ Stack trace:
 [2025-09-25 03:53:11] local.INFO: Locale set to: arabic  
 [2025-09-25 03:53:11] local.INFO: SetLocale middleware is running.  
 [2025-09-25 03:53:11] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-25 03:54:04] local.INFO: SetLocale middleware is running.  
+[2025-09-25 03:54:04] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-25 03:54:04] local.INFO: SetLocale middleware is running.  
+[2025-09-25 03:54:04] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-25 03:54:04] local.INFO: Locale set to: arabic  
+[2025-09-25 03:54:05] local.INFO: SetLocale middleware is running.  
+[2025-09-25 03:54:05] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-25 03:54:11] local.INFO: SetLocale middleware is running.  
+[2025-09-25 03:54:11] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-25 03:54:11] local.INFO: SetLocale middleware is running.  
+[2025-09-25 03:54:11] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-25 03:54:11] local.INFO: Locale set to: arabic  
+[2025-09-25 03:54:11] local.INFO: SetLocale middleware is running.  
+[2025-09-25 03:54:11] local.INFO: User is not authenticated. Using default locale.  
