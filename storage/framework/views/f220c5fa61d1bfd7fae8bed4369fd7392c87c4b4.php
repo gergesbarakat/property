@@ -21,7 +21,7 @@
             <a href="#"><?php echo e(__('Details')); ?></a>
         </li>
     </ul>
-<?php $__env->stopSection(); ?>
+<?php $__env->stopSection(); ?>\
 <?php $__env->startSection('content'); ?>
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('create unit')): ?>
         <div class="row">
@@ -32,60 +32,124 @@
             </div>
         </div>
     <?php endif; ?>
+    <style>
+        .product-for img {
+            height: 400px !important;
+            contain: cover;
+        }
 
-    <div class="row">
-        <div class="col-md-5 cdx-xl-45">
+
+        .product-to img {
+            height: 100px !important;
+
+            contain: cover;
+
+        }
+
+        .slick-slide {
+            height: 400px !important;
+        }
+
+        .slick-slide.slick-active {
+            height: 100px !important;
+        }
+
+        .product-detail-page .product-card .product-to {
+            height: 100px !important;
+        }
+    </style>
+    <div class="row mt-8 mb-8">
+        <div class="col-md-5 cdx-xl-45 ">
             <div class="product-card">
                 
                 <div class="product-for">
                     
                     <?php if($property->thumbnail): ?>
-                        <div>
-                            <div class="product-imgwrap">
-                                
-                                <img class="img-fluid"
-                                    src="<?php echo e(asset(Storage::url('upload/thumbnail')) . '/' . $property->thumbnail->image); ?>"
-                                    alt="Thumbnail">
+                        <?php
+                            $filePath = $property->thumbnail->image ?? 'default.jpg';
+                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'gif',
+                            ]);
+                        ?>
+                        <?php if($isImage): ?>
+                            <div>
+                                <div class="product-imgwrap">
+                                    <img class="img-fluid"
+                                        src="<?php echo e(asset(Storage::url('upload/thumbnail')) . '/' . $filePath); ?>"
+                                        alt="Thumbnail">
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                     
                     <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div>
-                            <div class="product-imgwrap">
-                                
-                                <img class="img-fluid"
-                                    src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $image->image); ?>"
-                                    alt="Property Image">
+                        <?php
+                            $filePath = $image->image ?? 'default.jpg';
+                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'gif',
+                            ]);
+                        ?>
+                        <?php if($isImage): ?>
+                            <div>
+                                <div class="product-imgwrap">
+                                    <img class="img-fluid"
+                                        src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $image->image); ?>"
+                                        alt="Property Image">
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
                 
-                <div class="product-to">
-                    
+                <div class="product-to mt-3">
                     <?php if($property->thumbnail): ?>
-                        <div>
-                            <div class="product-imgwrap">
-                                <img class="img-fluid"
-                                    src="<?php echo e(asset(Storage::url('upload/thumbnail')) . '/' . $property->thumbnail->image); ?>"
-                                    alt="Thumbnail">
+                        <?php
+                            $filePath = $property->thumbnail->image ?? 'default.jpg';
+                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'gif',
+                            ]);
+                        ?>
+                        <?php if($isImage): ?>
+                            <div>
+                                <div class="product-imgwrap">
+                                    <img class="img-fluid"
+                                        src="<?php echo e(asset(Storage::url('upload/thumbnail')) . '/' . $filePath); ?>"
+                                        alt="Thumbnail">
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
-                    
                     <?php $__currentLoopData = $property->propertyImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div>
-                            <div class="product-imgwrap">
-                                <img class="img-fluid"
-                                    src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $image->image); ?>"
-                                    alt="Property Image">
+                        <?php
+                            $filePath = $image->image ?? 'default.jpg';
+                            $isImage = in_array(strtolower(pathinfo($filePath, PATHINFO_EXTENSION)), [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'gif',
+                            ]);
+                        ?>
+                        <?php if($isImage): ?>
+                            <div>
+                                <div class="product-imgwrap">
+                                    <img class="img-fluid"
+                                        src="<?php echo e(asset(Storage::url('upload/property')) . '/' . $image->image); ?>"
+                                        alt="Property Image">
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-
         </div>
         <div class="col-md-7 cdx-xl-55 cdxpro-detail">
             <div class="product-card">

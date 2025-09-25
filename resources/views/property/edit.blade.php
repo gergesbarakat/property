@@ -1,128 +1,120 @@
 @extends('layouts.app')
 @section('page-title')
-    {{__('Property Edit')}}
+    {{ __('Property Edit') }}
 @endsection
 @push('script-page')
     <script src="{{ asset('assets/js/vendors/dropzone/dropzone.js') }}"></script>
     <script>
-        var dropzone = new Dropzone('#demo-upload', {
-            previewTemplate: document.querySelector('.preview-dropzon').innerHTML,
-            parallelUploads: 10,
-            thumbnailHeight: 120,
-            thumbnailWidth: 120,
-            maxFilesize: 10,
-            filesizeBase: 1000,
-            autoProcessQueue: false,
-            thumbnail: function (file, dataUrl) {
-                if (file.previewElement) {
-                    file.previewElement.classList.remove("dz-file-preview");
-                    var images = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-                    for (var i = 0; i < images.length; i++) {
-                        var thumbnailElement = images[i];
-                        thumbnailElement.alt = file.name;
-                        thumbnailElement.src = dataUrl;
-                    }
-                    setTimeout(function () {
-                        file.previewElement.classList.add("dz-image-preview");
-                    }, 1);
-                }
-            }
-
-        });
-        $('#property-update').on('click', function () {
+        $(function() {
             "use strict";
-            $('#property-update').attr('disabled', true);
-            var fd = new FormData();
-            var file = document.getElementById('thumbnail').files[0];
 
-            var files = $('#demo-upload').get(0).dropzone.getAcceptedFiles();
-            $.each(files, function (key, file) {
-                fd.append('property_images[' + key + ']', $('#demo-upload')[0].dropzone
-                    .getAcceptedFiles()[key]); // attach dropzone image element
+            Dropzone.autoDiscover = false;
+            var myDropzone = new Dropzone('#demo-upload', {
+                previewTemplate: document.querySelector('.preview-dropzon').innerHTML,
+                parallelUploads: 10,
+                thumbnailHeight: 120,
+                thumbnailWidth: 120,
+                maxFilesize: 10,
+                filesizeBase: 1000,
+                autoProcessQueue: false,
             });
-            if(file==undefined){
-                fd.append('thumbnail', '');
-            }else{
-                fd.append('thumbnail', file);
-            }
 
-            var other_data = $('#property_form').serializeArray();
-            $.each(other_data, function (key, input) {
-                fd.append(input.name, input.value);
-            });
-            $.ajax({
-                url: "{{route('property.update',$property->id)}}",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: fd,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function (data) {
-                    if (data.status == "success") {
-                        $('#property-update').attr('disabled', true);
-                        toastrs('success', data.msg, 'success');
-                        var url = '{{ route("property.show", ":id") }}';
-                        url = url.replace(':id', data.id);
-                        setTimeout(() => {
-                            window.location.href = url;
-                        }, "1000");
+            $('#property-update').on('click', function(e) {
+                e.preventDefault();
+                $('#property-update').attr('disabled', true);
+                var fd = new FormData($('#property_form')[0]);
+                var files = myDropzone.getAcceptedFiles();
+                $.each(files, function(key, file) {
+                    fd.append('property_images[]', file, file.name);
+                });
+                fd.append('_method', 'PUT');
 
-                    } else {
-                        toastrs('Error', data.msg, 'error');
+                $.ajax({
+                    url: "{{ route('property.update', $property->id) }}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(data) {
                         $('#property-update').attr('disabled', false);
-                    }
-                },
-                error: function (data) {
-                    $('#property-update').attr('disabled', false);
-                    if (data.error) {
-                        toastrs('Error', data.error, 'error');
-                    } else {
-                        toastrs('Error', data, 'error');
-                    }
-                },
+                        if (data.status == "success") {
+                            toastrs('Success', data.msg, 'success');
+                            var url = '{{ route('property.show', ':id') }}';
+                            url = url.replace(':id', data.id);
+                            setTimeout(() => {
+                                window.location.href = url;
+                            }, 1000);
+                        } else {
+                            toastrs('Error', data.msg, 'error');
+                        }
+                    },
+                    error: function(data) {
+                        $('#property-update').attr('disabled', false);
+                        let errorMessage = 'An unexpected error occurred.';
+                        if (data.responseJSON && data.responseJSON.msg) {
+                            errorMessage = data.responseJSON.msg;
+                        }
+                        toastrs('Error', errorMessage, 'error');
+                    },
+                });
+            });
+
+            // JavaScript to handle image deletion without nested forms.
+            $('.delete-property-image').on('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to delete this image?')) {
+                    var url = $(this).data('url');
+                    $('#delete-image-form').attr('action', url).submit();
+                }
             });
         });
-
     </script>
 @endpush
 @section('breadcrumb')
     <ul class="breadcrumb mb-0">
-        <li class="breadcrumb-item">
-            <a href="{{route('dashboard')}}"><h1>{{__('Dashboard')}}</h1></a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{{route('property.index')}}">{{__('Property')}}</a>
-        </li>
-        <li class="breadcrumb-item active">
-            <a href="#">{{__('Edit')}}</a>
-        </li>
+        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">
+                <h1>{{ __('Dashboard') }}</h1>
+            </a></li>
+        <li class="breadcrumb-item"><a href="{{ route('property.index') }}">{{ __('Property') }}</a></li>
+        <li class="breadcrumb-item active"><a href="#">{{ __('Edit') }}</a></li>
     </ul>
 @endsection
 @section('content')
-    {{Form::model($property, array('route' => array('property.update', $property->id), 'method' => 'PUT','enctype' => "multipart/form-data","id"=>"property_form")) }}
+    {{ Form::model($property, ['route' => ['property.update', $property->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'property_form']) }}
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <div class="info-group">
                         <div class="form-group ">
-                            {{Form::label('type',__('Type'),array('class'=>'form-label'))}}
-                            {{Form::select('type',$types,null,array('class'=>'form-control hidesearch'))}}
+                            {{ Form::label('type', __('Type'), ['class' => 'form-label']) }}
+                            {{ Form::select('type', $types, null, ['class' => 'form-control hidesearch']) }}
                         </div>
                         <div class="form-group">
-                            {{Form::label('name',__('Name'),array('class'=>'form-label'))}}
-                            {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Property Name')))}}
+                            {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
+                            {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => __('Enter Property Name')]) }}
                         </div>
                         <div class="form-group ">
-                            {{Form::label('description',__('Description'),array('class'=>'form-label'))}}
-                            {{Form::textarea('description',null,array('class'=>'form-control','rows'=>8,'placeholder'=>__('Enter Property Description')))}}
+                            {{ Form::label('description', __('Description'), ['class' => 'form-label']) }}
+                            {{ Form::textarea('description', null, ['class' => 'form-control', 'rows' => 8, 'placeholder' => __('Enter Property Description')]) }}
                         </div>
                         <div class="form-group">
-                            {{Form::label('thumbnail',__('Thumbnail Image'),array('class'=>'form-label'))}}
-                            {{Form::file('thumbnail',array('class'=>'form-control'))}}
+                            {{ Form::label('thumbnail', __('Change Thumbnail Image'), ['class' => 'form-label']) }}
+                            {{ Form::file('thumbnail', ['class' => 'form-control']) }}
                         </div>
+                        {{-- ✅ Display current thumbnail directly under the input --}}
+                        @if ($property->thumbnail)
+                            <div class="mt-2">
+                                <label>{{ __('Current Thumbnail') }}</label>
+                                <div class="text-center">
+                                    <img src="{{ asset(Storage::url('upload/thumbnail/' . $property->thumbnail->image)) }}"
+                                        alt="Thumbnail" width="150" class="img-thumbnail">
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -132,24 +124,24 @@
                 <div class="card-body">
                     <div class="info-group">
                         <div class="form-group">
-                            {{Form::label('country',__('Country'),array('class'=>'form-label'))}}
-                            {{Form::text('country',null,array('class'=>'form-control','placeholder'=>__('Enter Property Country')))}}
+                            {{ Form::label('country', __('Country'), ['class' => 'form-label']) }}
+                            {{ Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Property Country')]) }}
                         </div>
                         <div class="form-group">
-                            {{Form::label('state',__('State'),array('class'=>'form-label'))}}
-                            {{Form::text('state',null,array('class'=>'form-control','placeholder'=>__('Enter Property State')))}}
+                            {{ Form::label('state', __('State'), ['class' => 'form-label']) }}
+                            {{ Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter Property State')]) }}
                         </div>
                         <div class="form-group">
-                            {{Form::label('city',__('City'),array('class'=>'form-label'))}}
-                            {{Form::text('city',null,array('class'=>'form-control','placeholder'=>__('Enter Property City')))}}
+                            {{ Form::label('city', __('City'), ['class' => 'form-label']) }}
+                            {{ Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter Property City')]) }}
                         </div>
                         <div class="form-group">
-                            {{Form::label('zip_code',__('Zip Code'),array('class'=>'form-label'))}}
-                            {{Form::text('zip_code',null,array('class'=>'form-control','placeholder'=>__('Enter Property Zip Code')))}}
+                            {{ Form::label('zip_code', __('Zip Code'), ['class' => 'form-label']) }}
+                            {{ Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Property Zip Code')]) }}
                         </div>
                         <div class="form-group ">
-                            {{Form::label('address',__('Address'),array('class'=>'form-label'))}}
-                            {{Form::textarea('address',null,array('class'=>'form-control','rows'=>3,'placeholder'=>__('Enter Property Address')))}}
+                            {{ Form::label('address', __('Address'), ['class' => 'form-label']) }}
+                            {{ Form::textarea('address', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => __('Enter Property Address')]) }}
                         </div>
                     </div>
                 </div>
@@ -157,14 +149,31 @@
         </div>
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    {{Form::label('demo-upload',__('Property Images'),array('class'=>'form-label'))}}
+                <div class="card-header">{{ Form::label('demo-upload', __('Property Images'), ['class' => 'form-label']) }}
                 </div>
                 <div class="card-body">
+                    <h5>{{ __('Existing Images') }}</h5>
+                    <div class="row mb-4">
+                        {{-- ✅ This loop now only shows the 'extra' images --}}
+                        @forelse($property->propertyImages as $image)
+                            <div class="col-md-3 text-center mb-3">
+                                <img src="{{ asset(Storage::url('upload/property/' . $image->image)) }}" alt="Image"
+                                    class="img-fluid img-thumbnail mb-2" style="height: 150px; object-fit: cover;">
+                                <button class="btn btn-danger btn-sm delete-property-image"
+                                    data-url="{{ route('property.image.destroy', $image->id) }}">
+                                    Delete
+                                </button>
+                            </div>
+                        @empty
+                            <p>No additional images uploaded.</p>
+                        @endforelse
+                    </div>
+                    <hr>
+                    <h5 class="mt-4">{{ __('Upload New Images') }}</h5>
                     <div class="dropzone needsclick" id='demo-upload' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                            <h3>{{__('Drop files here or click to upload.')}}</h3>
+                            <h3>{{ __('Drop files here or click to upload.') }}</h3>
                         </div>
                     </div>
                     <div class="preview-dropzon" style="display: none;">
@@ -174,8 +183,7 @@
                                 <div class="dz-size"><span data-dz-size=""></span></div>
                                 <div class="dz-filename"><span data-dz-name=""></span></div>
                             </div>
-                            <div class="dz-progress"><span class="dz-upload"
-                                                           data-dz-uploadprogress="">                    </span></div>
+                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress=""></span></div>
                             <div class="dz-success-mark"><i class="fa fa-check" aria-hidden="true"></i></div>
                         </div>
                     </div>
@@ -184,12 +192,15 @@
         </div>
         <div class="col-lg-12">
             <div class="group-button text-end">
-                {{Form::submit(__('Update'),array('class'=>'btn btn-primary btn-rounded','id'=>'property-update'))}}
+                {{ Form::submit(__('Update'), ['class' => 'btn btn-primary btn-rounded', 'id' => 'property-update']) }}
             </div>
         </div>
     </div>
     {{ Form::close() }}
+
+    {{-- Single, hidden form for deleting images --}}
+    <form id="delete-image-form" action="" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
-
-
-

@@ -8,6 +8,7 @@ use App\Models\PropertyUnit;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Storage; // ✅ FIX: Added the missing import for the Storage facade
 class PropertyController extends Controller
 {
 
@@ -239,6 +240,31 @@ class PropertyController extends Controller
                 'msg' => __('Property successfully updated.'),
                 'id' => $property->id,
             ]);
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied!'));
+        }
+    }
+
+    public function destroyImage(PropertyImage $image)
+    {
+        if (\Auth::user()->can('edit property')) {
+            try {
+                // The 'image' column stores the filename only, so we need to build the full path.
+                $filePath = 'upload/property/' . $image->image;
+                if ($image->type == 'thumbnail') {
+                    $filePath = 'upload/thumbnail/' . $image->image;
+                }
+
+                // Delete the physical file from storage.
+                Storage::delete($filePath);
+
+                // Delete the record from the database.
+                $image->delete();
+
+                return redirect()->back()->with('success', 'Image successfully deleted.');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Failed to delete image.');
+            }
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
