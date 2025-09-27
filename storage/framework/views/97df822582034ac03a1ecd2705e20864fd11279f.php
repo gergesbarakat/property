@@ -1,4 +1,4 @@
-<?php echo e(Form::open(['route' => ['unit.store', $property_id], 'method' => 'post'])); ?>
+<?php echo e(Form::model($unit, ['route' => ['unit.update', [$property_id, $unit->id]], 'method' => 'PUT'])); ?>
 
 <div class="modal-body">
     <div class="row">
@@ -62,9 +62,9 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><?php echo e(__('Close')); ?></button>
-    <?php echo e(Form::submit(__('Create'), ['class' => 'btn btn-primary btn-rounded'])); ?>
+    <?php echo e(Form::submit(__('Update'), ['class' => 'btn btn-primary btn-rounded'])); ?>
 
 </div>
 <?php echo e(Form::close()); ?>
 
-<?php /**PATH F:\JOWEB\property\resources\views/unit/create.blade.php ENDPATH**/ ?>
+<?php /**PATH F:\JOWEB\property\resources\views/unit/edit.blade.php ENDPATH**/ ?>

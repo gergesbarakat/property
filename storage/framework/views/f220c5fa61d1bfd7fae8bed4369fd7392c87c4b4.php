@@ -219,6 +219,9 @@
                     <th><?php echo e(__('Kitchen')); ?></th>
                     <th><?php echo e(__('Bath')); ?></th>
                     <th><?php echo e(__('Unit Size')); ?></th>
+                    <th><?php echo e(__('Building')); ?></th>
+                    <th><?php echo e(__('Floor')); ?></th>
+                    <th><?php echo e(__('Location')); ?></th>
                     
                     
                     <th><?php echo e(__('status ')); ?></th>
@@ -241,6 +244,10 @@
                         <td><?php echo e($unit->kitchen); ?></td>
                         <td><?php echo e($unit->baths); ?></td>
                         <td><?php echo e($unit->unit_size); ?></td>
+                        <td><?php echo e($unit->building ?? '-'); ?></td>
+                        <td><?php echo e($unit->floor ?? '-'); ?></td>
+                        <td><?php echo e($unit->location ?? '-'); ?></td>
+
                         
                         <td>
                             <?php if(ucfirst($unit->status) != 'Available'): ?>

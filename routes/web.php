@@ -204,10 +204,10 @@ Route::group(
         ],
     ],
     function (): void {
-        Route::post('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
+        Route::get('/installments/{installment}/update-status', [InstallmentController::class, 'updateStatus'])->name('installments.updateStatus');
         Route::get('/tenants/{tenant}/contracts/download', [TenantController::class, 'downloadAllContracts'])->name('tenants.contracts.download');
         // This route will trigger the PDF download for a specific tenant.
-        Route::post('/installments/update-status', [InstallmentController::class, 'updateStatus'])->name('installment.payment.store');
+        Route::get('/installments/update-status', [InstallmentController::class, 'updateStatus'])->name('installment.payment.store');
         Route::delete('property/image/{image}/destroy', [PropertyController::class, 'destroyImage'])->name('property.image.destroy');
 
         Route::resource('property', PropertyController::class);

@@ -7,7 +7,7 @@ use App\Models\PropertyImage;
 use App\Models\PropertyUnit;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage; // ✅ FIX: Added the missing import for the Storage facade
 class PropertyController extends Controller
 {
@@ -304,177 +304,136 @@ class PropertyController extends Controller
     public function units()
     {
         if (\Auth::user()->can('manage unit')) {
-            $units = PropertyUnit::whereHas('property', function ($query) {
-                $query->where('is_active', 1);
-            })->with('property')->get();
+            $units = PropertyUnit::with(['property'])->whereHas('property', function ($q) {
+                $q->where('is_active', 1);
+            })->get();
             return view('unit.index', compact('units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-
-    public function unitCreate($property_id)
+    public function unitCreate($pid)
     {
         $types = PropertyUnit::$Types;
         $rentTypes = PropertyUnit::$rentTypes;
+        $property_id = $pid;
         return view('unit.create', compact('types', 'property_id', 'rentTypes'));
     }
 
     public function unitStore(Request $request, $property_id)
     {
-        if (\Auth::user()->can(abilities: 'create unit')) {
-            $validator = \Validator::make(
-                $request->all(),
-                [
-                    'name' => 'required|unique:properties', // Rule changed here
-                    'bedroom' => 'required',
-                    'kitchen' => 'required',
-                    'baths' => 'required',
-                    'unit_size' => 'required|numeric|min:0', // Uncomment if unit size is required
-                    // 'rent' => 'required',
-                    // 'rent_type' => 'required',
-                    // 'deposit_type' => 'required',
-                    // 'deposit_amount' => 'required',
-                    // 'late_fee_type' => 'required',
-                    // 'late_fee_amount' => 'required',
-                    // 'incident_receipt_amount' => 'required',
-                ]
-            );
-            if ($validator->fails()) {
-                $messages = $validator->getMessageBag();
+        if (\Auth::user()->can('create unit')) {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|unique:property_units,name,NULL,id,property_id,' . $property_id,
+                'bedroom' => 'nullable|integer|min:0',
+                'kitchen' => 'nullable|integer|min:0',
+                'baths' => 'nullable|integer|min:0',
+                'unit_size' => 'nullable|integer|min:0',
+                'floor' => 'nullable|string|max:255',
+                'building' => 'nullable|string|max:255',
+                'location' => 'nullable|string|max:255',
+                'notes' => 'nullable|string',
+            ]);
 
-                return redirect()->back()->with('error', $messages->first());
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', $validator->errors()->first());
             }
 
-            $unit = new PropertyUnit();
-            $unit->name = $request->name;
-            $unit->bedroom = $request->bedroom;
-            $unit->kitchen = $request->kitchen;
-            $unit->baths = $request->baths;
-            $unit->unit_size = $request->unit_size; // Add unit size field
-            // $unit->rent = $request->rent;
-            // $unit->rent_type = $request->rent_type;
-            // if ($request->rent_type == 'custom') {
-            //     $unit->start_date = $request->start_date;
-            //     $unit->end_date = $request->end_date;
-            //     $unit->payment_due_date = $request->payment_due_date;
-            // } else {
-            //     $unit->rent_duration = $request->rent_duration;
-            // }
+            $data = $validator->validated();
 
-            // $unit->deposit_type = $request->deposit_type;
-            // $unit->deposit_amount = $request->deposit_amount;
-            // $unit->late_fee_type = $request->late_fee_type;
-            // $unit->late_fee_amount = $request->late_fee_amount;
-            // $unit->incident_receipt_amount = $request->incident_receipt_amount;
-            $unit->notes = $request->notes;
-            $unit->property_id = $property_id;
-            $unit->parent_id = parentId();
-            $unit->save();
+            PropertyUnit::create([
+                'name' => $data['name'],
+                'bedroom' => empty($data['bedroom']) ? 0 : $data['bedroom'],
+                'kitchen' => empty($data['kitchen']) ? 0 : $data['kitchen'],
+                'baths' => empty($data['baths']) ? 0 : $data['baths'],
+                'unit_size' => empty($data['unit_size']) ? null : $data['unit_size'],
+                'floor' => empty($data['floor']) ? null : $data['floor'],
+                'building' => empty($data['building']) ? null : $data['building'],
+                'location' => empty($data['location']) ? null : $data['location'],
+                'notes' => empty($data['notes']) ? null : $data['notes'],
+
+                'property_id' => $property_id,
+                'parent_id' => parentId(),
+                'status' => 'available',
+            ]);
+
             return redirect()->back()->with('success', __('Unit successfully created.'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-
-    public function unitEdit($property_id, $unit_id)
+    // ✅ FIX: Changed to find models manually instead of route-model binding.
+    public function unitEdit($pid, $id)
     {
-        $unit = PropertyUnit::find($unit_id);
+        $unit = PropertyUnit::find($id);
+        if (!$unit) {
+            return response('Unit not found.', 404);
+        }
         $types = PropertyUnit::$Types;
         $rentTypes = PropertyUnit::$rentTypes;
+        $property_id = $pid; // Pass the property ID to the view
         return view('unit.edit', compact('types', 'property_id', 'rentTypes', 'unit'));
     }
 
-    public function unitUpdate(Request $request, $property_id, $unit_id)
+    // ✅ FIX: Changed to find model manually instead of route-model binding.
+    public function unitUpdate(Request $request, $pid, $id)
     {
         if (\Auth::user()->can('edit unit')) {
-            // Validate the incoming request data
-            $validator = \Validator::make(
-                $request->all(),
-                [
-                    'name' => 'required|unique:properties', // Rule changed here
-                    'bedroom' => 'required|integer|min:0',
-                    'kitchen' => 'required|integer|min:0',
-                    'baths' => 'required|integer|min:0',
-                    'unit_size' => 'required|numeric|min:0',
-                ]
-            );
-
-            // If validation fails, redirect back with the first error message
-            if ($validator->fails()) {
-                $messages = $validator->getMessageBag();
-                return redirect()->back()->with('error', $messages->first());
-            }
-
-            // Find the existing unit by its ID
-            $unit = PropertyUnit::find($unit_id);
-
-            // Check if the unit was found
+            $unit = PropertyUnit::find($id);
             if (!$unit) {
                 return redirect()->back()->with('error', __('Unit not found.'));
             }
 
-            // Update the unit's properties with the new data
-            $unit->name = $request->name;
-            $unit->bedroom = $request->bedroom;
-            $unit->kitchen = $request->kitchen;
-            $unit->baths = $request->baths;
-            $unit->notes = $request->notes;
-            $unit->unit_size = $request->unit_size; // Update unit size field
-            if ($unit->status == 'deactivated') {
-                $unit->status = 'Available';
+            if (strtolower($unit->status) === 'sold') {
+                return redirect()->back()->with('error', __('A sold unit cannot be edited.'));
             }
 
-            // Note: The property_id does not need to be updated as the unit belongs to it.
-            // The parent_id also remains the same.
+            $validator = Validator::make($request->all(), ['name' => 'required']);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', $validator->errors()->first());
+            }
 
-            // Save the changes to the database
-            $unit->save();
+            $unit->update($request->all());
 
-            // Redirect back with a success message
+            if (strtolower($unit->status) == 'deactivated') {
+                $unit->status = 'available';
+                $unit->save();
+            }
+
             return redirect()->back()->with('success', __('Unit successfully updated.'));
         } else {
-            // If the user does not have permission, redirect back with an error
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-    public function unitDestroy($property_id, $unit_id)
-    {
-        // 1. Check for 'delete unit' permission
-        if (\Auth::user()->can('delete unit')) {
 
-            // 2. Find the unit or fail gracefully
-            $unit = PropertyUnit::find($unit_id);
+    // ✅ FIX: Changed to find model manually instead of route-model binding.
+    public function unitDestroy($pid, $id)
+    {
+        if (\Auth::user()->can('delete unit')) {
+            $unit = PropertyUnit::find($id);
             if (!$unit) {
                 return redirect()->back()->with('error', 'Unit not found.');
             }
 
-            // 3. ✅ NEW: Check if the unit's status is 'available'.
-            // If it's 'sold' or already 'deactivated', return an error.
-            if ($unit->status !== 'Available') {
-                return redirect()->back()->with('error', __('This unit is already sold or deactivated and cannot be changed.'));
+            if (strtolower($unit->status) !== 'available') {
+                return redirect()->back()->with('error', __('Only available units can be deactivated. This unit is either sold or already inactive.'));
             }
 
-            // 4. Proceed with deactivation inside a try-catch block
             try {
-                // Set the status to 'deactivated' instead of deleting the record.
                 $unit->status = 'deactivated';
                 $unit->save();
-
-                // Redirect back with a success message.
                 return redirect()->back()->with('success', 'Unit successfully deactivated.');
             } catch (\Exception $e) {
-                // In case of an unexpected database error, redirect back with an error message.
                 return redirect()->back()->with('error', 'Failed to deactivate unit. Please try again.');
             }
         } else {
-            // If the user does not have permission, redirect back.
             return redirect()->back()->with('error', __('Permission Denied!'));
         }
     }
-    public function getPropertyUnit($property_id)
+
+    public function getPropertyUnit($pid)
     {
-        $units = PropertyUnit::where('property_id', $property_id)->where('status', 'Available')->get()->pluck('name', 'id');
+        $units = PropertyUnit::where('property_id', $pid)->where('status', 'available')->get()->pluck('name', 'id');
         return response()->json($units);
     }
 }

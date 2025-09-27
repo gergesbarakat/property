@@ -78,12 +78,12 @@ class TenantController extends Controller
                     'phone_number' => 'required|string|max:20',
                     'profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
                     'family_member' => 'nullable|integer|min:0',
-                    'national_id' => 'nullable|string|max:255',
-                    'country' => 'required|string|max:255',
-                    'state' => 'required|string|max:255',
-                    'city' => 'required|string|max:255',
-                    'zip_code' => 'required|string|max:20',
-                    'address' => 'required|string',
+                    'national_id' => 'required|string|max:255',
+                    'country' => 'string|max:255',
+                    'state' => 'string|max:255',
+                    'city' => 'string|max:255',
+                    'zip_code' => 'string|max:20',
+                    'address' => 'string',
                     'property' => 'required|exists:properties,id',
                     'unit' => 'required|exists:property_units,id',
                     'unit_price' => 'required|numeric|min:0',
@@ -93,7 +93,7 @@ class TenantController extends Controller
                     'installment_duration' => 'required_if:purchase_type,installment|integer|min:1',
                     'installment_start_date' => 'required_if:purchase_type,installment|date',
                     'deposit' => 'required_if:purchase_type,installment|numeric|min:0|lte:unit_price',
-                    'contracts' => 'nullable|array',
+                    'contracts' => 'nullable|array|min:1',
                     'contracts.*' => 'file|mimes:pdf,doc,docx,jpg,png|max:5120',
                 ]);
             } catch (ValidationException $e) {
@@ -104,7 +104,7 @@ class TenantController extends Controller
             try {
                 $profileImagePath = null;
                 if ($request->hasFile('profile')) {
-                    $profileImagePath = $request->file('profile')->store('upload/profiles', 'public');
+                    $profileImagePath = $request->file('profile')->storeAs('upload/profiles', 'public');
                 }
 
                 $user = User::create([
@@ -147,7 +147,7 @@ class TenantController extends Controller
                     'lease_start_date' => $validatedData['installment_start_date'] ?? null,
                     'lease_end_date' =>  $leaseEndDate,
                     'email' => $user->email,
-                    
+
                     'phone' => $user->phone_number,
                     'profile_image' => $user->profile,
                 ]);

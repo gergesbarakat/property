@@ -146,7 +146,8 @@
 
         dataTable = table.DataTable({
             "responsive": true,
-            "autoWidth": true,
+            "scrollX": true,
+            "width": "auto",
             "lengthMenu": [10, 25, 50, 100],
             "pageLength": 10,
 
@@ -216,7 +217,8 @@
             const columnHeader = $(dataTable.column(colIdx).header()).text().trim();
             const $wrapper = $('<div class="d-flex flex-column me-3"></div>');
             const $label = $(`<label class="form-label fw-bold">${columnHeader}</label>`);
-            if (columnHeader === "تاريخ الإنشاء" || columnHeader.toLowerCase().includes("date")) {
+            if (columnHeader.toLowerCase().includes("updated") || columnHeader.toLowerCase().includes("created") ||
+                columnHeader.toLowerCase().includes("date")) {
                 const $input = $('<input type="date" class="form-control form-control-sm" />');
 
                 $.fn.dataTable.ext.search.push(function(settings, data) {

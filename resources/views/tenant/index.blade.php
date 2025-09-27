@@ -23,60 +23,6 @@
 
 
 
-@section('styles')
-    {{-- Custom styles for the modern table UI. --}}
-    <style>
-        .table-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .modern-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .modern-table thead th {
-            font-weight: 600;
-            background-color: #fff;
-            border-bottom: 2px solid #dee2e6;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-        }
-
-        .modern-table td,
-        .modern-table th {
-            vertical-align: middle !important;
-            padding: 1rem;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .modern-table tbody tr {
-            transition: background-color 0.15s ease-in-out;
-        }
-
-        .modern-table .avatar {
-            width: 45px;
-            height: 45px;
-            object-fit: cover;
-        }
-
-        /* ✅ CSS for ghost buttons has been removed to allow for colors. */
-        .modern-table .action-buttons .btn {
-            width: 32px;
-            height: 32px;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin: 0 3px;
-        }
-    </style>
-@endsection
-
 @section('content')
     <div class="card border-0 shadow-sm">
         <div class="table-header  p-20 d-flex justify-content-between align-items-center">
@@ -87,29 +33,21 @@
                 <table class="table modern-table" id="invoice-table">
                     <thead>
                         <tr>
-                            <th >Buyer</th>
-                            <th>Property</th>
-                            <th>Unit</th>
-                            <th>Contract Start</th>
-                            <th>Contract End</th>
-                            <th>purchase_type</th>
-
-                            <th>created_at</th>
-
-                            <th>updated_at</th>
-
-
-
-                            <th >Actions</th>
+                            <th style="width: 25%;">{{ __('Buyer') }}</th>
+                            <th style="width: 15%;">{{ __('Property') }}</th>
+                            <th style="width: 15%;">{{ __('Unit') }}</th>
+                            <th style="width: 12%;">{{ __('Contract Start') }}</th>
+                            <th style="width: 12%;">{{ __('Contract End') }}</th>
+                            <th style="width: 11%;">{{ __('Purchase Type') }}</th>
+                            {{-- ✅ FIX: Aligned the Actions header to the end (right in LTR, left in RTL) --}}
+                            <th style="width: 10%;" class="text-end">{{ __('Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($tenants as $tenant)
                             <tr>
-
                                 <td>
                                     <div class="d-flex align-items-center">
-
                                         <div class="ms-3">
                                             <strong class="d-block">{{ optional($tenant->user)->first_name }}
                                                 {{ optional($tenant->user)->last_name }}</strong>
@@ -119,44 +57,31 @@
                                 </td>
                                 <td>{{ optional($tenant->linked_property)->name ?? '-' }}</td>
                                 <td>{{ optional($tenant->propertyUnit)->name ?? '-' }}</td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     @if ($tenant->installments->isNotEmpty())
                                         {{ \Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('M j, Y') }}
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     @if ($tenant->installments->isNotEmpty())
                                         {{ \Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('M j, Y') }}
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td>{{ $tenant->purchase_type }}</td>
-                                <td>{{ $tenant->created_at }}</td>
-                                <td>{{ $tenant->updated_at }}</td>
-                                <td class="text-center action-buttons">
-                                    {{-- ✅ Buttons updated with distinct colors --}}
+                                <td>{{ ucfirst($tenant->purchase_type) }}</td>
+                                {{-- ✅ FIX: Aligned the action buttons to the end --}}
+                                <td class="text-end action-buttons">
                                     <a href="{{ route('tenant.show', $tenant->id) }}"
                                         class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="View"><i
                                             data-feather="eye"></i></a>
-                                    {{-- <a href="{{ route('tenant.edit', $tenant->id) }}"
-                                        class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" title="Edit"><i
-                                            data-feather="edit"></i></a>
-                                    <form action="{{ route('tenant.destroy', $tenant->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger text-white"
-                                            data-bs-toggle="tooltip" title="Delete"
-                                            onclick="return confirm('Are you sure?')"><i data-feather="trash"></i></button>
-                                    </form> --}}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="7" class="text-center py-5">
                                     <h5 class="text-muted">No buyers found.</h5>
                                 </td>
                             </tr>

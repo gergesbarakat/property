@@ -79,6 +79,12 @@
     <link href="<?php echo e(asset('assets/css/vendor/datatable/buttons.dataTables.css')); ?>" rel="stylesheet">
 
     <link href="<?php echo e(asset('assets/css/vendor/datatable/jquery.dataTables.css')); ?>" rel="stylesheet">
+    <style>
+        table {
+            width: 100% !important;
+        }
+    </style>
+
 
 </head>
 <?php /**PATH F:\JOWEB\property\resources\views/admin/head.blade.php ENDPATH**/ ?>

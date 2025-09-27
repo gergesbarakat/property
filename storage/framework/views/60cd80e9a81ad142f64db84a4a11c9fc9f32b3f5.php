@@ -23,60 +23,6 @@
 
 
 
-<?php $__env->startSection('styles'); ?>
-    
-    <style>
-        .table-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .modern-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .modern-table thead th {
-            font-weight: 600;
-            background-color: #fff;
-            border-bottom: 2px solid #dee2e6;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-        }
-
-        .modern-table td,
-        .modern-table th {
-            vertical-align: middle !important;
-            padding: 1rem;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .modern-table tbody tr {
-            transition: background-color 0.15s ease-in-out;
-        }
-
-        .modern-table .avatar {
-            width: 45px;
-            height: 45px;
-            object-fit: cover;
-        }
-
-        /* ✅ CSS for ghost buttons has been removed to allow for colors. */
-        .modern-table .action-buttons .btn {
-            width: 32px;
-            height: 32px;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin: 0 3px;
-        }
-    </style>
-<?php $__env->stopSection(); ?>
-
 <?php $__env->startSection('content'); ?>
     <div class="card border-0 shadow-sm">
         <div class="table-header  p-20 d-flex justify-content-between align-items-center">
@@ -87,29 +33,21 @@
                 <table class="table modern-table" id="invoice-table">
                     <thead>
                         <tr>
-                            <th >Buyer</th>
-                            <th>Property</th>
-                            <th>Unit</th>
-                            <th>Contract Start</th>
-                            <th>Contract End</th>
-                            <th>purchase_type</th>
-
-                            <th>created_at</th>
-
-                            <th>updated_at</th>
-
-
-
-                            <th >Actions</th>
+                            <th style="width: 25%;"><?php echo e(__('Buyer')); ?></th>
+                            <th style="width: 15%;"><?php echo e(__('Property')); ?></th>
+                            <th style="width: 15%;"><?php echo e(__('Unit')); ?></th>
+                            <th style="width: 12%;"><?php echo e(__('Contract Start')); ?></th>
+                            <th style="width: 12%;"><?php echo e(__('Contract End')); ?></th>
+                            <th style="width: 11%;"><?php echo e(__('Purchase Type')); ?></th>
+                            
+                            <th style="width: 10%;" class="text-end"><?php echo e(__('Actions')); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $__empty_1 = true; $__currentLoopData = $tenants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tenant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr>
-
                                 <td>
                                     <div class="d-flex align-items-center">
-
                                         <div class="ms-3">
                                             <strong class="d-block"><?php echo e(optional($tenant->user)->first_name); ?>
 
@@ -120,7 +58,7 @@
                                 </td>
                                 <td><?php echo e(optional($tenant->linked_property)->name ?? '-'); ?></td>
                                 <td><?php echo e(optional($tenant->propertyUnit)->name ?? '-'); ?></td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     <?php if($tenant->installments->isNotEmpty()): ?>
                                         <?php echo e(\Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('M j, Y')); ?>
 
@@ -128,7 +66,7 @@
                                         -
                                     <?php endif; ?>
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     <?php if($tenant->installments->isNotEmpty()): ?>
                                         <?php echo e(\Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('M j, Y')); ?>
 
@@ -136,20 +74,17 @@
                                         -
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo e($tenant->purchase_type); ?></td>
-                                <td><?php echo e($tenant->created_at); ?></td>
-                                <td><?php echo e($tenant->updated_at); ?></td>
-                                <td class="text-center action-buttons">
-                                    
+                                <td><?php echo e(ucfirst($tenant->purchase_type)); ?></td>
+                                
+                                <td class="text-end action-buttons">
                                     <a href="<?php echo e(route('tenant.show', $tenant->id)); ?>"
                                         class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="View"><i
                                             data-feather="eye"></i></a>
-                                    
                                 </td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="7" class="text-center py-5">
                                     <h5 class="text-muted">No buyers found.</h5>
                                 </td>
                             </tr>

@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const toggleIcon = document.createElement('span');
         toggleIcon.innerHTML = '👁️';
         toggleIcon.classList.add(
-            'position-absolute', 'top-50', 'end-0', 'translate-middle-y', 'pe-2',
+            'position-absolute', 'top-50','p-7', 'end-0', 'translate-middle-y', 'pe-2',
             'cursor-pointer'
         );
         wrapper.appendChild(toggleIcon);

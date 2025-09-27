@@ -218,6 +218,9 @@
                     <th>{{ __('Kitchen') }}</th>
                     <th>{{ __('Bath') }}</th>
                     <th>{{ __('Unit Size') }}</th>
+                    <th>{{ __('Building') }}</th>
+                    <th>{{ __('Floor') }}</th>
+                    <th>{{ __('Location') }}</th>
                     {{-- <th>{{ __('Rent Type') }}</th>
                     <th>{{ __('Rent') }}</th> --}}
                     {{-- <th>{{ __('Start Date') }}</th>
@@ -249,6 +252,10 @@
                         <td>{{ $unit->kitchen }}</td>
                         <td>{{ $unit->baths }}</td>
                         <td>{{ $unit->unit_size }}</td>
+                        <td>{{ $unit->building ?? '-' }}</td>
+                        <td>{{ $unit->floor ?? '-' }}</td>
+                        <td>{{ $unit->location ?? '-' }}</td>
+
                         {{-- <td>{{ $unit->rent_type }}</td>
                         <td>{{ priceFormat($unit->rent) }}</td>
                         <td>{{ $unit->rent_type === 'custom' ? dateFormat($unit->start_date) : '-' }}</td>
