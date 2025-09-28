@@ -1,9 +1,9 @@
-@extends('layouts.app')
-@section('page-title')
-    {{ __('Buyer Edit') }}
-@endsection
-@push('script-page')
-    <script src="{{ asset('assets/js/vendors/dropzone/dropzone.js') }}"></script>
+<?php $__env->startSection('page-title'); ?>
+    <?php echo e(__('Buyer Edit')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('script-page'); ?>
+    <script src="<?php echo e(asset('assets/js/vendors/dropzone/dropzone.js')); ?>"></script>
     <script>
         $(function() {
             "use strict";
@@ -37,7 +37,7 @@
                 fd.append('_method', 'PUT');
 
                 $.ajax({
-                    url: "{{ route('tenant.update', $tenant->id) }}",
+                    url: "<?php echo e(route('tenant.update', $tenant->id)); ?>",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -50,7 +50,7 @@
                         if (data.status == "success") {
                             toastrs('Success', data.msg, 'success');
                             setTimeout(() => {
-                                window.location.href = "{{ route('tenant.index') }}";
+                                window.location.href = "<?php echo e(route('tenant.index')); ?>";
                             }, 1000);
                         } else {
                             toastrs('Error', data.msg, 'error');
@@ -74,17 +74,17 @@
             });
         });
     </script>
-@endpush
-@section('breadcrumb')
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('breadcrumb'); ?>
     <ul class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">
-                <h1>{{ __('Dashboard') }}</h1>
+        <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>">
+                <h1><?php echo e(__('Dashboard')); ?></h1>
             </a></li>
-        <li class="breadcrumb-item"><a href="{{ route('tenant.index') }}">{{ __('Buyer') }}</a></li>
-        <li class="breadcrumb-item active"><a href="#">{{ __('Edit') }}</a></li>
+        <li class="breadcrumb-item"><a href="<?php echo e(route('tenant.index')); ?>"><?php echo e(__('Buyer')); ?></a></li>
+        <li class="breadcrumb-item active"><a href="#"><?php echo e(__('Edit')); ?></a></li>
     </ul>
-@endsection
-@section('styles')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('styles'); ?>
     <style>
         /* ✅ NEW: Styles for the remove button on the Dropzone preview */
         .dz-preview .dz-remove {
@@ -114,45 +114,60 @@
             background-color: rgba(255, 0, 0, 0.8);
         }
     </style>
-@endsection
-@section('content')
-    {{ Form::model($tenant, ['route' => ['tenant.update', $tenant->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'tenant_form']) }}
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <?php echo e(Form::model($tenant, ['route' => ['tenant.update', $tenant->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'tenant_form'])); ?>
+
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Personal Details') }}</h5>
+                    <h5><?php echo e(__('Personal Details')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('first_name', __('First Name'), ['class' => 'form-label']) }}
-                                {{ Form::text('first_name', $user->first_name, ['class' => 'form-control', 'placeholder' => __('Enter First Name')]) }}
+                                <?php echo e(Form::label('first_name', __('First Name'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('first_name', $user->first_name, ['class' => 'form-control', 'placeholder' => __('Enter First Name')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('last_name', __('Last Name'), ['class' => 'form-label']) }}
-                                {{ Form::text('last_name', $user->last_name, ['class' => 'form-control', 'placeholder' => __('Enter Last Name')]) }}
+                                <?php echo e(Form::label('last_name', __('Last Name'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('last_name', $user->last_name, ['class' => 'form-control', 'placeholder' => __('Enter Last Name')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
-                                {{ Form::text('email', $user->email, ['class' => 'form-control', 'placeholder' => __('Enter Email')]) }}
+                                <?php echo e(Form::label('email', __('Email'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('email', $user->email, ['class' => 'form-control', 'placeholder' => __('Enter Email')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('phone_number', __('Phone Number'), ['class' => 'form-label']) }}
-                                {{ Form::text('phone_number', $user->phone_number, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number')]) }}
+                                <?php echo e(Form::label('phone_number', __('Phone Number'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('phone_number', $user->phone_number, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('national_id', __('National ID'), ['class' => 'form-label']) }}
-                                {{ Form::text('national_id', null, ['class' => 'form-control', 'placeholder' => __('Enter National ID')]) }}
+                                <?php echo e(Form::label('national_id', __('National ID'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('national_id', null, ['class' => 'form-control', 'placeholder' => __('Enter National ID')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('family_member', __('Total Family Member'), ['class' => 'form-label']) }}
-                                {{ Form::number('family_member', null, ['class' => 'form-control', 'placeholder' => __('Enter Total Family Member')]) }}
+                                <?php echo e(Form::label('family_member', __('Total Family Member'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::number('family_member', null, ['class' => 'form-control', 'placeholder' => __('Enter Total Family Member')])); ?>
+
                             </div>
                             <div class="form-group">
-                                {{ Form::label('profile', __('Profile'), ['class' => 'form-label']) }}
-                                {{ Form::file('profile', ['class' => 'form-control']) }}
+                                <?php echo e(Form::label('profile', __('Profile'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::file('profile', ['class' => 'form-control'])); ?>
+
                             </div>
                         </div>
                     </div>
@@ -162,30 +177,40 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Address Details') }}</h5>
+                    <h5><?php echo e(__('Address Details')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('country', __('Country'), ['class' => 'form-label']) }}
-                                {{ Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Country')]) }}
+                                <?php echo e(Form::label('country', __('Country'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('Enter Country')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('state', __('State'), ['class' => 'form-label']) }}
-                                {{ Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter State')]) }}
+                                <?php echo e(Form::label('state', __('State'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('Enter State')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('city', __('City'), ['class' => 'form-label']) }}
-                                {{ Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter City')]) }}
+                                <?php echo e(Form::label('city', __('City'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter City')])); ?>
+
                             </div>
                             <div class="form-group col-lg-6 col-md-6">
-                                {{ Form::label('zip_code', __('Zip Code'), ['class' => 'form-label']) }}
-                                {{ Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Zip Code')]) }}
+                                <?php echo e(Form::label('zip_code', __('Zip Code'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::text('zip_code', null, ['class' => 'form-control', 'placeholder' => __('Enter Zip Code')])); ?>
+
                             </div>
                             <div class="form-group ">
-                                {{ Form::label('address', __('Address'), ['class' => 'form-label']) }}
-                                {{ Form::textarea('address', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => __('Enter Address')]) }}
+                                <?php echo e(Form::label('address', __('Address'), ['class' => 'form-label'])); ?>
+
+                                <?php echo e(Form::textarea('address', null, ['class' => 'form-control', 'rows' => 5, 'placeholder' => __('Enter Address')])); ?>
+
                             </div>
                         </div>
                     </div>
@@ -195,18 +220,18 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Property Details') }}</h5>
+                    <h5><?php echo e(__('Property Details')); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <h6>{{ __('Property') }}</h6>
-                                <p class="form-control-static">{{ optional($tenant->linked_property)->name ?? 'N/A' }}</p>
+                                <h6><?php echo e(__('Property')); ?></h6>
+                                <p class="form-control-static"><?php echo e(optional($tenant->linked_property)->name ?? 'N/A'); ?></p>
                             </div>
                             <div class="form-group col-md-6">
-                                <h6>{{ __('Unit') }}</h6>
-                                <p class="form-control-static">{{ optional($tenant->propertyUnit)->name ?? 'N/A' }}</p>
+                                <h6><?php echo e(__('Unit')); ?></h6>
+                                <p class="form-control-static"><?php echo e(optional($tenant->propertyUnit)->name ?? 'N/A'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -216,37 +241,37 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h5>{{ __('Documents') }}</h5>
+                    <h5><?php echo e(__('Documents')); ?></h5>
                 </div>
                 <div class="card-body">
-                    <h5>{{ __('Existing Documents') }}</h5>
-                    @if ($tenant->contracts->isNotEmpty())
+                    <h5><?php echo e(__('Existing Documents')); ?></h5>
+                    <?php if($tenant->contracts->isNotEmpty()): ?>
                         <ul class="list-group mb-4">
-                            @foreach ($tenant->contracts as $contract)
+                            <?php $__currentLoopData = $tenant->contracts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $contract): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <a href="{{ Storage::url($contract->contract_file) }}"
-                                        target="_blank">{{ basename($contract->contract_file) }}</a>
-                                    <form action="{{ route('tenant.contract.destroy', $contract->id) }}" method="POST"
+                                    <a href="<?php echo e(Storage::url($contract->contract_file)); ?>"
+                                        target="_blank"><?php echo e(basename($contract->contract_file)); ?></a>
+                                    <form action="<?php echo e(route('tenant.contract.destroy', $contract->id)); ?>" method="POST"
                                         onsubmit="return confirm('Are you sure you want to delete this document?');">
-                                        @csrf
-                                        @method('DELETE')
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
                                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                     </form>
                                 </li>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
-                    @else
+                    <?php else: ?>
                         <p class="text-muted">No documents have been uploaded yet.</p>
-                    @endif
+                    <?php endif; ?>
                     <hr>
-                    <h5 class="mt-4">{{ __('Upload New Documents') }}</h5>
+                    <h5 class="mt-4"><?php echo e(__('Upload New Documents')); ?></h5>
                     <div class="dropzone needsclick" id='demo-upload' action="#">
                         <div class="dz-message needsclick">
                             <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                            <h3>{{ __('Drop new files here or click to upload.') }}</h3>
+                            <h3><?php echo e(__('Drop new files here or click to upload.')); ?></h3>
                         </div>
                     </div>
-                    {{-- ✅ FIX: The preview template now includes a remove link --}}
+                    
                     <div class="preview-dropzon" style="display: none;">
                         <div class="dz-preview dz-file-preview">
                             <div class="dz-image"><img data-dz-thumbnail="" src="" alt=""></div>
@@ -264,9 +289,13 @@
         </div>
         <div class="col-lg-12">
             <div class="group-button text-end">
-                {{ Form::submit(__('Update'), ['class' => 'btn btn-primary btn-rounded', 'id' => 'tenant-submit']) }}
+                <?php echo e(Form::submit(__('Update'), ['class' => 'btn btn-primary btn-rounded', 'id' => 'tenant-submit'])); ?>
+
             </div>
         </div>
     </div>
-    {{ Form::close() }}
-@endsection
+    <?php echo e(Form::close()); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\JOWEB\property\resources\views/tenant/edit.blade.php ENDPATH**/ ?>

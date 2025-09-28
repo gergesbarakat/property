@@ -77,6 +77,12 @@
                                     <a href="{{ route('tenant.show', $tenant->id) }}"
                                         class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="View"><i
                                             data-feather="eye"></i></a>
+                                    @can('edit tenant')
+                                        <a href="{{ route('tenant.edit', $tenant->id) }}"
+                                            class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" title="Edit"><i
+                                                data-feather="edit"></i></a>
+                                    @endcan
+
                                 </td>
                             </tr>
                         @empty

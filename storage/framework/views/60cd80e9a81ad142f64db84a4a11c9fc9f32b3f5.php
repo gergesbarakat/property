@@ -80,6 +80,12 @@
                                     <a href="<?php echo e(route('tenant.show', $tenant->id)); ?>"
                                         class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="View"><i
                                             data-feather="eye"></i></a>
+                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit tenant')): ?>
+                                        <a href="<?php echo e(route('tenant.edit', $tenant->id)); ?>"
+                                            class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" title="Edit"><i
+                                                data-feather="edit"></i></a>
+                                    <?php endif; ?>
+
                                 </td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

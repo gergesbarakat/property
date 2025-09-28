@@ -25,6 +25,24 @@ class Installment extends Model
         'paid_date' => 'date',
     ];
 
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class, 'tenant_id');
+    }
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'installment_id');
+    }
+    /**
+     * Get the payment record associated with this installment.
+     * ✅ THIS IS THE FIX.
+     */
+    public function payment()
+    {
+        // An installment has one payment record, linked by 'installment_id'
+        return $this->hasOne(InvoicePayment::class, 'installment_id');
+    }
+
     public function buyer()
     {
         // ✅ THE FIX: Explicitly define the foreign key 'buyer_id'.

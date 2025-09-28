@@ -18,6 +18,7 @@ class Invoice extends Model
         'end_date',
         'status',
         'notes',
+        'installment_id',
         'tenant_id',
         'parent_id',
     ];
@@ -61,6 +62,12 @@ class Invoice extends Model
     {
         return $this->hasMany('App\Models\InvoicePayment', 'invoice_id', 'id');
     }
+    public function payment()
+    {
+        // An invoice has one payment record.
+        return $this->hasOne(InvoicePayment::class, 'invoice_id');
+    }
+
 
     public function getInvoiceSubTotalAmount()
     {

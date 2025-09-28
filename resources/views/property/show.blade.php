@@ -196,7 +196,7 @@
                         @endphp
 
                         @if (!$isImage)
-                            <a href="{{ asset(Storage::url('upload/property')) . '/' . $filePath }}"
+                            <a href="{{ asset(path: Storage::url('upload/property')) . '/' . $filePath }}"
                                 class="btn btn-primary mb-2" download>
                                 Download {{ basename($filePath) }}
                             </a>

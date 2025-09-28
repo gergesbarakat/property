@@ -209,6 +209,12 @@ Route::group(
         // This route will trigger the PDF download for a specific tenant.
         Route::get('/installments/update-status', [InstallmentController::class, 'updateStatus'])->name('installment.payment.store');
         Route::delete('property/image/{image}/destroy', [PropertyController::class, 'destroyImage'])->name('property.image.destroy');
+        // ✅ NEW: Route to get the payment form for the modal
+        Route::get('/installments/{installment}/payment/create', [App\Http\Controllers\InstallmentController::class, 'createPayment'])->name('installment.payment.create');
+        Route::delete('tenant/contract/{contract}/destroy', [App\Http\Controllers\TenantController::class, 'destroyContract'])->name('tenant.contract.destroy');
+
+        // ✅ NEW: Route to handle the payment form submission
+        Route::post('/installments/payment/store', [App\Http\Controllers\InstallmentController::class, 'storePayment'])->name('installment.payment.store');
 
         Route::resource('property', PropertyController::class);
         Route::get('property/{pid}/unit/create', [PropertyController::class, 'unitCreate'])->name('unit.create');

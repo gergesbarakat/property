@@ -27,4 +27,13 @@ class InvoiceItem extends Model
         'amount',
         'description',
     ];
+
+
+        public function invoice()
+    {
+        // This defines that an InvoiceItem "Belongs To" one Invoice.
+        return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
+
+
 }

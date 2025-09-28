@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InvoiceItem; // ✅ ADD THIS LINE
-
 use App\Models\Installment;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\InvoicePayment;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class InstallmentController extends Controller
 {
     /**
-     * Update the status of an installment and create an invoice with its item.
-     *
-     * @param  \App\Models\Installment  $installment
-     * @return \Illuminate\Http\RedirectResponse
+     * Show the form for creating a new payment record for an installment.
      */
-    public function updateStatus(Request $request)
+    public function createPayment(Installment $installment)
+    {
+        return view('installments.payment', compact('installment'));
+    }
+
+    /**
+     * Store a new payment, handle full or partial payments, and split installments if necessary.
+     */
+    public function storePayment(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'installment_id' => 'required|exists:installments,id',
@@ -47,35 +54,40 @@ class InstallmentController extends Controller
                 return redirect()->back()->with('error', 'This installment has already been paid.');
             }
 
-            $receiptPath = $request->file('receipt')->store('receipts', 'public');
+            $receiptPath = $request->file('receipt')->storeAs('receipts', 'public');
 
             if ($request->payment_type === 'full') {
-                // --- FULL PAYMENT LOGIC ---
-                $this->handlePayment($originalInstallment, $tenant, $request->amount, $request->payment_date, $receiptPath, $request->notes);
-                $originalInstallment->update(['status' => 'paid']);
+                $originalInstallment->update(['status' => 'paid', 'paid_date' => $request->payment_date, 'notes' => $request->notes]);
+                $this->createInvoiceAndPayment($originalInstallment, $tenant, $originalInstallment->amount, $request->payment_date, $receiptPath, $request->notes);
             } else {
-                // --- PARTIAL PAYMENT LOGIC ---
                 $partialAmount = (float) $request->partial_amount;
                 $remainingAmount = $originalInstallment->amount - $partialAmount;
 
                 if ($remainingAmount <= 0) {
-                    throw new \Exception('Partial amount cannot be greater than or equal to the installment amount.');
+                    throw new \Exception('Partial amount must be less than the installment amount.');
                 }
 
-                // 1. Create invoice for the partial payment
-                $this->handlePayment($originalInstallment, $tenant, $partialAmount, $request->payment_date, $receiptPath, $request->notes);
-
-                // 2. Create a new installment for the remaining amount, due next month
-                Installment::create([
+                $paidInstallment = Installment::create([
                     'buyer_id' => $tenant->id,
-                    'unit_id' => $originalInstallment->unit_id,
-                    'installment_number' => $originalInstallment->installment_number + 0.1, // Or another way to denote it's a split
-                    'due_date' => Carbon::parse($originalInstallment->due_date)->addMonth(),
-                    'amount' => $remainingAmount,
-                    'status' => 'pending',
+                    'installment_number' => $originalInstallment->installment_number,
+                    'due_date' => $request->payment_date,
+                    'amount' => $partialAmount,
+                    'status' => 'paid',
+                    'paid_date' => $request->payment_date,
+                    'notes' => 'Partial payment. ' . $request->notes,
                 ]);
 
-                // 3. Delete the original installment as it has now been split
+                $this->createInvoiceAndPayment($paidInstallment, $tenant, $partialAmount, $request->payment_date, $receiptPath, $request->notes);
+
+                Installment::create([
+                    'buyer_id' => $tenant->id,
+                    'installment_number' => $originalInstallment->installment_number + 0.1,
+                    'due_date' => $originalInstallment->due_date,
+                    'amount' => $remainingAmount,
+                    'status' => 'pending',
+                    'notes' => 'Remaining balance from partial payment.',
+                ]);
+
                 $originalInstallment->delete();
             }
 
@@ -89,32 +101,37 @@ class InstallmentController extends Controller
     }
 
     /**
-     * Helper function to create Invoice, InvoiceItem, and InvoicePayment.
+     * Helper function to create Invoice, InvoiceItem, and InvoicePayment records.
      */
-    private function handlePayment(Installment $installment, Tenant $tenant, $amount, $paymentDate, $receiptPath, $notes)
+    private function createInvoiceAndPayment(Installment $installment, Tenant $tenant, $paymentAmount, $paymentDate, $receiptPath, $notes)
     {
+        // Step 1: Create the Invoice record, linked to the installment
         $invoice = Invoice::create([
             'invoice_id'    => 'INV-' . now()->format('Ymd') . '-' . $installment->id . '-' . rand(100, 999),
             'property_id'   => $tenant->property,
             'unit_id'       => $tenant->unit,
             'tenant_id'     => $tenant->id,
+            'installment_id' => $installment->id,
             'invoice_month' => Carbon::parse($installment->due_date)->startOfMonth()->format('Y-m-d'),
             'end_date'      => $installment->due_date,
-            'status'        => 'paid',
+            'status'        => ($installment->status == 'paid' && $paymentAmount >= $installment->amount) ? 'paid' : 'partial_paid',
         ]);
 
+        // Step 2: Create the associated Invoice Item
         InvoiceItem::create([
             'invoice_id'    => $invoice->id,
             'invoice_type'  => 'installment',
-            'amount'        => $amount,
+            'amount'        => $paymentAmount,
             'description'   => 'Payment for installment #' . $installment->installment_number,
         ]);
 
+        // ✅ FIX: The re-query has been removed. We now use the $invoice object directly.
+        // Step 3: Create the Invoice Payment record using the original invoice's ID.
         InvoicePayment::create([
             'invoice_id' => $invoice->id,
             'installment_id' => $installment->id,
             'payment_date' => $paymentDate,
-            'amount' => $amount,
+            'amount' => $paymentAmount,
             'receipt' => $receiptPath,
             'notes' => $notes,
         ]);

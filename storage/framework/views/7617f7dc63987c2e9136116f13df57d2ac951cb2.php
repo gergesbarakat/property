@@ -17,11 +17,27 @@
     </ul>
 <?php $__env->stopSection(); ?>
 
-
-
-<?php $__env->startSection('content'); ?>
-    \
+<?php $__env->startSection('styles'); ?>
     <style>
+        .user-card .user-imgwrap {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .user-card .user-imgwrap img {
+            width: 100px;
+            height: 100px;
+            border: 5px solid #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        .user-card .card-body {
+            margin-top: 60px;
+        }
+
         .media-body h6 {
             color: #6c757d;
             margin-bottom: 0.25rem;
@@ -35,71 +51,10 @@
             font-size: 0.8rem;
             padding: 0.5em 0.75em;
         }
-
-        /* ✅ NEW: Custom styles for the new payment modal */
-        .installment_modal_backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 1050;
-            /* High z-index */
-            display: none;
-        }
-
-        .installment_modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 500px;
-            background-color: #fff;
-            border-radius: .5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
-            z-index: 1051;
-            /* Higher than backdrop */
-            display: none;
-            flex-direction: column;
-            max-height: 90vh;
-        }
-
-        .installment_modal .modal-header,
-        .installment_modal .modal-body,
-        .installment_modal .modal-footer {
-            padding: 1rem;
-        }
-
-        .installment_modal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .installment_modal .modal-body {
-            overflow-y: auto;
-        }
-
-        .installment_modal .modal-footer {
-            border-top: 1px solid #dee2e6;
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-
-        .installment_modal .btn-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            line-height: 1;
-            cursor: pointer;
-            padding: 0;
-            opacity: 0.7;
-        }
     </style>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
     
     <div class="row">
         <div class="col-12">
@@ -120,7 +75,7 @@
                 <div class="card-header" style="min-height: 50px;"></div>
                 <div class="card-body text-center">
                     <div class="user-imgwrap"><img class="img-fluid rounded-circle"
-                            src="<?php echo e(optional($tenant->user)->profile ? Storage::url($tenant->user->profile) : asset('path/to/default/avatar.png')); ?>"
+                            src="<?php echo e(asset(Storage::url('upload/profiles')) . '/' . $tenant->user->profile); ?>"
                             alt="Profile Image"></div>
                     <div class="user-detailwrap">
                         <h3><?php echo e(optional($tenant->user)->first_name); ?> <?php echo e(optional($tenant->user)->last_name); ?></h3>
@@ -237,14 +192,22 @@
                                         <td class="text-center">
                                             <?php if($installment->status != 'paid'): ?>
                                                 
-                                                <button type="button"
-                                                    class="btn btn-sm btn-outline-success open-installment-modal"
-                                                    data-installment-id="<?php echo e($installment->id); ?>"
-                                                    data-amount="<?php echo e($installment->amount); ?>">
+                                                <a href="#" class="btn btn-sm btn-outline-success customModal"
+                                                    data-url="<?php echo e(route('installment.payment.create', $installment->id)); ?>"
+                                                    data-title="Record Payment for Installment #<?php echo e($installment->installment_number); ?>"
+                                                    data-size="md">
                                                     Record Payment
-                                                </button>
+                                                </a>
                                             <?php else: ?>
-                                                <span>-</span>
+                                                <?php if(optional($installment->invoice)->payment?->receipt): ?>
+                                                    <a href="<?php echo e(Storage::url($installment->invoice->payment->receipt)); ?>"
+                                                        class="btn btn-sm btn-outline-primary" download>
+                                                        <i data-feather="download" style="width:16px; height:16px;"></i>
+                                                        Download Receipt
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span>-</span>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
@@ -264,103 +227,44 @@
     </div>
 
     
-    <div class="installment_modal_backdrop" id="installment_modal_backdrop"></div>
-    <div class="installment_modal" id="installment_modal">
-        <div class="modal-header">
-            <h5 class="modal-title">Record Payment & Upload Receipt</h5>
-            <button type="button" class="btn-close close-installment-modal">&times;</button>
+    <div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="commonModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commonModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
         </div>
-        <form id="installment_payment_form" enctype="multipart/form-data">
-            <?php echo csrf_field(); ?>
-            <div class="modal-body">
-                <input type="hidden" name="installment_id" id="modal_installment_id">
-                <input type="hidden" name="amount" id="modal_total_amount">
-
-                <div class="mb-3">
-                    <label for="payment_type" class="form-label">Payment Type</label>
-                    <select name="payment_type" id="payment_type" class="form-control">
-                        <option value="full">Full Payment</option>
-                        <option value="partial">Partial Payment</option>
-                    </select>
-                </div>
-
-                <div class="mb-3" id="partial_amount_div" style="display: none;">
-                    <label for="modal_partial_amount" class="form-label">Partial Amount Paid</label>
-                    <input type="number" class="form-control" id="modal_partial_amount" name="partial_amount"
-                        step="0.01">
-                </div>
-
-                <div class="mb-3">
-                    <label for="modal_payment_date" class="form-label">Payment Date</label>
-                    <input type="date" class="form-control" id="modal_payment_date" name="payment_date"
-                        value="<?php echo e(now()->format('Y-m-d')); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="modal_receipt" class="form-label">Payment Receipt</label>
-                    <input type="file" class="form-control" id="modal_receipt" name="receipt" required>
-                </div>
-                <div class="mb-3">
-                    <label for="modal_notes" class="form-label">Notes (Optional)</label>
-                    <textarea class="form-control" id="modal_notes" name="notes" rows="2"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary close-installment-modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save Payment</button>
-            </div>
-        </form>
     </div>
-
-    <script>
-        // Use a no-conflict wrapper to ensure '$' works with your theme's jQuery.
-        (function($) {
-            "use strict";
-
-            $(document).ready(function() {
-                var modal = $('#installment_modal');
-                var backdrop = $('#installment_modal_backdrop');
-
-                // ✅ FIX: The AJAX submission logic has been removed.
-                // The script now only handles opening and closing the modal.
-
-                // --- Open Modal ---
-                $('.open-installment-modal').on('click', function() {
-                    var button = $(this);
-                    var installmentId = button.data('installment-id');
-                    var amount = button.data('amount');
-
-                    modal.find('#modal_installment_id').val(installmentId);
-                    modal.find('#modal_total_amount').val(amount);
-
-                    backdrop.fadeIn(200);
-                    modal.css('display', 'flex').hide().fadeIn(200);
-                });
-
-                // --- Close Modal ---
-                function closeModal() {
-                    backdrop.fadeOut(200);
-                    modal.fadeOut(200);
-                    // Reset the form for the next time it opens
-                    modal.find('form')[0].reset();
-                    $('#partial_amount_div').hide();
-                    $('#payment_type').val('full');
-                }
-                $('.close-installment-modal').on('click', closeModal);
-                backdrop.on('click', closeModal);
-
-                // --- Toggle Partial Payment Input ---
-                $('#payment_type').on('change', function() {
-                    if ($(this).val() === 'partial') {
-                        $('#partial_amount_div').slideDown();
-                        $('#modal_partial_amount').prop('required', true);
-                    } else {
-                        $('#partial_amount_div').slideUp();
-                        $('#modal_partial_amount').prop('required', false).val('');
-                    }
-                });
-            });
-        })(jQuery);
-    </script>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+    <script>
+        $(document).on('click', '.customModal', function() {
+            var modal = $('#commonModal');
+            var url = $(this).data('url');
+            var title = $(this).data('title');
+            var size = $(this).data('size') || 'md'; // Default to medium size if not specified
+
+            // Set modal title and size
+            modal.find('.modal-title').text(title);
+            modal.find('.modal-dialog').removeClass('modal-sm modal-lg modal-xl').addClass('modal-' + size);
+
+            // Fetch content from the URL and inject it into the modal body
+            $.get(url, function(data) {
+                modal.find('.modal-body').html(data);
+                modal.modal('show');
+            });
+        });
+    </script>
+<?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\JOWEB\property\resources\views/tenant/show.blade.php ENDPATH**/ ?>
