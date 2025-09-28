@@ -71,7 +71,7 @@
                                         -
                                     @endif
                                 </td>
-                                <td>{{ ucfirst($tenant->purchase_type) }}</td>
+                                <td>{{ ()ucfirst($tenant->purchase_type) }}</td>
                                 {{-- ✅ FIX: Aligned the action buttons to the end --}}
                                 <td class="text-end action-buttons">
                                     <a href="{{ route('tenant.show', $tenant->id) }}"

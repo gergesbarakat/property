@@ -2,6 +2,16 @@
 @section('page-title')
     {{ __('Dashboard') }}
 @endsection
+@section('breadcrumb')
+    <ul class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="{{ route('dashboard') }}">
+                <h1>{{ __('Dashboard') }}</h1>
+            </a>
+        </li>
+    </ul>
+@endsection
+
 @push('script-page')
     <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
     <script>
@@ -31,7 +41,7 @@
                 },
                 stroke: {
                     width: [0, 2],
-                    curve: 'smooth',
+                    curve: 'smooth'
                 },
                 plotOptions: {
                     bar: {
@@ -40,7 +50,7 @@
                     }
                 },
                 fill: {
-                    opacity: [1, 0.1],
+                    opacity: [1, 0.1]
                 },
                 colors: ['#5c6ac4', '#5c6ac4'],
                 yaxis: {
@@ -57,7 +67,7 @@
             var chart = new ApexCharts(document.querySelector("#incomeExpense"), options);
             chart.render();
 
-            // --- Upcoming Installments Filter Logic ---
+            // ✅ NEW: JavaScript for the installment filter buttons
             $('.installment-filter-btn').on('click', function() {
                 $('.installment-filter-btn').removeClass('btn-primary').addClass('btn-outline-primary');
                 $(this).removeClass('btn-outline-primary').addClass('btn-primary');
@@ -68,15 +78,6 @@
         })();
     </script>
 @endpush
-@section('breadcrumb')
-    <ul class="breadcrumb mb-0">
-        <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}">
-                <h1>{{ __('Dashboard') }}</h1>
-            </a>
-        </li>
-    </ul>
-@endsection
 
 @section('content')
     {{-- Statistics Cards --}}
@@ -91,7 +92,7 @@
                                         class="fa fa-building"></i></span></div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <p class="text-muted mb-1">{{ __('Total Property') }}</p>
+                            <p class="text-muted mb-1">{{ __('Total Active Properties') }}</p>
                             <h4 class="mb-0">{{ $result['totalProperty'] }}</h4>
                         </div>
                     </div>
@@ -108,7 +109,7 @@
                                         class="fa fa-home"></i></span></div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <p class="text-muted mb-1">{{ __('Total Unit') }}</p>
+                            <p class="text-muted mb-1">{{ __('Total Units') }}</p>
                             <h4 class="mb-0">{{ $result['totalUnit'] }}</h4>
                         </div>
                     </div>
@@ -127,7 +128,8 @@
                         <div class="flex-grow-1 ms-3">
                             <p class="text-muted mb-1">{{ __('Total Income') }}</p>
                             <h4 class="mb-0">
-                                {{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ $result['totalIncome'] }}</h4>
+                                {{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($result['totalIncome'], 2) }}
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -145,7 +147,8 @@
                         <div class="flex-grow-1 ms-3">
                             <p class="text-muted mb-1">{{ __('Total Expense') }}</p>
                             <h4 class="mb-0">
-                                {{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ $result['totalExpense'] }}</h4>
+                                {{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($result['totalExpense'], 2) }}
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -154,68 +157,75 @@
     </div>
 
     <div class="row">
-        {{-- Upcoming Installments Card --}}
+        {{-- ✅ NEW: Upcoming Installments Card --}}
         <div class="col-lg-5">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ __('Upcoming Installment Payments') }}</h5>
+                    <h5 class="mb-0">{{ __('Upcoming Installments') }}</h5>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary btn-sm installment-filter-btn"
-                            data-target="week-installments">{{ __('This Week') }}</button>
+                            data-target="this-month-installments">{{ __('This Month') }}</button>
                         <button type="button" class="btn btn-outline-primary btn-sm installment-filter-btn"
-                            data-target="month-installments">{{ __('This Month') }}</button>
+                            data-target="next-month-installments">{{ __('Next Month') }}</button>
                     </div>
                 </div>
                 <div class="card-body">
-                    {{-- List for "This Week" --}}
-                    <ul class="list-group list-group-flush installments-list" id="week-installments">
-                        @forelse($dueThisWeek as $installment)
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <div>
-                                    {{-- ✅ FIX: Using the correct 'buyer' relationship to generate the link and get the name --}}
-                                    <a href="{{ route('tenant.show', $installment->buyer->id) }}" class="text-dark">
-                                        <strong>{{ optional($installment->buyer->user)->first_name }}</strong>
-                                    </a>
-                                    <small
-                                        class="d-block text-muted">{{ optional($installment->buyer->propertyUnit->property)->name }}
-                                        - {{ optional($installment->buyer->propertyUnit)->name }}</small>
-                                </div>
-                                <div class="text-end">
-                                    <strong
-                                        class="text-dark">{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($installment->amount, 2) }}</strong>
-                                    <small class="d-block text-muted">Due:
-                                        {{ \Carbon\Carbon::parse($installment->due_date)->format('D, M j') }}</small>
-                                </div>
-                            </li>
-                        @empty
-                            <li class="list-group-item text-center text-muted">{{ __('No payments due this week.') }}</li>
-                        @endforelse
-                    </ul>
-                    {{-- List for "This Month" (initially hidden) --}}
-                    <ul class="list-group list-group-flush installments-list" id="month-installments"
-                        style="display: none;">
-                        @forelse($dueThisMonth as $installment)
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <div>
-                                    {{-- ✅ FIX: Using the correct 'buyer' relationship to generate the link and get the name --}}
-                                    <a href="{{ route('tenant.show', $installment->buyer->id) }}" class="text-dark">
-                                        <strong>{{ optional($installment->buyer->user)->first_name }}</strong>
-                                    </a>
-                                    <small
-                                        class="d-block text-muted">{{ optional($installment->buyer->propertyUnit->property)->name }}
-                                        - {{ optional($installment->buyer->propertyUnit)->name }}</small>
-                                </div>
-                                <div class="text-end">
-                                    <strong
-                                        class="text-dark">{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($installment->amount, 2) }}</strong>
-                                    <small class="d-block text-muted">Due:
-                                        {{ \Carbon\Carbon::parse($installment->due_date)->format('D, M j') }}</small>
-                                </div>
-                            </li>
-                        @empty
-                            <li class="list-group-item text-center text-muted">{{ __('No payments due this month.') }}</li>
-                        @endforelse
-                    </ul>
+                    {{-- List for "This Month" --}}
+                    <div class="installments-list" id="this-month-installments">
+                        <table class="table table-sm">
+                            <tbody>
+                                @forelse($result['dueThisMonth'] as $installment)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('tenant.show', $installment->buyer->id) }}"
+                                                class="text-dark fw-bold">{{ optional($installment->buyer->user)->first_name }}</a>
+                                            <small
+                                                class="d-block text-muted">{{ optional($installment->buyer->linked_property)->name }}
+                                                - {{ optional($installment->buyer->propertyUnit)->name }}</small>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong
+                                                class="text-dark">{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($installment->amount, 2) }}</strong>
+                                            <small class="d-block text-muted">Due:
+                                                {{ \Carbon\Carbon::parse($installment->due_date)->format('D, M j') }}</small>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-center text-muted p-4">{{ __('No payments due this month.') }}</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    {{-- List for "Next Month" --}}
+                    <div class="installments-list" id="next-month-installments" style="display: none;">
+                        <table class="table table-sm">
+                            <tbody>
+                                @forelse($result['dueNextMonth'] as $installment)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('tenant.show', $installment->buyer->id) }}"
+                                                class="text-dark fw-bold">{{ optional($installment->buyer->user)->first_name }}</a>
+                                            <small
+                                                class="d-block text-muted">{{ optional($installment->buyer->linked_property)->name }}
+                                                - {{ optional($installment->buyer->propertyUnit)->name }}</small>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong
+                                                class="text-dark">{{ $result['settings']['CURRENCY_SYMBOL'] ?? '$' }}{{ number_format($installment->amount, 2) }}</strong>
+                                            <small class="d-block text-muted">Due:
+                                                {{ \Carbon\Carbon::parse($installment->due_date)->format('D, M j') }}</small>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-center text-muted p-4">{{ __('No payments due next month.') }}</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

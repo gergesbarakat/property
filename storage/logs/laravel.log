@@ -53751,3 +53751,322 @@ Stack trace:
 [2025-09-28 10:20:19] local.INFO: Locale set to: arabic  
 [2025-09-28 10:20:19] local.INFO: SetLocale middleware is running.  
 [2025-09-28 10:20:19] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:27:40] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:27:40] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:27:40] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:27:40] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-28 10:27:40] local.INFO: Locale set to: arabic  
+[2025-09-28 10:27:40] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:27:40] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:27:41] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:27:41] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-28 10:27:41] local.INFO: Locale set to: arabic  
+[2025-09-28 10:27:42] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:27:42] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:34:39] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:34:39] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:34:39] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:34:39] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-28 10:34:39] local.INFO: Locale set to: arabic  
+[2025-09-28 10:34:41] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:34:41] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:48:31] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:48:31] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:48:31] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:48:31] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-28 10:48:31] local.INFO: Locale set to: arabic  
+[2025-09-28 10:48:32] local.ERROR: Undefined array key "dueThisMonth" {"view":{"view":"F:\\JOWEB\\property\\resources\\views\\dashboard\\index.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-879210968 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1627</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-879210968\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","result":"<pre class=sf-dump id=sf-dump-1949792645 data-indent-pad=\"  \"><span class=sf-dump-note>array:8</span> [<samp data-depth=1 class=sf-dump-expanded>
+  \"<span class=sf-dump-key>totalProperty</span>\" => <span class=sf-dump-num>20</span>
+  \"<span class=sf-dump-key>totalUnit</span>\" => <span class=sf-dump-num>16</span>
+  \"<span class=sf-dump-key>totalIncome</span>\" => \"<span class=sf-dump-str title=\"12 characters\">164639668.81</span>\"
+  \"<span class=sf-dump-key>totalExpense</span>\" => <span class=sf-dump-num>0</span>
+  \"<span class=sf-dump-key>recentProperty</span>\" => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Collection</span></span> {<a class=sf-dump-ref>#1714</a><samp data-depth=2 class=sf-dump-compact>
+    #<span class=sf-dump-protected title=\"Protected property\">items</span>: <span class=sf-dump-note>array:5</span> [<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-index>0</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Property
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Property</span></span> {<a class=sf-dump-ref>#1713</a> &#8230;30}
+      <span class=sf-dump-index>1</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Property
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Property</span></span> {<a class=sf-dump-ref>#1679</a> &#8230;30}
+      <span class=sf-dump-index>2</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Property
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Property</span></span> {<a class=sf-dump-ref>#1678</a> &#8230;30}
+      <span class=sf-dump-index>3</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Property
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Property</span></span> {<a class=sf-dump-ref>#1677</a> &#8230;30}
+      <span class=sf-dump-index>4</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Property
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Property</span></span> {<a class=sf-dump-ref>#1676</a> &#8230;30}
+    </samp>]
+    #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  </samp>}
+  \"<span class=sf-dump-key>recentTenant</span>\" => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"Illuminate\\Database\\Eloquent\\Collection
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Database\\Eloquent</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Collection</span></span> {<a class=sf-dump-ref>#1706</a><samp data-depth=2 class=sf-dump-compact>
+    #<span class=sf-dump-protected title=\"Protected property\">items</span>: <span class=sf-dump-note>array:5</span> [<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-index>0</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Tenant
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Tenant</span></span> {<a class=sf-dump-ref>#1705</a> &#8230;30}
+      <span class=sf-dump-index>1</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Tenant
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Tenant</span></span> {<a class=sf-dump-ref>#1740</a> &#8230;30}
+      <span class=sf-dump-index>2</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Tenant
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Tenant</span></span> {<a class=sf-dump-ref>#1739</a> &#8230;30}
+      <span class=sf-dump-index>3</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Tenant
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Tenant</span></span> {<a class=sf-dump-ref>#1738</a> &#8230;30}
+      <span class=sf-dump-index>4</span> => <span class=\"sf-dump-note sf-dump-ellipsization\" title=\"App\\Models\\Tenant
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">App\\Models</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span><span class=\"sf-dump-ellipsis-tail\">Tenant</span></span> {<a class=sf-dump-ref>#1737</a> &#8230;30}
+    </samp>]
+    #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+  </samp>}
+  \"<span class=sf-dump-key>incomeExpenseByMonth</span>\" => <span class=sf-dump-note>array:3</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>label</span>\" => <span class=sf-dump-note>array:12</span> [<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-index>0</span> => \"<span class=sf-dump-str title=\"8 characters\">Jan-2025</span>\"
+      <span class=sf-dump-index>1</span> => \"<span class=sf-dump-str title=\"8 characters\">Feb-2025</span>\"
+      <span class=sf-dump-index>2</span> => \"<span class=sf-dump-str title=\"8 characters\">Mar-2025</span>\"
+      <span class=sf-dump-index>3</span> => \"<span class=sf-dump-str title=\"8 characters\">Apr-2025</span>\"
+      <span class=sf-dump-index>4</span> => \"<span class=sf-dump-str title=\"8 characters\">May-2025</span>\"
+      <span class=sf-dump-index>5</span> => \"<span class=sf-dump-str title=\"8 characters\">Jun-2025</span>\"
+      <span class=sf-dump-index>6</span> => \"<span class=sf-dump-str title=\"8 characters\">Jul-2025</span>\"
+      <span class=sf-dump-index>7</span> => \"<span class=sf-dump-str title=\"8 characters\">Aug-2025</span>\"
+      <span class=sf-dump-index>8</span> => \"<span class=sf-dump-str title=\"8 characters\">Sep-2025</span>\"
+      <span class=sf-dump-index>9</span> => \"<span class=sf-dump-str title=\"8 characters\">Oct-2025</span>\"
+      <span class=sf-dump-index>10</span> => \"<span class=sf-dump-str title=\"8 characters\">Nov-2025</span>\"
+      <span class=sf-dump-index>11</span> => \"<span class=sf-dump-str title=\"8 characters\">Dec-2025</span>\"
+    </samp>]
+    \"<span class=sf-dump-key>income</span>\" => <span class=sf-dump-note>array:12</span> [<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-index>0</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>1</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>2</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>3</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>4</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>5</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>6</span> => \"<span class=sf-dump-str title=\"12 characters\">109703995.36</span>\"
+      <span class=sf-dump-index>7</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>8</span> => \"<span class=sf-dump-str title=\"11 characters\">54935673.45</span>\"
+      <span class=sf-dump-index>9</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>10</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>11</span> => <span class=sf-dump-num>0</span>
+    </samp>]
+    \"<span class=sf-dump-key>expense</span>\" => <span class=sf-dump-note>array:12</span> [<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-index>0</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>1</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>2</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>3</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>4</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>5</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>6</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>7</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>8</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>9</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>10</span> => <span class=sf-dump-num>0</span>
+      <span class=sf-dump-index>11</span> => <span class=sf-dump-num>0</span>
+    </samp>]
+  </samp>]
+  \"<span class=sf-dump-key>settings</span>\" => <span class=sf-dump-note>array:53</span> [<samp data-depth=2 class=sf-dump-compact>
+    \"<span class=sf-dump-key>app_name</span>\" => \"<span class=sf-dump-str title=\"7 characters\">ShGroup</span>\"
+    \"<span class=sf-dump-key>theme_color</span>\" => \"<span class=sf-dump-str title=\"6 characters\">color1</span>\"
+    \"<span class=sf-dump-key>color_type</span>\" => \"<span class=sf-dump-str title=\"7 characters\">default</span>\"
+    \"<span class=sf-dump-key>own_color</span>\" => \"\"
+    \"<span class=sf-dump-key>own_color_code</span>\" => \"\"
+    \"<span class=sf-dump-key>sidebar_mode</span>\" => \"<span class=sf-dump-str title=\"5 characters\">light</span>\"
+    \"<span class=sf-dump-key>layout_direction</span>\" => \"<span class=sf-dump-str title=\"7 characters\">rtlmode</span>\"
+    \"<span class=sf-dump-key>layout_mode</span>\" => \"<span class=sf-dump-str title=\"9 characters\">lightmode</span>\"
+    \"<span class=sf-dump-key>company_logo</span>\" => \"<span class=sf-dump-str title=\"10 characters\">2_logo.png</span>\"
+    \"<span class=sf-dump-key>company_favicon</span>\" => \"<span class=sf-dump-str title=\"13 characters\">2_favicon.png</span>\"
+    \"<span class=sf-dump-key>landing_logo</span>\" => \"<span class=sf-dump-str title=\"16 characters\">landing_logo.png</span>\"
+    \"<span class=sf-dump-key>meta_seo_title</span>\" => \"\"
+    \"<span class=sf-dump-key>meta_seo_keyword</span>\" => \"\"
+    \"<span class=sf-dump-key>meta_seo_description</span>\" => \"\"
+    \"<span class=sf-dump-key>meta_seo_image</span>\" => \"\"
+    \"<span class=sf-dump-key>company_date_format</span>\" => \"<span class=sf-dump-str title=\"6 characters\">M j, Y</span>\"
+    \"<span class=sf-dump-key>company_time_format</span>\" => \"<span class=sf-dump-str title=\"5 characters\">g:i A</span>\"
+    \"<span class=sf-dump-key>company_name</span>\" => \"<span class=sf-dump-str title=\"7 characters\">Shgroup</span>\"
+    \"<span class=sf-dump-key>company_phone</span>\" => \"<span class=sf-dump-str title=\"11 characters\">01277944537</span>\"
+    \"<span class=sf-dump-key>company_address</span>\" => \"<span class=sf-dump-str title=\"5 characters\">cairo</span>\"
+    \"<span class=sf-dump-key>company_email</span>\" => \"<span class=sf-dump-str title=\"25 characters\">girgisbarakat70@gmail.com</span>\"
+    \"<span class=sf-dump-key>company_email_from_name</span>\" => \"\"
+    \"<span class=sf-dump-key>google_recaptcha</span>\" => \"<span class=sf-dump-str title=\"3 characters\">off</span>\"
+    \"<span class=sf-dump-key>recaptcha_key</span>\" => \"\"
+    \"<span class=sf-dump-key>recaptcha_secret</span>\" => \"\"
+    \"<span class=sf-dump-key>landing_page</span>\" => \"<span class=sf-dump-str title=\"2 characters\">on</span>\"
+    \"<span class=sf-dump-key>register_page</span>\" => \"<span class=sf-dump-str title=\"2 characters\">on</span>\"
+    \"<span class=sf-dump-key>SERVER_DRIVER</span>\" => \"\"
+    \"<span class=sf-dump-key>SERVER_HOST</span>\" => \"\"
+    \"<span class=sf-dump-key>SERVER_PORT</span>\" => \"\"
+    \"<span class=sf-dump-key>SERVER_USERNAME</span>\" => \"\"
+    \"<span class=sf-dump-key>SERVER_PASSWORD</span>\" => \"\"
+    \"<span class=sf-dump-key>SERVER_ENCRYPTION</span>\" => \"\"
+    \"<span class=sf-dump-key>FROM_EMAIL</span>\" => \"\"
+    \"<span class=sf-dump-key>FROM_NAME</span>\" => \"\"
+    \"<span class=sf-dump-key>invoice_number_prefix</span>\" => \"<span class=sf-dump-str title=\"8 characters\">#INV-000</span>\"
+    \"<span class=sf-dump-key>expense_number_prefix</span>\" => \"<span class=sf-dump-str title=\"8 characters\">#EXP-000</span>\"
+    \"<span class=sf-dump-key>CURRENCY</span>\" => \"<span class=sf-dump-str title=\"3 characters\">EGP</span>\"
+    \"<span class=sf-dump-key>CURRENCY_SYMBOL</span>\" => \"<span class=sf-dump-str title=\"3 characters\">EGP</span>\"
+    \"<span class=sf-dump-key>STRIPE_PAYMENT</span>\" => \"<span class=sf-dump-str title=\"3 characters\">off</span>\"
+    \"<span class=sf-dump-key>STRIPE_KEY</span>\" => \"\"
+    \"<span class=sf-dump-key>STRIPE_SECRET</span>\" => \"\"
+    \"<span class=sf-dump-key>paypal_payment</span>\" => \"<span class=sf-dump-str title=\"3 characters\">off</span>\"
+    \"<span class=sf-dump-key>paypal_mode</span>\" => \"\"
+    \"<span class=sf-dump-key>paypal_client_id</span>\" => \"\"
+    \"<span class=sf-dump-key>paypal_secret_key</span>\" => \"\"
+    \"<span class=sf-dump-key>bank_transfer_payment</span>\" => \"<span class=sf-dump-str title=\"3 characters\">off</span>\"
+    \"<span class=sf-dump-key>bank_name</span>\" => \"\"
+    \"<span class=sf-dump-key>bank_holder_name</span>\" => \"\"
+    \"<span class=sf-dump-key>bank_account_number</span>\" => \"\"
+    \"<span class=sf-dump-key>bank_ifsc_code</span>\" => \"\"
+    \"<span class=sf-dump-key>bank_other_details</span>\" => \"\"
+    \"<span class=sf-dump-key>timezone</span>\" => \"<span class=sf-dump-str title=\"12 characters\">Africa/Cairo</span>\"
+  </samp>]
+</samp>]
+</pre><script>Sfdump(\"sf-dump-1949792645\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","dueThisWeek":"<pre class=sf-dump id=sf-dump-1258747024 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Database\\Eloquent\\Collection</span> {<a class=sf-dump-ref>#1695</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1258747024\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","dueThisMonth":"<pre class=sf-dump id=sf-dump-1336422969 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Database\\Eloquent\\Collection</span> {<a class=sf-dump-ref>#1895</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">items</span>: []
+  #<span class=sf-dump-protected title=\"Protected property\">escapeWhenCastingToString</span>: <span class=sf-dump-const>false</span>
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1336422969\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"userId":2,"exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Undefined array key \"dueThisMonth\" at F:\\JOWEB\\property\\resources\\views\\dashboard\\index.blade.php:177)
+[stacktrace]
+#0 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(272): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'F:\\\\JOWEB\\\\proper...', 179)
+#1 F:\\JOWEB\\property\\resources\\views\\dashboard\\index.blade.php(177): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined array...', 'F:\\\\JOWEB\\\\proper...', 179)
+#2 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(109): require('F:\\\\JOWEB\\\\proper...')
+#3 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(110): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('F:\\\\JOWEB\\\\proper...', Array)
+#5 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(70): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('F:\\\\JOWEB\\\\proper...', Array)
+#6 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(195): Illuminate\\View\\Engines\\CompilerEngine->get('F:\\\\JOWEB\\\\proper...', Array)
+#7 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(178): Illuminate\\View\\View->getContents()
+#8 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(147): Illuminate\\View\\View->renderContents()
+#9 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(906): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(875): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(797): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(141): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 F:\\JOWEB\\property\\app\\Http\\Middleware\\XSS.php(43): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): App\\Http\\Middleware\\XSS->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 F:\\JOWEB\\property\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 F:\\JOWEB\\property\\app\\Http\\Middleware\\SetLocale.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): App\\Http\\Middleware\\SetLocale->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#29 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(797): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#36 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(776): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#37 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(740): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#38 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(729): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#39 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(190): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#40 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(141): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#41 F:\\JOWEB\\property\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 F:\\JOWEB\\property\\app\\Http\\Middleware\\SetLocale.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): App\\Http\\Middleware\\SetLocale->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(165): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#61 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(134): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#62 F:\\JOWEB\\property\\public\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#63 F:\\JOWEB\\property\\index.php(21): require_once('F:\\\\JOWEB\\\\proper...')
+#64 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined array key \"dueThisMonth\" at F:\\JOWEB\\property\\storage\\framework\\views\\f842d25872f0928d11fe5458830a30b864ce4649.php:179)
+[stacktrace]
+#0 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(272): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'F:\\\\JOWEB\\\\proper...', 179)
+#1 F:\\JOWEB\\property\\storage\\framework\\views\\f842d25872f0928d11fe5458830a30b864ce4649.php(179): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined array...', 'F:\\\\JOWEB\\\\proper...', 179)
+#2 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(109): require('F:\\\\JOWEB\\\\proper...')
+#3 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(110): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('F:\\\\JOWEB\\\\proper...', Array)
+#5 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(70): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('F:\\\\JOWEB\\\\proper...', Array)
+#6 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(195): Illuminate\\View\\Engines\\CompilerEngine->get('F:\\\\JOWEB\\\\proper...', Array)
+#7 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(178): Illuminate\\View\\View->getContents()
+#8 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(147): Illuminate\\View\\View->renderContents()
+#9 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(906): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#12 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(875): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#13 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(797): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#14 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(141): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 F:\\JOWEB\\property\\app\\Http\\Middleware\\XSS.php(43): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): App\\Http\\Middleware\\XSS->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 F:\\JOWEB\\property\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 F:\\JOWEB\\property\\app\\Http\\Middleware\\SetLocale.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): App\\Http\\Middleware\\SetLocale->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#29 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(797): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#36 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(776): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#37 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(740): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#38 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(729): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#39 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(190): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#40 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(141): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#41 F:\\JOWEB\\property\\vendor\\barryvdh\\laravel-debugbar\\src\\Middleware\\InjectDebugbar.php(66): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Barryvdh\\Debugbar\\Middleware\\InjectDebugbar->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 F:\\JOWEB\\property\\app\\Http\\Middleware\\SetLocale.php(35): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): App\\Http\\Middleware\\SetLocale->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(165): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#61 F:\\JOWEB\\property\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(134): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#62 F:\\JOWEB\\property\\public\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#63 F:\\JOWEB\\property\\index.php(21): require_once('F:\\\\JOWEB\\\\proper...')
+#64 {main}
+"} 
+[2025-09-28 10:49:36] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:49:36] local.INFO: User is not authenticated. Using default locale.  
+[2025-09-28 10:49:36] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:49:36] local.INFO: User is authenticated. Language is: arabic  
+[2025-09-28 10:49:36] local.INFO: Locale set to: arabic  
+[2025-09-28 10:49:37] local.INFO: SetLocale middleware is running.  
+[2025-09-28 10:49:37] local.INFO: User is not authenticated. Using default locale.  

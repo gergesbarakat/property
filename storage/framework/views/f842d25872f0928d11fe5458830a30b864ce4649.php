@@ -2,6 +2,16 @@
     <?php echo e(__('Dashboard')); ?>
 
 <?php $__env->stopSection(); ?>
+<?php $__env->startSection('breadcrumb'); ?>
+    <ul class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="<?php echo e(route('dashboard')); ?>">
+                <h1><?php echo e(__('Dashboard')); ?></h1>
+            </a>
+        </li>
+    </ul>
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startPush('script-page'); ?>
     <script src="<?php echo e(asset('assets/js/plugins/apexcharts.min.js')); ?>"></script>
     <script>
@@ -31,7 +41,7 @@
                 },
                 stroke: {
                     width: [0, 2],
-                    curve: 'smooth',
+                    curve: 'smooth'
                 },
                 plotOptions: {
                     bar: {
@@ -40,7 +50,7 @@
                     }
                 },
                 fill: {
-                    opacity: [1, 0.1],
+                    opacity: [1, 0.1]
                 },
                 colors: ['#5c6ac4', '#5c6ac4'],
                 yaxis: {
@@ -57,7 +67,7 @@
             var chart = new ApexCharts(document.querySelector("#incomeExpense"), options);
             chart.render();
 
-            // --- Upcoming Installments Filter Logic ---
+            // ✅ NEW: JavaScript for the installment filter buttons
             $('.installment-filter-btn').on('click', function() {
                 $('.installment-filter-btn').removeClass('btn-primary').addClass('btn-outline-primary');
                 $(this).removeClass('btn-outline-primary').addClass('btn-primary');
@@ -68,15 +78,6 @@
         })();
     </script>
 <?php $__env->stopPush(); ?>
-<?php $__env->startSection('breadcrumb'); ?>
-    <ul class="breadcrumb mb-0">
-        <li class="breadcrumb-item">
-            <a href="<?php echo e(route('dashboard')); ?>">
-                <h1><?php echo e(__('Dashboard')); ?></h1>
-            </a>
-        </li>
-    </ul>
-<?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
     
@@ -91,7 +92,7 @@
                                         class="fa fa-building"></i></span></div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <p class="text-muted mb-1"><?php echo e(__('Total Property')); ?></p>
+                            <p class="text-muted mb-1"><?php echo e(__('Total Active Properties')); ?></p>
                             <h4 class="mb-0"><?php echo e($result['totalProperty']); ?></h4>
                         </div>
                     </div>
@@ -108,7 +109,7 @@
                                         class="fa fa-home"></i></span></div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <p class="text-muted mb-1"><?php echo e(__('Total Unit')); ?></p>
+                            <p class="text-muted mb-1"><?php echo e(__('Total Units')); ?></p>
                             <h4 class="mb-0"><?php echo e($result['totalUnit']); ?></h4>
                         </div>
                     </div>
@@ -127,7 +128,9 @@
                         <div class="flex-grow-1 ms-3">
                             <p class="text-muted mb-1"><?php echo e(__('Total Income')); ?></p>
                             <h4 class="mb-0">
-                                <?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e($result['totalIncome']); ?></h4>
+                                <?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e(number_format($result['totalIncome'], 2)); ?>
+
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -145,7 +148,9 @@
                         <div class="flex-grow-1 ms-3">
                             <p class="text-muted mb-1"><?php echo e(__('Total Expense')); ?></p>
                             <h4 class="mb-0">
-                                <?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e($result['totalExpense']); ?></h4>
+                                <?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e(number_format($result['totalExpense'], 2)); ?>
+
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -158,66 +163,73 @@
         <div class="col-lg-5">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><?php echo e(__('Upcoming Installment Payments')); ?></h5>
+                    <h5 class="mb-0"><?php echo e(__('Upcoming Installments')); ?></h5>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary btn-sm installment-filter-btn"
-                            data-target="week-installments"><?php echo e(__('This Week')); ?></button>
+                            data-target="this-month-installments"><?php echo e(__('This Month')); ?></button>
                         <button type="button" class="btn btn-outline-primary btn-sm installment-filter-btn"
-                            data-target="month-installments"><?php echo e(__('This Month')); ?></button>
+                            data-target="next-month-installments"><?php echo e(__('Next Month')); ?></button>
                     </div>
                 </div>
                 <div class="card-body">
                     
-                    <ul class="list-group list-group-flush installments-list" id="week-installments">
-                        <?php $__empty_1 = true; $__currentLoopData = $dueThisWeek; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <div>
-                                    
-                                    <a href="<?php echo e(route('tenant.show', $installment->buyer->id)); ?>" class="text-dark">
-                                        <strong><?php echo e(optional($installment->buyer->user)->first_name); ?></strong>
-                                    </a>
-                                    <small
-                                        class="d-block text-muted"><?php echo e(optional($installment->buyer->propertyUnit->property)->name); ?>
+                    <div class="installments-list" id="this-month-installments">
+                        <table class="table table-sm">
+                            <tbody>
+                                <?php $__empty_1 = true; $__currentLoopData = $result['dueThisMonth']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <tr>
+                                        <td>
+                                            <a href="<?php echo e(route('tenant.show', $installment->buyer->id)); ?>"
+                                                class="text-dark fw-bold"><?php echo e(optional($installment->buyer->user)->first_name); ?></a>
+                                            <small
+                                                class="d-block text-muted"><?php echo e(optional($installment->buyer->linked_property)->name); ?>
 
-                                        - <?php echo e(optional($installment->buyer->propertyUnit)->name); ?></small>
-                                </div>
-                                <div class="text-end">
-                                    <strong
-                                        class="text-dark"><?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e(number_format($installment->amount, 2)); ?></strong>
-                                    <small class="d-block text-muted">Due:
-                                        <?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('D, M j')); ?></small>
-                                </div>
-                            </li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                            <li class="list-group-item text-center text-muted"><?php echo e(__('No payments due this week.')); ?></li>
-                        <?php endif; ?>
-                    </ul>
+                                                - <?php echo e(optional($installment->buyer->propertyUnit)->name); ?></small>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong
+                                                class="text-dark"><?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e(number_format($installment->amount, 2)); ?></strong>
+                                            <small class="d-block text-muted">Due:
+                                                <?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('D, M j')); ?></small>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                    <tr>
+                                        <td class="text-center text-muted p-4"><?php echo e(__('No payments due this month.')); ?></td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     
-                    <ul class="list-group list-group-flush installments-list" id="month-installments"
-                        style="display: none;">
-                        <?php $__empty_1 = true; $__currentLoopData = $dueThisMonth; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <div>
-                                    
-                                    <a href="<?php echo e(route('tenant.show', $installment->buyer->id)); ?>" class="text-dark">
-                                        <strong><?php echo e(optional($installment->buyer->user)->first_name); ?></strong>
-                                    </a>
-                                    <small
-                                        class="d-block text-muted"><?php echo e(optional($installment->buyer->propertyUnit->property)->name); ?>
+                    <div class="installments-list" id="next-month-installments" style="display: none;">
+                        <table class="table table-sm">
+                            <tbody>
+                                <?php $__empty_1 = true; $__currentLoopData = $result['dueNextMonth']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <tr>
+                                        <td>
+                                            <a href="<?php echo e(route('tenant.show', $installment->buyer->id)); ?>"
+                                                class="text-dark fw-bold"><?php echo e(optional($installment->buyer->user)->first_name); ?></a>
+                                            <small
+                                                class="d-block text-muted"><?php echo e(optional($installment->buyer->linked_property)->name); ?>
 
-                                        - <?php echo e(optional($installment->buyer->propertyUnit)->name); ?></small>
-                                </div>
-                                <div class="text-end">
-                                    <strong
-                                        class="text-dark"><?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e(number_format($installment->amount, 2)); ?></strong>
-                                    <small class="d-block text-muted">Due:
-                                        <?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('D, M j')); ?></small>
-                                </div>
-                            </li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                            <li class="list-group-item text-center text-muted"><?php echo e(__('No payments due this month.')); ?></li>
-                        <?php endif; ?>
-                    </ul>
+                                                - <?php echo e(optional($installment->buyer->propertyUnit)->name); ?></small>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong
+                                                class="text-dark"><?php echo e($result['settings']['CURRENCY_SYMBOL'] ?? '$'); ?><?php echo e(number_format($installment->amount, 2)); ?></strong>
+                                            <small class="d-block text-muted">Due:
+                                                <?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('D, M j')); ?></small>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                    <tr>
+                                        <td class="text-center text-muted p-4"><?php echo e(__('No payments due next month.')); ?></td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
