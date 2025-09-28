@@ -36,8 +36,8 @@
                             <th style="width: 25%;"><?php echo e(__('Buyer')); ?></th>
                             <th style="width: 15%;"><?php echo e(__('Property')); ?></th>
                             <th style="width: 15%;"><?php echo e(__('Unit')); ?></th>
-                            <th style="width: 12%;"><?php echo e(__('Contract Start')); ?></th>
-                            <th style="width: 12%;"><?php echo e(__('Contract End')); ?></th>
+                            <th style="width: 12%;"><?php echo e(__('Start date')); ?></th>
+                            <th style="width: 12%;"><?php echo e(__('End date')); ?></th>
                             <th style="width: 11%;"><?php echo e(__('Purchase Type')); ?></th>
                             
                             <th style="width: 10%;" class="text-end"><?php echo e(__('Actions')); ?></th>
@@ -60,7 +60,7 @@
                                 <td><?php echo e(optional($tenant->propertyUnit)->name ?? '-'); ?></td>
                                 <td class="whitespace-nowrap">
                                     <?php if($tenant->installments->isNotEmpty()): ?>
-                                        <?php echo e(\Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('M j, Y')); ?>
+                                        <?php echo e(\Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('Y-m-d')); ?>
 
                                     <?php else: ?>
                                         -
@@ -68,7 +68,7 @@
                                 </td>
                                 <td class="whitespace-nowrap">
                                     <?php if($tenant->installments->isNotEmpty()): ?>
-                                        <?php echo e(\Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('M j, Y')); ?>
+                                        <?php echo e(\Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('Y-m-d')); ?>
 
                                     <?php else: ?>
                                         -

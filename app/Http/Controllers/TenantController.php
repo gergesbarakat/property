@@ -39,16 +39,23 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant)
     {
-        // ✅ FIX: The direct relationship 'installments.payment' has been removed.
-        $tenant->load([
-            'user',
-            'linked_property',
-            'propertyUnit',
-            'installments.invoice.payment',
-            'contracts'
-        ]);
+        $tenant->load(['user', 'linked_property', 'propertyUnit', 'installments', 'contracts']);
 
-        return view('tenant.show', compact('tenant'));
+        // ✅ NEW: Calculate financial summary for the tenant
+        $allInstallments = $tenant->installments;
+        $paidInstallments = $allInstallments->where('status', 'paid');
+
+        $financialSummary = [
+            'total_amount' => $allInstallments->sum('amount'),
+            'paid_amount' => $paidInstallments->sum('amount'),
+            'due_amount' => $allInstallments->sum('amount') - $paidInstallments->sum('amount'),
+            'total_installments' => $allInstallments->count(),
+            'paid_installments' => $paidInstallments->count(),
+            'due_installments' => $allInstallments->where('status', '!=', 'paid')->count(),
+        ];
+
+        // Pass both the tenant and the financial summary to the view
+        return view('tenant.show', compact('tenant', 'financialSummary'));
     }
 
     public function create()

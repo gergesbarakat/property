@@ -6,8 +6,19 @@ use App\Models\Tenant;
 use App\Models\Invoice;
 use App\Models\Property;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf; // Import the PDF facade
+use App\Models\Contract;
+use App\Models\Installment;
+use App\Models\PropertyUnit;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
+use ZipArchive;
+use App\Models\InvoiceItem;
+use App\Models\InvoicePayment;
 
 class PdfExportController extends Controller
 {
@@ -20,10 +31,10 @@ class PdfExportController extends Controller
      * @param  int  $id The ID of the model instance.
      * @return \Illuminate\Http\Response
      */
-    public function downloadPdf(Request $request, $type, $id   )
+    public function downloadPdf(Request $request, $type, $id)
     {
         // Ensure settings are available
-          // Debugging line to check settings
+        // Debugging line to check settings
         $data = [];
         $view = '';
         $fileName = 'document.pdf';
@@ -31,13 +42,25 @@ class PdfExportController extends Controller
         // Use a switch statement to handle different export types
         switch ($type) {
             case 'tenant':
-                $tenant = Tenant::with(['user', 'linked_property', 'propertyUnit', 'installments'])->find($id);
+                $tenant = Tenant::with(['user', 'linked_property', 'propertyUnit', 'installments', 'contracts'])->find($id);
+                $allInstallments = $tenant->installments;
+                $paidInstallments = $allInstallments->where('status', 'paid');
+
+                $financialSummary = [
+                    'total_amount' => $allInstallments->sum('amount'),
+                    'paid_amount' => $paidInstallments->sum('amount'),
+                    'due_amount' => $allInstallments->sum('amount') - $paidInstallments->sum('amount'),
+                    'total_installments' => $allInstallments->count(),
+                    'paid_installments' => $paidInstallments->count(),
+                    'due_installments' => $allInstallments->where('status', '!=', 'paid')->count(),
+                ];
+                $tenant->financial_summary = $financialSummary;
                 if (!$tenant) {
                     return redirect()->back()->with('error', 'Tenant not found.');
                 }
                 $data = ['tenant' => $tenant];
                 $view = 'pdf.tenant_details';
-                $fileName = 'tenant_details_' . str_replace(' ', '_', optional($tenant->user)->first_name) . '.pdf';
+                $fileName = date('Y_m_d') . '_' . str_replace(' ', '_', optional($tenant->user)->first_name) . '.pdf';
                 break;
 
             case 'invoice':

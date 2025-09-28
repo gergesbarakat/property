@@ -196,7 +196,7 @@
                         ?>
 
                         <?php if(!$isImage): ?>
-                            <a href="<?php echo e(asset(Storage::url('upload/property')) . '/' . $filePath); ?>"
+                            <a href="<?php echo e(asset(path: Storage::url('upload/property')) . '/' . $filePath); ?>"
                                 class="btn btn-primary mb-2" download>
                                 Download <?php echo e(basename($filePath)); ?>
 

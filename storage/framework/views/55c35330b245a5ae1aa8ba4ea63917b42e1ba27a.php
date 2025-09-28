@@ -105,48 +105,51 @@
                 <tr>
                     <td>
                         <img class="img-fluid" style="width: 150px; height: auto;"
-                            src="{{ asset(Storage::url('upload/logo/')) . '/' . (isset($admin_logo) && !empty($admin_logo) ? $admin_logo : 'logo.png') }}"
+                            src="<?php echo e(asset(Storage::url('upload/logo/')) . '/' . (isset($admin_logo) && !empty($admin_logo) ? $admin_logo : 'logo.png')); ?>"
                             alt="theeme-logo">
                     </td>
                     <td>
                         Bill To:
-                        <strong>{{ optional($tenant->user)->first_name }}
-                            {{ optional($tenant->user)->last_name }}</strong><br>
-                        {{ $tenant->address ?? '-' }}<br>
-                        {{ $tenant->city ?? '' }}, {{ $tenant->state ?? '' }} <br>
-                        {{ optional($tenant->user)->email ?? '-' }}<br>
-                        ID:{{ $tenant->zip_code ?? '' }}
+                        <strong><?php echo e(optional($tenant->user)->first_name); ?>
+
+                            <?php echo e(optional($tenant->user)->last_name); ?></strong><br>
+                        <?php echo e($tenant->address ?? '-'); ?><br>
+                        <?php echo e($tenant->city ?? ''); ?>, <?php echo e($tenant->state ?? ''); ?> <br>
+                        <?php echo e(optional($tenant->user)->email ?? '-'); ?><br>
+                        ID:<?php echo e($tenant->zip_code ?? ''); ?>
+
                     </td>
                     <td>Property Details:
-                        <strong>{{ optional($tenant->linked_property)->name ?? '-' }}</strong><br>
-                        Unit: {{ optional($tenant->propertyUnit)->name ?? '-' }}<br>
-                        Generated on: {{ now()->format('F j, Y') }}
+                        <strong><?php echo e(optional($tenant->linked_property)->name ?? '-'); ?></strong><br>
+                        Unit: <?php echo e(optional($tenant->propertyUnit)->name ?? '-'); ?><br>
+                        Generated on: <?php echo e(now()->format('F j, Y')); ?>
+
                     </td>
                 </tr>
             </table>
         </div>
 
-        {{-- ✅ NEW: Unit Details Section --}}
+        
         <div class="section">
             <div class="section-title">Unit Details</div>
             <table class="info-table">
                 <tr>
                     <td class="label">Bedrooms:</td>
-                    <td>{{ optional($tenant->propertyUnit)->bedroom ?? '-' }}</td>
+                    <td><?php echo e(optional($tenant->propertyUnit)->bedroom ?? '-'); ?></td>
                     <td class="label">Baths:</td>
-                    <td>{{ optional($tenant->propertyUnit)->baths ?? '-' }}</td>
+                    <td><?php echo e(optional($tenant->propertyUnit)->baths ?? '-'); ?></td>
                 </tr>
                 <tr>
                     <td class="label">Kitchens:</td>
-                    <td>{{ optional($tenant->propertyUnit)->kitchen ?? '-' }}</td>
+                    <td><?php echo e(optional($tenant->propertyUnit)->kitchen ?? '-'); ?></td>
                     <td class="label">Status:</td>
-                    <td>{{ ucfirst(optional($tenant->propertyUnit)->status) ?? '-' }}</td>
+                    <td><?php echo e(ucfirst(optional($tenant->propertyUnit)->status) ?? '-'); ?></td>
                 </tr>
             </table>
         </div>
 
-        {{-- Installment Plan Section --}}
-        @if ($tenant->installments->isNotEmpty())
+        
+        <?php if($tenant->installments->isNotEmpty()): ?>
             <div class="section">
                 <div class="section-title">Installment Plan</div>
                 <table class="installments-table">
@@ -159,18 +162,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($tenant->installments as $installment)
+                        <?php $__currentLoopData = $tenant->installments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td>{{ $installment->installment_number }}</td>
-                                <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('M j, Y') }}</td>
-                                <td>${{ number_format($installment->amount, 2) }}</td>
-                                <td>{{ ucfirst($installment->status) }}</td>
+                                <td><?php echo e($installment->installment_number); ?></td>
+                                <td><?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('M j, Y')); ?></td>
+                                <td>$<?php echo e(number_format($installment->amount, 2)); ?></td>
+                                <td><?php echo e(ucfirst($installment->status)); ?></td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="footer">
             <p>Thank you for your business!</p>
@@ -179,3 +182,4 @@
 </body>
 
 </html>
+<?php /**PATH F:\JOWEB\property\resources\views/pdf/tenant_details.blade.php ENDPATH**/ ?>

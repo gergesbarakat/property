@@ -36,8 +36,8 @@
                             <th style="width: 25%;">{{ __('Buyer') }}</th>
                             <th style="width: 15%;">{{ __('Property') }}</th>
                             <th style="width: 15%;">{{ __('Unit') }}</th>
-                            <th style="width: 12%;">{{ __('Contract Start') }}</th>
-                            <th style="width: 12%;">{{ __('Contract End') }}</th>
+                            <th style="width: 12%;">{{ __('Start date') }}</th>
+                            <th style="width: 12%;">{{ __('End date') }}</th>
                             <th style="width: 11%;">{{ __('Purchase Type') }}</th>
                             {{-- ✅ FIX: Aligned the Actions header to the end (right in LTR, left in RTL) --}}
                             <th style="width: 10%;" class="text-end">{{ __('Actions') }}</th>
@@ -59,14 +59,14 @@
                                 <td>{{ optional($tenant->propertyUnit)->name ?? '-' }}</td>
                                 <td class="whitespace-nowrap">
                                     @if ($tenant->installments->isNotEmpty())
-                                        {{ \Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('M j, Y') }}
+                                        {{ \Carbon\Carbon::parse($tenant->installments->min('due_date'))->format('Y-m-d') }}
                                     @else
                                         -
                                     @endif
                                 </td>
                                 <td class="whitespace-nowrap">
                                     @if ($tenant->installments->isNotEmpty())
-                                        {{ \Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('M j, Y') }}
+                                        {{ \Carbon\Carbon::parse($tenant->installments->max('due_date'))->format('Y-m-d') }}
                                     @else
                                         -
                                     @endif
