@@ -54,9 +54,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/property'),
+    'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL','http://localhost/property/public'),
+    'asset_url' => env('ASSET_URL','http://localhost/public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -222,4 +222,3 @@ return [
     ])->toArray(),
 
 ];
- 
