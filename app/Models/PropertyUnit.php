@@ -24,6 +24,9 @@ class PropertyUnit extends Model
         'kitchen',
         'status',
         'unit_size',
+        'floor',
+        'building',
+        'location',
         'rent',
         'deposit_amount',
         'deposit_type',
@@ -48,20 +51,16 @@ class PropertyUnit extends Model
         'yearly' => 'Yearly',
         'custom' => 'Custom',
     ];
-    public function properties()
-    {
-        // This defines the relationship: A Unit "Belongs To" a Property.
-        // It assumes the foreign key in your 'property_units' table is 'property_id'.
-        return $this->belongsTo(Property::class, 'property_id');
-    }
+
     public function property()
     {
-        // This defines the relationship: A Unit "Belongs To" a Property.
-        // It assumes the foreign key in your 'property_units' table is 'property_id'.
+        // A Unit "Belongs To" a Property.
         return $this->belongsTo(Property::class, 'property_id');
     }
+
     public function tenants()
     {
-        return Tenant::where('unit', $this->id)->first();
+        // Using a proper relationship is better for performance.
+        return $this->hasMany(Tenant::class, 'unit');
     }
 }
