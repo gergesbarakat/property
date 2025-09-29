@@ -38,6 +38,7 @@ class CodeParser
             'laravel-translatable-string-exporter.functions',
             [
                 '__',
+                'trans_choice',
                 '_t',
                 '@lang',
             ]
