@@ -25,19 +25,12 @@
                         <thead>
                             <tr>
                                 <th><?php echo e(__('Property')); ?></th>
-
                                 <th><?php echo e(__('Name')); ?></th>
                                 <th><?php echo e(__('Bedroom')); ?></th>
                                 <th><?php echo e(__('Kitchen')); ?></th>
                                 <th><?php echo e(__('Bath')); ?></th>
                                 <th><?php echo e(__('Unit Size')); ?></th>
-                                <th><?php echo e(__('status')); ?></th>
-
-                                
-                                
-                                <th><?php echo e(__('Created ')); ?></th>
-                                <th><?php echo e(__('Updated')); ?></th>
-
+                                <th><?php echo e(__('Status')); ?></th>
                                 <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
                                     <th class="text-center"><?php echo e(__('Actions')); ?></th>
                                 <?php endif; ?>
@@ -46,29 +39,24 @@
                         <tbody>
                             <?php $__currentLoopData = $units; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                    <td><?php echo e($unit->properties->name); ?></td>
-
+                                    
+                                    <td><?php echo e(optional($unit->property)->name ?? '-'); ?></td>
                                     <td><?php echo e($unit->name); ?></td>
                                     <td><?php echo e($unit->bedroom); ?></td>
                                     <td><?php echo e($unit->kitchen); ?></td>
                                     <td><?php echo e($unit->baths); ?></td>
-                                    <td><?php echo e($unit->unit_size); ?></td>
+                                    <td><?php echo e($unit->unit_size ? $unit->unit_size . ' Sq. Ft.' : '-'); ?></td>
                                     <td>
-                                        <?php if(ucfirst($unit->status) != 'Available'): ?>
-                                            <span class="badge bg-danger text-white"><?php echo e($unit->status); ?></span>
+                                        <?php if(strtolower($unit->status) != 'available'): ?>
+                                            <span class="badge bg-danger text-white"><?php echo e(ucfirst($unit->status)); ?></span>
                                         <?php else: ?>
-                                            <span class="badge bg-success text-white"><?php echo e($unit->status); ?></span>
+                                            <span class="badge bg-success text-white"><?php echo e(ucfirst($unit->status)); ?></span>
                                         <?php endif; ?>
                                     </td>
-                                    
-                                    <td><?php echo e($unit->created_at); ?></td>
-                                    <td><?php echo e($unit->updated_at); ?></td>
-
                                     <?php if(Gate::check('edit unit') || Gate::check('delete unit')): ?>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <div class="cart-action">
                                                 <?php echo Form::open(['method' => 'DELETE', 'route' => ['unit.destroy', [$unit->property_id, $unit->id]]]); ?>
-
 
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit unit')): ?>
                                                     <a class="text-success customModal"
@@ -79,7 +67,7 @@
                                                 <?php endif; ?>
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete unit')): ?>
                                                     <a class=" text-danger confirm_dialog" data-bs-toggle="tooltip"
-                                                        data-bs-original-title="<?php echo e(__('Detete')); ?>" href="#"> <i
+                                                        data-bs-original-title="<?php echo e(__('Delete')); ?>" href="#"> <i
                                                             data-feather="trash-2"></i></a>
                                                 <?php endif; ?>
                                                 <?php echo Form::close(); ?>
@@ -89,10 +77,7 @@
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-
                         </tbody>
-
                     </table>
                 </div>
             </div>

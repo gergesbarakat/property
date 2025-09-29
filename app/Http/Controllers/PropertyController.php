@@ -48,8 +48,8 @@ class PropertyController extends Controller
                     'city' => 'required',
                     'zip_code' => 'required',
                     'address' => 'required',
-                    'thumbnail' => 'required',
-                ]
+                    'thumbnail' => 'required|min:1|mimes:jpg,jpeg,png,gif|max:2048',
+                 ]
             );
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
@@ -304,9 +304,14 @@ class PropertyController extends Controller
     public function units()
     {
         if (\Auth::user()->can('manage unit')) {
-            $units = PropertyUnit::with(['property'])->whereHas('property', function ($q) {
-                $q->where('is_active', 1);
-            })->get();
+            // ✅ FIX: Use whereHas to ensure we only get units that have a valid, active property.
+            // This prevents orphaned data from being sent to the view.
+            $units = PropertyUnit::with('property')
+                ->whereHas('property', function ($query) {
+                    $query->where('is_active', 1);
+                })
+                ->get();
+
             return view('unit.index', compact('units'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
