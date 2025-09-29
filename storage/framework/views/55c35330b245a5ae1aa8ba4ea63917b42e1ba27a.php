@@ -95,89 +95,7 @@
             border-top: 1px solid #eee;
             margin: 20px 0;
         }
-
-        .user-card .user-imgwrap {
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .user-card .user-imgwrap img {
-            width: 100px;
-            height: 100px;
-            border: 5px solid #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            object-fit: cover;
-        }
-
-        .user-card .card-body {
-            margin-top: 60px;
-        }
-
-        .badge {
-            font-size: 0.8rem;
-            padding: 0.5em 0.75em;
-            font-weight: 500;
-        }
-
-        .financial-summary .stat-card {
-            background-color: #f8f9fa;
-            border-radius: .5rem;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .financial-summary .stat-card .icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .financial-summary .stat-card h6 {
-            font-size: 0.8rem;
-            color: #6c757d;
-            text-transform: uppercase;
-            margin-bottom: 0.25rem;
-        }
-
-        .financial-summary .stat-card p {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-
-        .info-card .media-body h6 {
-            color: #6c757d;
-            margin-bottom: 0.25rem;
-        }
-
-        .info-card .media-body p {
-            font-weight: 500;
-        }
-
-        .installments-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .installments-table thead th {
-            font-weight: 600;
-            background-color: #fff;
-            border-bottom: 2px solid #dee2e6;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-        }
-
-        .installments-table td,
-        .installments-table th {
-            vertical-align: middle !important;
-            padding: 1rem;
-            border-top: 1px solid #e9ecef;
-        }
     </style>
-
 </head>
 
 <body>
@@ -229,68 +147,38 @@
                 </tr>
             </table>
         </div>
-        <div class="col-xl-9 cdx-xxl-70 cdx-xl-60">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-transparent">
-                    <h4><?php echo e(__('Financial Summary')); ?></h4>
-                </div>
-                <table class="card-body financial-summary">
-                    <tr>
-                        <td>
-                            <div class="stat-card">
-                                <div class="icon text-primary"><i data-feather="dollar-sign"></i></div>
-                                <h6>Total Amount</h6>
-                                <p><?php echo e(number_format($tenant->financial_summary['total_amount'], 2)); ?> EGP</p>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="stat-card">
-                                <div class="icon text-success"><i data-feather="check-circle"></i></div>
-                                <h6>Amount Paid</h6>
-                                <p><?php echo e(number_format($tenant->financial_summary['paid_amount'], 2)); ?> EGP</p>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="stat-card">
-                                <div class="icon text-danger"><i data-feather="trending-down"></i></div>
-                                <h6>Amount Due</h6>
-                                <p><?php echo e(number_format($tenant->financial_summary['due_amount'], 2)); ?> EGP</p>
-                            </div>
-                        </td>
-                    </tr>
+
+        
+        <?php if($tenant->installments->isNotEmpty()): ?>
+            <div class="section">
+                <div class="section-title">Installment Plan</div>
+                <table class="installments-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Due Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $__currentLoopData = $tenant->installments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <tr>
+                                <td><?php echo e($installment->installment_number); ?></td>
+                                <td><?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('M j, Y')); ?></td>
+                                <td>$<?php echo e(number_format($installment->amount, 2)); ?></td>
+                                <td><?php echo e(ucfirst($installment->status)); ?></td>
+                            </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </tbody>
                 </table>
-
-                
-                <?php if($tenant->installments->isNotEmpty()): ?>
-                    <div class="section">
-                        <div class="section-title">Installment Plan</div>
-                        <table class="installments-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Due Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $__currentLoopData = $tenant->installments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $installment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <tr>
-                                        <td><?php echo e($installment->installment_number); ?></td>
-                                        <td><?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('M j, Y')); ?></td>
-                                        <td>$<?php echo e(number_format($installment->amount, 2)); ?></td>
-                                        <td><?php echo e(ucfirst($installment->status)); ?></td>
-                                    </tr>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-
-                <div class="footer">
-                    <p>Thank you for your business!</p>
-                </div>
             </div>
+        <?php endif; ?>
+
+        <div class="footer">
+            <p>Thank you for your business!</p>
+        </div>
+    </div>
 </body>
 
 </html>
