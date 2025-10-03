@@ -63699,6 +63699,7 @@ Stack trace:
 [2025-09-29 05:33:31] local.INFO: User is not authenticated. Using default locale.  
 [2025-09-29 05:33:31] local.INFO: SetLocale middleware is running.  
 [2025-09-29 05:33:31] local.INFO: User is not authenticated. Using default locale.  
+<<<<<<< HEAD
 [2025-09-30 08:36:34] local.INFO: SetLocale middleware is running.  
 [2025-09-30 08:36:36] local.INFO: User is not authenticated. Using default locale.  
 [2025-09-30 08:36:36] local.INFO: User is not authenticated. Using default locale.  
@@ -64310,3 +64311,5 @@ Stack trace:
 [2025-10-03 10:23:29] local.ERROR: Tenant Creation Failed: SQLSTATE[22007]: Invalid datetime format: 1366 Incorrect integer value: '' for column `property`.`tenants`.`family_member` at row 1 (SQL: insert into `tenants` (`user_id`, `family_member`, `address`, `country`, `state`, `city`, `zip_code`, `property`, `unit`, `purchase_type`, `email`, `phone`, `profile_image`, `updated_at`, `created_at`) values (6, , cairo, Egypt, Qena, cairo, 234234, 1, 1, installment, sadasdasd@gmail.com, 01277944537, WhatsApp Image 2025-09-26 at 8.39.20 PM (2)_1759487009.jpeg, 2025-10-03 10:23:29, 2025-10-03 10:23:29))  
 [2025-10-03 10:23:29] local.INFO: SetLocale middleware is running.  
 [2025-10-03 10:23:29] local.INFO: User is not authenticated. Using default locale.  
+=======
+>>>>>>> 2018d8ccd479fe4f151520f6cff5c90009208fcf
