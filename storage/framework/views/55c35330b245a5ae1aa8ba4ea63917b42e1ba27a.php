@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenant Statement</title>
+    <title>Buyer Statement</title>
     <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -166,7 +166,7 @@
                             <tr>
                                 <td><?php echo e($installment->installment_number); ?></td>
                                 <td><?php echo e(\Carbon\Carbon::parse($installment->due_date)->format('M j, Y')); ?></td>
-                                <td>$<?php echo e(number_format($installment->amount, 2)); ?></td>
+                                <td><?php echo e(number_format($installment->amount, 2)); ?>EGP</td>
                                 <td><?php echo e(ucfirst($installment->status)); ?></td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

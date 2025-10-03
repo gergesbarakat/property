@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenant Statement</title>
+    <title>Buyer Statement</title>
     <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -163,7 +163,7 @@
                             <tr>
                                 <td>{{ $installment->installment_number }}</td>
                                 <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('M j, Y') }}</td>
-                                <td>${{ number_format($installment->amount, 2) }}</td>
+                                <td>{{ number_format($installment->amount, 2) }}EGP</td>
                                 <td>{{ ucfirst($installment->status) }}</td>
                             </tr>
                         @endforeach
