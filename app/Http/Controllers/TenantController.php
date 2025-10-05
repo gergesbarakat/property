@@ -50,7 +50,7 @@ class TenantController extends Controller
             'paid_amount' => $paidInstallments->sum('amount'),
             'due_amount' => $allInstallments->sum('amount') - $paidInstallments->sum('amount'),
             'total_installments' => $allInstallments->count(),
-            'paid_installments' => $paidInstallments->count(),
+            ' .'   => $paidInstallments->count(),
             'due_installments' => $allInstallments->where('status', '!=', 'paid')->count(),
         ];
 
@@ -97,9 +97,9 @@ class TenantController extends Controller
                     'phone_number' => 'required|string|max:20',
                     'profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
                     'family_member' => 'nullable|integer|min:0',
-                    'national_id' => 'nullable|string|max:255',
                     'country' => 'required|string|max:255',
                     'state' => 'required|string|max:255',
+                    'national_id' => 'required|string|max:255',
                     'city' => 'required|string|max:255',
                     'zip_code' => 'required|string|max:20',
                     'address' => 'required|string',
@@ -130,7 +130,7 @@ class TenantController extends Controller
                     $fileNameToStore = $filename . '_' . time() . '.' . $extension;
 
                     // This stores the file in `storage/app/public/upload/profiles` and returns the full path.
-                    $profileImagePath = $fileNameToStore;
+                    $profileImagePath = 'upload/profiles/' . $fileNameToStore;
                     $request->file('profile')->storeAs('upload/profiles/', $fileNameToStore, 'public');
                 }
 
@@ -161,8 +161,8 @@ class TenantController extends Controller
 
                 $tenant = Tenant::create([
                     'user_id' => $user->id,
-                    'family_member' => $validatedData['family_member'] ?? null,
-                    'national_id' => $validatedData['national_id'] ?? null,
+                    'family_member' => $validatedData['family_member'] ? $validatedData['family_member'] : 0,
+                    'national_id' => $validatedData['national_id'],
                     'address' => $validatedData['address'],
                     'country' => $validatedData['country'],
                     'state' => $validatedData['state'],
@@ -171,7 +171,7 @@ class TenantController extends Controller
                     'property' => $validatedData['property'],
                     'unit' => $validatedData['unit'],
                     'purchase_type' => $validatedData['purchase_type'],
-                    'lease_start_date' => $validatedData['installment_start_date'] ?? null,
+                    'lease_start_date' => $validatedData['installment_start_date'] ? $validatedData['installment_start_date'] : null,
                     'lease_end_date' =>  $leaseEndDate,
                     'email' => $user->email,
                     'phone' => $user->phone_number,
@@ -182,7 +182,7 @@ class TenantController extends Controller
                     foreach ($request->file('contracts') as $file) {
                         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                         $extension = $file->getClientOriginalExtension();
-                        $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+                        $fileNameToStore = 'contracts/' . $filename . '_' . time() . '.' . $extension;
                         $path = $file->storeAs('contracts', $fileNameToStore, 'public');
                         Contract::create(['tenant_id' => $tenant->id, 'contract_file' => $path]);
                     }
@@ -228,10 +228,10 @@ class TenantController extends Controller
                 }
 
                 DB::commit();
-                return response()->json(['status' => 'success', 'msg' => __('Tenant successfully created.')]);
+                return response()->json(['status' => 'success', 'msg' => __('Buyer successfully created.')]);
             } catch (\Exception $e) {
                 DB::rollBack();
-                Log::error('Tenant Creation Failed: ' . $e->getMessage());
+                Log::error('Buyer Creation Failed: ' . $e->getMessage());
                 return response()->json(['status' => 'error', 'msg' => $e->getMessage()], 500);
             }
         }
@@ -300,12 +300,17 @@ class TenantController extends Controller
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
 
+                $profileImagePath = null;
+                // ✅ FIX: Changed file handling to use storeAs for consistency.
                 if ($request->hasFile('profile')) {
-                    if ($user->profile) {
-                        Storage::disk('public')->delete($user->profile);
-                    }
-                    $path = $request->file('profile')->store('profiles', 'public');
-                    $user->profile = $path;
+                    $file = $request->file('profile');
+
+                    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+                    // This stores the file in `storage/app/public/upload/profiles` and returns the full path.
+                    $profileImagePath = 'upload/profiles/' . $fileNameToStore;
+                    $request->file('profile')->storeAs('upload/profiles/', $fileNameToStore, 'public');
                 }
                 $user->save();
 
@@ -319,7 +324,7 @@ class TenantController extends Controller
                 $tenant->address = $request->address;
                 $tenant->email = $user->email;
                 $tenant->phone = $user->phone_number;
-                $tenant->profile_image = $user->profile;
+                $tenant->profile_image = $profileImagePath;
                 $tenant->save();
 
                 // --- Handle New Contract Documents ---
@@ -334,7 +339,7 @@ class TenantController extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'msg' => __('Tenant successfully updated.'),
+                    'msg' => __('Buyer successfully updated.'),
                 ]);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -353,7 +358,7 @@ class TenantController extends Controller
     {
         if (\Auth::user()->can('delete tenant')) {
             $tenant->delete();
-            return redirect()->back()->with('success', 'Tenant successfully deleted.');
+            return redirect()->back()->with('success', 'Buyer successfully deleted.');
         } else {
             return redirect()->back()->with('error', __('Permission Denied!'));
         }

@@ -215,6 +215,8 @@ Route::group(
 
         // ✅ NEW: Route to handle the payment form submission
         Route::post('/installments/payment/store', [App\Http\Controllers\InstallmentController::class, 'storePayment'])->name('installment.payment.store');
+        Route::get('/installments/{installment}/edit-notes', [App\Http\Controllers\InstallmentController::class, 'editNotes'])->name('installment.notes.edit');
+        Route::put('/installments/{installment}/update-notes', [App\Http\Controllers\InstallmentController::class, 'updateNotes'])->name('installment.notes.update');
 
         Route::resource('property', PropertyController::class);
         Route::get('property/{pid}/unit/create', [PropertyController::class, 'unitCreate'])->name('unit.create');

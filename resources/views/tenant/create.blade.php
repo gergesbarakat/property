@@ -2,6 +2,26 @@
 @section('page-title')
     {{ __('Buyer Create') }}
 @endsection
+{{-- ✅ NEW: CSS to style the remove button on Dropzone previews --}}
+<style>
+    .dz-preview .dz-remove {
+        font-size: 1.5rem;
+        color: #fff;
+        text-decoration: none;
+        background: rgb(255, 0, 0);
+        width: 100%;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        line-height: 1;
+        opacity: 1;
+        z-index: 4444;
+        /* Ensure it's on top */
+    }
+</style>
+
 @push('script-page')
     <script src="{{ asset('assets/js/vendors/dropzone/dropzone.js') }}"></script>
     <script>
@@ -18,6 +38,9 @@
                 maxFilesize: 10,
                 filesizeBase: 1000,
                 autoProcessQueue: false,
+                // ✅ FIX: These options enable the remove button functionality
+                addRemoveLinks: true,
+                dictRemoveFile: 'delete',
                 thumbnail: function(file, dataUrl) {
                     if (file.previewElement) {
                         file.previewElement.classList.remove("dz-file-preview");
@@ -90,28 +113,34 @@
 
                 if (propertyId) {
                     // Construct the correct URL using the existing route
-                    var url = '{{ route("property.unit", ":id") }}';
+                    var url = '{{ route('property.unit', ':id') }}';
                     url = url.replace(':id', propertyId);
 
                     $.ajax({
                         url: url,
                         type: 'GET', // Your route uses GET
                         dataType: 'json',
-                        success: function (data) {
-                            unitDropdown.html('<option value="">{{ __('Select Unit') }}</option>');
+                        success: function(data) {
+                            unitDropdown.html(
+                                '<option value="">{{ __('Select Unit') }}</option>');
                             unitDropdown.prop('disabled', false);
 
                             if (data && !$.isEmptyObject(data)) {
-                                $.each(data, function (id, name) {
-                                    unitDropdown.append('<option value="' + id + '">' + name + '</option>');
+                                $.each(data, function(id, name) {
+                                    unitDropdown.append('<option value="' + id + '">' +
+                                        name + '</option>');
                                 });
                             } else {
-                                unitDropdown.html('<option value="">{{ __('No Available Units') }}</option>');
+                                unitDropdown.html(
+                                    '<option value="">{{ __('No Available Units') }}</option>'
+                                );
                                 unitDropdown.prop('disabled', true);
                             }
                         },
-                        error: function () {
-                            unitDropdown.html('<option value="">{{ __('Could not load units') }}</option>');
+                        error: function() {
+                            unitDropdown.html(
+                                '<option value="">{{ __('Could not load units') }}</option>'
+                            );
                             unitDropdown.prop('disabled', true);
                         }
                     });
@@ -137,11 +166,19 @@
                 }
                 let endDate = new Date(startDate.getTime());
                 let monthsToAdd = 0;
-                switch(type) {
-                    case 'monthly': monthsToAdd = duration; break;
-                    case 'quarter_year': monthsToAdd = duration * 3; break;
-                    case 'half_year': monthsToAdd = duration * 6; break;
-                    case 'yearly': monthsToAdd = duration * 12; break;
+                switch (type) {
+                    case 'monthly':
+                        monthsToAdd = duration;
+                        break;
+                    case 'quarter_year':
+                        monthsToAdd = duration * 3;
+                        break;
+                    case 'half_year':
+                        monthsToAdd = duration * 6;
+                        break;
+                    case 'yearly':
+                        monthsToAdd = duration * 12;
+                        break;
                 }
                 endDate.setMonth(endDate.getMonth() + monthsToAdd);
                 let year = endDate.getFullYear();
@@ -183,10 +220,11 @@
                 $('#installment_amount').val(installmentAmount.toFixed(2));
             }
 
-            $('#purchase_type, #unit_price, #deposit, #installment_duration, #installment_fee_percent, #installment_start_date, #installment_type').on('change keyup', function() {
-                calculateInstallmentAmount();
-                calculateEndDate();
-            });
+            $('#purchase_type, #unit_price, #deposit, #installment_duration, #installment_fee_percent, #installment_start_date, #installment_type')
+                .on('change keyup', function() {
+                    calculateInstallmentAmount();
+                    calculateEndDate();
+                });
 
             calculateInstallmentAmount();
             calculateEndDate();
@@ -196,7 +234,9 @@
 @section('breadcrumb')
     <ul class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}"><h1>{{ __('Dashboard') }}</h1></a>
+            <a href="{{ route('dashboard') }}">
+                <h1>{{ __('Dashboard') }}</h1>
+            </a>
         </li>
         <li class="breadcrumb-item">
             <a href="{{ route('tenant.index') }}">{{ __('Buyer') }}</a>
@@ -211,7 +251,9 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header"><h5>{{ __('Personal Details') }}</h5></div>
+                <div class="card-header">
+                    <h5>{{ __('Personal Details') }}</h5>
+                </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
@@ -254,7 +296,9 @@
         </div>
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header"><h5>{{ __('Address Details') }}</h5></div>
+                <div class="card-header">
+                    <h5>{{ __('Address Details') }}</h5>
+                </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
@@ -285,7 +329,9 @@
         </div>
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header"><h5>{{ __('Property Details') }}</h5></div>
+                <div class="card-header">
+                    <h5>{{ __('Property Details') }}</h5>
+                </div>
                 <div class="card-body">
                     <div class="info-group">
                         <div class="row">
@@ -335,7 +381,7 @@
                                 {{ Form::label('price_after_deposit', __('Price After Deposit'), ['class' => 'form-label']) }}
                                 {{ Form::number('price_after_deposit', null, ['class' => 'form-control', 'id' => 'price_after_deposit', 'readonly']) }}
                             </div>
-                             <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
+                            <div class="form-group col-lg-6 col-md-6 purchase_installment d-none">
                                 {{ Form::label('installment_fee_percent', __('Installment Fee %'), ['class' => 'form-label']) }}
                                 {{ Form::number('installment_fee_percent', null, ['class' => 'form-control', 'id' => 'installment_fee_percent', 'step' => '0.01', 'min' => 0]) }}
                             </div>
@@ -348,9 +394,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="card">
-                <div class="card-header"><h5>{{ __('Documents') }}</h5></div>
+                <div class="card-header">
+                    <h5>{{ __('Documents') }}</h5>
+                </div>
                 <div class="card-body">
                     <div class="dropzone needsclick" id='demo-upload' action="#">
                         <div class="dz-message needsclick">
@@ -358,12 +406,17 @@
                             <h3>{{ __('Drop files here or click to upload.') }}</h3>
                         </div>
                     </div>
+                    {{-- ✅ FIX: The preview template now includes a remove link --}}
                     <div class="preview-dropzon" style="display: none;">
                         <div class="dz-preview dz-file-preview">
                             <div class="dz-image"><img data-dz-thumbnail="" src="" alt=""></div>
-                            <div class="dz-details"><div class="dz-size"><span data-dz-size=""></span></div><div class="dz-filename"><span data-dz-name=""></span></div></div>
+                            <div class="dz-details">
+                                <div class="dz-size"><span data-dz-size=""></span></div>
+                                <div class="dz-filename"><span data-dz-name=""></span></div>
+                            </div>
                             <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress=""> </span></div>
                             <div class="dz-success-mark"><i class="fa fa-check" aria-hidden="true"></i></div>
+                            {{-- This link will be automatically handled by Dropzone --}}
                         </div>
                     </div>
                 </div>

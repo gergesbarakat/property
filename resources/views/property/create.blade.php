@@ -13,6 +13,9 @@
             maxFilesize: 10,
             filesizeBase: 1000,
             autoProcessQueue: false,
+            addRemoveLinks: true,
+            dictRemoveFile: 'delete',
+
             thumbnail: function(file, dataUrl) {
                 if (file.previewElement) {
                     file.previewElement.classList.remove("dz-file-preview");

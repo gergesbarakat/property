@@ -17,6 +17,9 @@
                 maxFilesize: 10,
                 filesizeBase: 1000,
                 autoProcessQueue: false,
+                addRemoveLinks: true,
+                dictRemoveFile: 'delete',
+
             });
 
             $('#property-update').on('click', function(e) {

@@ -16,6 +16,10 @@ class InstallmentController extends Controller
 {
     /**
      * Show the form for creating a new payment record for an installment.
+     * This is typically loaded into a modal.
+     *
+     * @param  \App\Models\Installment  $installment
+     * @return \Illuminate\View\View
      */
     public function createPayment(Installment $installment)
     {
@@ -24,6 +28,9 @@ class InstallmentController extends Controller
 
     /**
      * Store a new payment, handle full or partial payments, and split installments if necessary.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function storePayment(Request $request)
     {
@@ -54,7 +61,7 @@ class InstallmentController extends Controller
                 return redirect()->back()->with('error', 'This installment has already been paid.');
             }
 
-            $receiptPath = $request->file('receipt')->storeAs('receipts', 'public');
+            $receiptPath = $request->file('receipt')->store('receipts', 'public');
 
             if ($request->payment_type === 'full') {
                 $originalInstallment->update(['status' => 'paid', 'paid_date' => $request->payment_date, 'notes' => $request->notes]);
@@ -67,8 +74,9 @@ class InstallmentController extends Controller
                     throw new \Exception('Partial amount must be less than the installment amount.');
                 }
 
+                // Create a new "paid" installment for the partial amount.
                 $paidInstallment = Installment::create([
-                    'buyer_id' => $tenant->id,
+                    'tenant_id' => $tenant->id,
                     'installment_number' => $originalInstallment->installment_number,
                     'due_date' => $request->payment_date,
                     'amount' => $partialAmount,
@@ -79,8 +87,9 @@ class InstallmentController extends Controller
 
                 $this->createInvoiceAndPayment($paidInstallment, $tenant, $partialAmount, $request->payment_date, $receiptPath, $request->notes);
 
+                // Create a new "pending" installment for the remaining amount.
                 Installment::create([
-                    'buyer_id' => $tenant->id,
+                    'tenant_id' => $tenant->id,
                     'installment_number' => $originalInstallment->installment_number + 0.1,
                     'due_date' => $originalInstallment->due_date,
                     'amount' => $remainingAmount,
@@ -101,11 +110,35 @@ class InstallmentController extends Controller
     }
 
     /**
+     * Show the form for editing an installment's notes.
+     */
+    public function editNotes(Installment $installment)
+    {
+        return view('installments.edit_notes', compact('installment'));
+    }
+
+    /**
+     * Update the notes for a specific installment.
+     */
+    public function updateNotes(Request $request, Installment $installment)
+    {
+        if (\Auth::user()->can('edit tenant')) {
+            $request->validate(['notes' => 'nullable|string']);
+
+            $installment->notes = $request->notes;
+            $installment->save();
+
+            return redirect()->back()->with('success', 'Notes updated successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied!'));
+        }
+    }
+
+    /**
      * Helper function to create Invoice, InvoiceItem, and InvoicePayment records.
      */
     private function createInvoiceAndPayment(Installment $installment, Tenant $tenant, $paymentAmount, $paymentDate, $receiptPath, $notes)
     {
-        // Step 1: Create the Invoice record, linked to the installment
         $invoice = Invoice::create([
             'invoice_id'    => 'INV-' . now()->format('Ymd') . '-' . $installment->id . '-' . rand(100, 999),
             'property_id'   => $tenant->property,
@@ -117,7 +150,6 @@ class InstallmentController extends Controller
             'status'        => ($installment->status == 'paid' && $paymentAmount >= $installment->amount) ? 'paid' : 'partial_paid',
         ]);
 
-        // Step 2: Create the associated Invoice Item
         InvoiceItem::create([
             'invoice_id'    => $invoice->id,
             'invoice_type'  => 'installment',
@@ -125,8 +157,6 @@ class InstallmentController extends Controller
             'description'   => 'Payment for installment #' . $installment->installment_number,
         ]);
 
-        // ✅ FIX: The re-query has been removed. We now use the $invoice object directly.
-        // Step 3: Create the Invoice Payment record using the original invoice's ID.
         InvoicePayment::create([
             'invoice_id' => $invoice->id,
             'installment_id' => $installment->id,

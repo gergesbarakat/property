@@ -18,8 +18,8 @@
                 maxFilesize: 10,
                 filesizeBase: 1000,
                 autoProcessQueue: false,
-                addRemoveLinks: true, // This enables the remove link functionality
-                dictRemoveFile: '×', // Sets the text for the remove link
+                addRemoveLinks: true,
+                dictRemoveFile: 'delete',
             });
 
             // --- AJAX Form Submission ---
